@@ -6,6 +6,10 @@ set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
+if(MSVC)
+    add_compile_options(/EHsc)
+endif()
+
 # Put all executable outputs in <repo>/bin.
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}/bin")
 if(CMAKE_CONFIGURATION_TYPES)
