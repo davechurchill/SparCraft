@@ -85,7 +85,7 @@ class SearchExperiment
     std::string getResultsOutFileName();
     std::string getConfigOutFileName();
     std::string currentDateTime();
-    void printStateUnits(std::ofstream & results, GameState & state);
+    void printStateUnits(std::ofstream & results, const GameState & state);
     void addGameState(const GameState & state);
 
 public:

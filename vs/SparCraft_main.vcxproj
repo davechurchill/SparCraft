@@ -103,7 +103,7 @@
       <DisableSpecificWarnings>4275</DisableSpecificWarnings>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>$(Platform)\$(Configuration)\SparCraft\SparCraft.lib;$(Platform)\$(Configuration)\BWAPIData\BWAPId.lib;sfml-audio-d.lib;sfml-graphics-d.lib;sfml-system-d.lib;sfml-window-d.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>$(Platform)\$(Configuration)\SparCraft\SparCraft_d.lib;$(Platform)\$(Configuration)\BWAPIData\BWAPId.lib;sfml-audio-d.lib;sfml-graphics-d.lib;sfml-system-d.lib;sfml-window-d.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(SFML_DIR)\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Console</SubSystem>
@@ -231,7 +231,6 @@
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
 </Project>
-
 
 
 

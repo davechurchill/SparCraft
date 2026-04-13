@@ -7,6 +7,7 @@ Game::Game(const GameState & initialState, const size_t & limit)
     , state(initialState)
     , _playerToMoveMethod(SparCraft::PlayerToMove::Alternate)
     , rounds(0)
+    , gameTimeMS(0)
     , moveLimit(limit)
 {
 
@@ -17,6 +18,7 @@ Game::Game(const GameState & initialState, PlayerPtr & p1, PlayerPtr & p2, const
     , state(initialState)
     , _playerToMoveMethod(SparCraft::PlayerToMove::Alternate)
     , rounds(0)
+    , gameTimeMS(0)
     , moveLimit(limit)
 {
     // add the players
@@ -65,8 +67,10 @@ void Game::playNextTurn()
     // the tuple of moves he wishes to make
     toMove->getMoves(state, moves[playerToMove], scriptMoves[playerToMove]);
         
+    const bool bothPlayersCanMove = state.bothCanMove();
+
     // if both players can move, generate the other player's moves
-    if (state.bothCanMove())
+    if (bothPlayersCanMove)
     {
         state.generateMoves(moves[enemy->ID()], enemy->ID());
         enemy->getMoves(state, moves[enemy->ID()], scriptMoves[enemy->ID()]);
@@ -75,7 +79,9 @@ void Game::playNextTurn()
     }
 
     // make the moves
-    state.makeMoves(scriptMoves[toMove->ID()]);
+    // If both sides were eligible at the start of the turn, execute the second
+    // script batch even if initiative changes after the first batch is applied.
+    state.makeMoves(scriptMoves[toMove->ID()], bothPlayersCanMove);
 
     state.finishedMoving();
     rounds++;
@@ -126,8 +132,10 @@ void Game::playIndividualScripts(UnitScriptData & scriptData)
         // calculate the moves the unit would do given its script preferences
         scriptData.calculateMoves(playerToMove, moves[playerToMove], state, scriptMoves[playerToMove]);
 
+        const bool bothPlayersCanMove = state.bothCanMove();
+
         // if both players can move, generate the other player's moves
-        if (state.bothCanMove())
+        if (bothPlayersCanMove)
         {
             state.generateMoves(moves[enemyPlayer], enemyPlayer);
 
@@ -137,7 +145,9 @@ void Game::playIndividualScripts(UnitScriptData & scriptData)
         }
 
         // make the moves
-        state.makeMoves(scriptMoves[playerToMove]);
+        // Preserve simultaneous-turn execution semantics when both sides could
+        // act before either script batch was applied.
+        state.makeMoves(scriptMoves[playerToMove], bothPlayersCanMove);
         state.finishedMoving();
         rounds++;
     }
@@ -150,12 +160,12 @@ PlayerPtr Game::getPlayer(const size_t & player)
     return _players[player];
 }
 
-size_t Game::getRounds()
+size_t Game::getRounds() const
 {
     return rounds;
 }
 
-double Game::getTime()
+double Game::getTime() const
 {
     return gameTimeMS;
 }

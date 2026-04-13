@@ -855,8 +855,9 @@ void SearchExperiment::runExperiment()
 					p2AB->setTranspositionTable(TTPtr(new TranspositionTable()));
 				}
 
-				// construct the game
+				// construct and run the game
 				Game g(states[state], playerOne, playerTwo, 20000);
+                const Game * completedGame = &g;
                 ScoreType gameEval = 0;
 
                 if (showDisplay)
@@ -869,12 +870,14 @@ void SearchExperiment::runExperiment()
                         gui.onFrame();
                     }
 
-                    gameEval = gui.getGame().getState().eval(Players::Player_One, SparCraft::EvaluationMethods::LTD2).val();
+                    completedGame = &gui.getGame();
                 }
                 else
                 {
-                    gameEval = g.getState().eval(Players::Player_One, SparCraft::EvaluationMethods::LTD2).val();
+                    g.play();
                 }
+
+                gameEval = completedGame->getState().eval(Players::Player_One, SparCraft::EvaluationMethods::LTD2).val();
 
                 numGames[p1Player][p2Player]++;
                 if (gameEval > 0)
@@ -890,16 +893,16 @@ void SearchExperiment::runExperiment()
                     numDraws[p1Player][p2Player]++;
                 }
 
-				double ms = g.getTime();
-				sprintf(buf, " %10d %6zu %12.2lf", gameEval, g.getRounds(), ms);
+				double ms = completedGame->getTime();
+				sprintf(buf, " %10d %6zu %12.2lf", gameEval, completedGame->getRounds(), ms);
 				fprintf(stderr, "%12d %12.2lf\n", gameEval, ms);
 
 				resultsEval[p1Player][p2Player].push_back(gameEval);
-				resultsRounds[p1Player][p2Player].push_back((int)g.getRounds());
+				resultsRounds[p1Player][p2Player].push_back((int)completedGame->getRounds());
 				resultsTime[p1Player][p2Player].push_back(ms);
 
                 results << buf;
-                printStateUnits(results, g.getState());
+                printStateUnits(results, completedGame->getState());
                 results << std::endl;
                 
                 writeResultsSummary();
@@ -911,14 +914,14 @@ void SearchExperiment::runExperiment()
 }
 
 
-void SearchExperiment::printStateUnits(std::ofstream & results, GameState & state)
+void SearchExperiment::printStateUnits(std::ofstream & results, const GameState & state)
 {
     std::stringstream ss;
     for (size_t p(0); p<Constants::Num_Players; ++p)
     {
         for (size_t u(0); u<state.numUnits(p); ++u)
         {
-            Unit & unit(state.getUnit(p,u));
+            const Unit & unit(state.getUnit(p,u));
             Position pos(unit.currentPosition(state.getTime()));
                         
             ss << " | " << unit.name() << " " << (int)unit.player() << " " << unit.currentHP() << " " << pos.x() << " " << pos.y();

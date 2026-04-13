@@ -101,7 +101,7 @@ public:
 
     // move related functions
     void                    generateMoves(MoveArray & moves, const size_t & playerIndex)            const;
-    void                    makeMoves(const std::vector<Action> & moves);
+    void                    makeMoves(const std::vector<Action> & moves, const bool ignoreCanMoveCheck = false);
     const int &             getNumMovements(const size_t & player)                                  const;
     const size_t            whoCanMove()                                                            const;
     const bool              bothCanMove()                                                           const;

@@ -246,9 +246,9 @@ void GameState::generateMoves(MoveArray & moves, const size_t & playerIndex) con
 }
 
 
-void GameState::makeMoves(const std::vector<Action> & moves)
+void GameState::makeMoves(const std::vector<Action> & moves, const bool ignoreCanMoveCheck)
 {    
-    if (moves.size() > 0)
+    if (!ignoreCanMoveCheck && moves.size() > 0)
     {
         const size_t canMove(whoCanMove());
         const size_t playerToMove(moves[0].player());

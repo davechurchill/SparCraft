@@ -21,6 +21,7 @@ endif()
 
 option(SPARCRAFT_BUILD_BWAPIDATA "Build bundled BWAPIData static library" ON)
 option(SPARCRAFT_BUILD_APP "Build the SparCraft executable" ON)
+option(SPARCRAFT_BUILD_TESTS "Build the SparCraft test executable" ON)
 
 set(SPARCRAFT_SRC_DIR "${CMAKE_SOURCE_DIR}/src")
 set(SPARCRAFT_BWAPIDATA_INCLUDE_DIR "${CMAKE_SOURCE_DIR}/src/bwapidata/include")
@@ -53,6 +54,26 @@ else()
 endif()
 
 target_link_libraries(SparCraftCore PUBLIC BWAPIData)
+
+if(SPARCRAFT_BUILD_TESTS)
+  add_executable(SparCraftTests
+    "${SPARCRAFT_SRC_DIR}/test/main_test.cpp"
+    "${SPARCRAFT_SRC_DIR}/test/catch2/catch_amalgamated.cpp"
+  )
+
+  target_include_directories(SparCraftTests
+    PRIVATE
+      "${SPARCRAFT_SRC_DIR}"
+      "${SPARCRAFT_SRC_DIR}/test/catch2"
+  )
+
+  target_compile_definitions(SparCraftTests PRIVATE NOMINMAX)
+  target_link_libraries(SparCraftTests PRIVATE SparCraftCore)
+
+  if(MSVC)
+    target_compile_options(SparCraftTests PRIVATE /EHsc)
+  endif()
+endif()
 
 if(SPARCRAFT_BUILD_APP)
   find_package(SFML 3 COMPONENTS System Window Graphics Audio REQUIRED)
