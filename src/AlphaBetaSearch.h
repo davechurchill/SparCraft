@@ -1,12 +1,12 @@
 #pragma once
 
 #include <limits>
+#include <vector>
 
 #include "AllPlayers.h"
 #include "Timer.hpp"
 #include "GameState.h"
 #include "Action.h"
-#include "Array.hpp"
 #include "MoveArray.hpp"
 #include "TranspositionTable.h"
 #include "Player.h"
@@ -31,17 +31,16 @@ class AlphaBetaSearch
 
 	size_t                                  m_currentRootDepth;
 
-	Array<MoveArray, 
-          Constants::Max_Search_Depth + 1>      m_allMoves;
+    std::vector<MoveArray>                  m_allMoves;
 
-	Array2D<std::vector<Action>, 
-			Constants::Max_Search_Depth + 1, 
-			Constants::Max_Ordered_Moves>   m_orderedMoves;
+    std::vector<std::vector<std::vector<Action>>> m_orderedMoves;
 
     std::vector<PlayerPtr>					m_allScripts[Constants::Num_Players];
     PlayerPtr                               m_playerModels[Constants::Num_Players];
 
 	TTPtr                                   _TT;
+
+    void ensureDepthStorage(const size_t depth);
 
 public:
 

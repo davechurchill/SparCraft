@@ -199,15 +199,17 @@ const AlphaBetaMove & AlphaBetaSearch::getAlphaBetaMove(const TTLookupValue & TT
 
 void AlphaBetaSearch::generateOrderedMoves(GameState & state, MoveArray & moves, const TTLookupValue & TTval, const size_t playerToMove, const size_t depth)
 {
+    ensureDepthStorage(depth);
+
 	// get the array where we will store the moves and clear it
-	Array<std::vector<Action>, Constants::Max_Ordered_Moves> & orderedMoves(m_orderedMoves[depth]);
+	std::vector<std::vector<Action>> & orderedMoves(m_orderedMoves[depth]);
 	orderedMoves.clear();
 
 	// if we are using opponent modeling, get the move and then return, we don't want to put any more moves in
 	if (m_params.playerModel(playerToMove) != PlayerModels::None)
 	{
         // put the vector into the ordered moves array
-        orderedMoves.add(std::vector<Action>());
+        orderedMoves.emplace_back();
 
         // generate the moves into that vector
         m_playerModels[playerToMove]->getMoves(state, moves, orderedMoves[0]);
@@ -220,9 +222,14 @@ void AlphaBetaSearch::generateOrderedMoves(GameState & state, MoveArray & moves,
     {
         for (size_t s(0); s<m_params.getOrderedMoveScripts().size(); s++)
 	    {
+            if (orderedMoves.size() >= Constants::Max_Ordered_Moves)
+            {
+                break;
+            }
+
             std::vector<Action> moveVec;
 		    m_allScripts[playerToMove][s]->getMoves(state, moves, moveVec);
-		    orderedMoves.add(moveVec);
+		    orderedMoves.push_back(moveVec);
 	    }
 
     }
@@ -247,7 +254,7 @@ bool AlphaBetaSearch::getNextMoveVec(size_t playerToMove, MoveArray & moves, con
 
     }
 
-	const Array<std::vector<Action>, Constants::Max_Ordered_Moves> & orderedMoves(m_orderedMoves[depth]);
+	const std::vector<std::vector<Action>> & orderedMoves(m_orderedMoves[depth]);
     moveVec.clear();
    
 	// if this move should be from the ordered list, return it from the list
@@ -361,6 +368,7 @@ AlphaBetaValue AlphaBetaSearch::alphaBeta(GameState & state, size_t depth, const
 	bool bestMoveSet(false);
 
 	// move generation
+    ensureDepthStorage(depth);
 	MoveArray & moves = m_allMoves[depth];
 	state.generateMoves(moves, playerToMove);
     moves.shuffleMoveActions();
@@ -466,6 +474,19 @@ const size_t AlphaBetaSearch::getEnemy(const size_t player) const
 const bool AlphaBetaSearch::isRoot(const size_t depth) const
 {
 	return depth == m_currentRootDepth;
+}
+
+void AlphaBetaSearch::ensureDepthStorage(const size_t depth)
+{
+    if (depth >= m_allMoves.size())
+    {
+        m_allMoves.resize(depth + 1);
+    }
+
+    if (depth >= m_orderedMoves.size())
+    {
+        m_orderedMoves.resize(depth + 1);
+    }
 }
 
 
