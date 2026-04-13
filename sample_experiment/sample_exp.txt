@@ -143,10 +143,11 @@ ResultsFile PATH_TO\sample_exp true
 #  Format
 #  Display BOOL ImageDir
 #
-#  This directory is included with SparCraft in folder SparCraft\starcraft_images\
+#  This directory is included with SparCraft in folder SparCraft\bin\starcraft_images\
 #  Be sure to use forward slash "\" and include the final "\" character
 #  No spaces allowed!
 #
 ##################################################
 
-Display true PATH_TO\starcraft_images\
+Display true PATH_TO\bin\starcraft_images\
+

@@ -275,7 +275,7 @@ void GUI::drawUnitType(const BWAPI::UnitType & type, const Position & p)
 
 void GUI::loadTextures()
 {
-    std::string imageDir = "../asset/images/";
+    std::string imageDir = "asset/images/";
 
     // set up the vectors that will hold the textures
     _textures = std::vector<GLuint>(MaxStarCraftTextures, 0);
@@ -420,3 +420,4 @@ const Game & GUI::getGame() const
 {
     return _guiGame.getGame();
 }
+

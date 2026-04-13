@@ -9,7 +9,7 @@
 // you shouldn't run this, I used it for my paper
 void generateExperimentFile(int searchTimer, int maxChildren, int numStates, int numUnits, bool sep)
 {
-    std::string display("Display true C:\\Users\\Dave\\Desktop\\sc2010\\StarCraft_Bot\\Visual_Studio_Projects\\SparCraft\\starcraft_images\\");
+    std::string display("Display true C:\\Users\\Dave\\Desktop\\sc2010\\StarCraft_Bot\\Visual_Studio_Projects\\SparCraft\\bin\\starcraft_images\\");
         
     std::string stat = (sep ? "sep" : "sym");
     std::stringstream folder; folder << "exp\\exp_" << numUnits << "_" << stat;
