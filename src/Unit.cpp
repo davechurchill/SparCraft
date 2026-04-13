@@ -1,4 +1,5 @@
 #include "Unit.h"
+#include <algorithm>
 
 using namespace SparCraft;
 

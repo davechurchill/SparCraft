@@ -17,7 +17,7 @@
 
 #pragma once
 
-#ifdef WIN32   // Windows system specific
+#if defined(_WIN32) || defined(WIN32)   // Windows system specific
 	#include <windows.h>
 #else          // Unix based system specific
 	#include <sys/time.h>
@@ -32,7 +32,7 @@ class Timer
  	double startTimeInMicroSec;                 // starting time in micro-second
     double endTimeInMicroSec;                   // ending time in micro-second
     int    stopped;                             // stop flag 
-	#ifdef WIN32
+	#if defined(_WIN32) || defined(WIN32)
 		LARGE_INTEGER frequency;                    // ticks per second
 		LARGE_INTEGER startCount;                   //
 		LARGE_INTEGER endCount;                     //

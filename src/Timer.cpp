@@ -4,7 +4,7 @@ using namespace SparCraft;
 
 Timer::Timer()
 {
-	#ifdef WIN32
+	#if defined(_WIN32) || defined(WIN32)
 		QueryPerformanceFrequency(&frequency);
 		startCount.QuadPart = 0;
 		endCount.QuadPart = 0;
@@ -26,7 +26,7 @@ void Timer::start()
 {
 	stopped = 0; // reset stop flag
 		
-	#ifdef WIN32
+	#if defined(_WIN32) || defined(WIN32)
 		QueryPerformanceCounter(&startCount);
 	#else
 		gettimeofday(&startCount, NULL);
@@ -37,7 +37,7 @@ void Timer::stop()
 {
 	stopped = 1; // set timer stopped flag
 
-	#ifdef WIN32
+	#if defined(_WIN32) || defined(WIN32)
 		QueryPerformanceCounter(&endCount);
 	#else
 		gettimeofday(&endCount, NULL);
@@ -46,7 +46,7 @@ void Timer::stop()
 	
 double Timer::getElapsedTimeInMicroSec()
 {
-	#ifdef WIN32
+	#if defined(_WIN32) || defined(WIN32)
 		if(!stopped)
 			QueryPerformanceCounter(&endCount);
 

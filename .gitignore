@@ -6,6 +6,7 @@ bin/*.pdb
 bin/*.map
 bin/*.dll
 bin/*.exe
-source/*.o
-source/**/*.o
-source/**/*.d
+src/*.o
+src/**/*.o
+src/**/*.d
+/build

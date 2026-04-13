@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <Filter Include="gui">
@@ -12,79 +12,79 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\source\gui\GUI.cpp">
+    <ClCompile Include="..\src\gui\GUI.cpp">
       <Filter>gui</Filter>
     </ClCompile>
-    <ClCompile Include="..\source\gui\GUIGame.cpp">
+    <ClCompile Include="..\src\gui\GUIGame.cpp">
       <Filter>gui</Filter>
     </ClCompile>
-    <ClCompile Include="..\source\imgui\imgui-SFML.cpp">
+    <ClCompile Include="..\src\imgui\imgui-SFML.cpp">
       <Filter>imgui</Filter>
     </ClCompile>
-    <ClCompile Include="..\source\imgui\imgui.cpp">
+    <ClCompile Include="..\src\imgui\imgui.cpp">
       <Filter>imgui</Filter>
     </ClCompile>
-    <ClCompile Include="..\source\imgui\imgui_demo.cpp">
+    <ClCompile Include="..\src\imgui\imgui_demo.cpp">
       <Filter>imgui</Filter>
     </ClCompile>
-    <ClCompile Include="..\source\imgui\imgui_draw.cpp">
+    <ClCompile Include="..\src\imgui\imgui_draw.cpp">
       <Filter>imgui</Filter>
     </ClCompile>
-    <ClCompile Include="..\source\imgui\imgui_stdlib.cpp">
+    <ClCompile Include="..\src\imgui\imgui_stdlib.cpp">
       <Filter>imgui</Filter>
     </ClCompile>
-    <ClCompile Include="..\source\imgui\imgui_tables.cpp">
+    <ClCompile Include="..\src\imgui\imgui_tables.cpp">
       <Filter>imgui</Filter>
     </ClCompile>
-    <ClCompile Include="..\source\imgui\imgui_widgets.cpp">
+    <ClCompile Include="..\src\imgui\imgui_widgets.cpp">
       <Filter>imgui</Filter>
     </ClCompile>
-    <ClCompile Include="..\source\main\main.cpp">
+    <ClCompile Include="..\src\main\main.cpp">
       <Filter>main</Filter>
     </ClCompile>
-    <ClCompile Include="..\source\main\SearchExperiment.cpp">
+    <ClCompile Include="..\src\main\SearchExperiment.cpp">
       <Filter>main</Filter>
     </ClCompile>
-    <ClCompile Include="..\source\TutorialCode.cpp" />
+    <ClCompile Include="..\src\TutorialCode.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\source\gui\GUI.h">
+    <ClInclude Include="..\src\gui\GUI.h">
       <Filter>gui</Filter>
     </ClInclude>
-    <ClInclude Include="..\source\gui\GUIGame.h">
+    <ClInclude Include="..\src\gui\GUIGame.h">
       <Filter>gui</Filter>
     </ClInclude>
-    <ClInclude Include="..\source\main\SearchExperiment.h">
+    <ClInclude Include="..\src\main\SearchExperiment.h">
       <Filter>main</Filter>
     </ClInclude>
-    <ClInclude Include="..\source\imgui\imconfig-SFML.h">
+    <ClInclude Include="..\src\imgui\imconfig-SFML.h">
       <Filter>imgui</Filter>
     </ClInclude>
-    <ClInclude Include="..\source\imgui\imconfig.h">
+    <ClInclude Include="..\src\imgui\imconfig.h">
       <Filter>imgui</Filter>
     </ClInclude>
-    <ClInclude Include="..\source\imgui\imgui-SFML.h">
+    <ClInclude Include="..\src\imgui\imgui-SFML.h">
       <Filter>imgui</Filter>
     </ClInclude>
-    <ClInclude Include="..\source\imgui\imgui-SFML_export.h">
+    <ClInclude Include="..\src\imgui\imgui-SFML_export.h">
       <Filter>imgui</Filter>
     </ClInclude>
-    <ClInclude Include="..\source\imgui\imgui.h">
+    <ClInclude Include="..\src\imgui\imgui.h">
       <Filter>imgui</Filter>
     </ClInclude>
-    <ClInclude Include="..\source\imgui\imgui_internal.h">
+    <ClInclude Include="..\src\imgui\imgui_internal.h">
       <Filter>imgui</Filter>
     </ClInclude>
-    <ClInclude Include="..\source\imgui\imgui_stdlib.h">
+    <ClInclude Include="..\src\imgui\imgui_stdlib.h">
       <Filter>imgui</Filter>
     </ClInclude>
-    <ClInclude Include="..\source\imgui\imstb_rectpack.h">
+    <ClInclude Include="..\src\imgui\imstb_rectpack.h">
       <Filter>imgui</Filter>
     </ClInclude>
-    <ClInclude Include="..\source\imgui\imstb_textedit.h">
+    <ClInclude Include="..\src\imgui\imstb_textedit.h">
       <Filter>imgui</Filter>
     </ClInclude>
-    <ClInclude Include="..\source\imgui\imstb_truetype.h">
+    <ClInclude Include="..\src\imgui\imstb_truetype.h">
       <Filter>imgui</Filter>
     </ClInclude>
   </ItemGroup>

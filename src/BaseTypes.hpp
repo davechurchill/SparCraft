@@ -11,6 +11,7 @@ namespace SparCraft
     typedef 	int					TimeType;
     typedef		short				HealthType;
     typedef		int					ScoreType;
+    typedef     size_t              IDType;
     typedef		unsigned int		HashType;
     typedef     int                 UCTValue;
 

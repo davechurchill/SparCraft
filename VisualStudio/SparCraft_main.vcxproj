@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -80,7 +80,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>../source/imgui;../bin/bwapidata/include;$(BWAPI_DIR)/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../src/imgui;../src/bwapidata/include;$(BWAPI_DIR)/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;NOMINMAX;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>false</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -94,7 +94,7 @@
       <DisableSpecificWarnings>4275</DisableSpecificWarnings>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>$(Configuration)/SparCraft/SparCraft_d.lib;../bin/bwapidata/lib/BWAPId.lib;$(BWAPI_DIR)/lib/BWAPId.lib;sfml-audio-d.lib;sfml-graphics-d.lib;sfml-system-d.lib;sfml-window-d.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>$(Configuration)/SparCraft/SparCraft_d.lib;../src/bwapidata/lib/BWAPId.lib;$(BWAPI_DIR)/lib/BWAPId.lib;sfml-audio-d.lib;sfml-graphics-d.lib;sfml-system-d.lib;sfml-window-d.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(SFML_DIR)\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Console</SubSystem>
@@ -106,7 +106,7 @@
     <ClCompile>
       <Optimization>Full</Optimization>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <AdditionalIncludeDirectories>../source/imgui;../bin/bwapidata/include;$(BWAPI_DIR)\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../src/imgui;../src/bwapidata/include;$(BWAPI_DIR)\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;NOMINMAX;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <FunctionLevelLinking>true</FunctionLevelLinking>
@@ -123,7 +123,7 @@
       <DisableSpecificWarnings>4275</DisableSpecificWarnings>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>$(Configuration)/SparCraft/SparCraft.lib;../bin/bwapidata/lib/BWAPI.lib;$(BWAPI_DIR)/lib/BWAPI.lib;sfml-audio.lib;sfml-graphics.lib;sfml-system.lib;sfml-window.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>$(Configuration)/SparCraft/SparCraft.lib;../src/bwapidata/lib/BWAPI.lib;$(BWAPI_DIR)/lib/BWAPI.lib;sfml-audio.lib;sfml-graphics.lib;sfml-system.lib;sfml-window.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(SFML_DIR)\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Console</SubSystem>
@@ -135,38 +135,39 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="..\source\gui\GUI.h" />
-    <ClInclude Include="..\source\gui\GUIGame.h" />
-    <ClInclude Include="..\source\imgui\imconfig-SFML.h" />
-    <ClInclude Include="..\source\imgui\imconfig.h" />
-    <ClInclude Include="..\source\imgui\imgui-SFML.h" />
-    <ClInclude Include="..\source\imgui\imgui-SFML_export.h" />
-    <ClInclude Include="..\source\imgui\imgui.h" />
-    <ClInclude Include="..\source\imgui\imgui_internal.h" />
-    <ClInclude Include="..\source\imgui\imgui_stdlib.h" />
-    <ClInclude Include="..\source\imgui\imstb_rectpack.h" />
-    <ClInclude Include="..\source\imgui\imstb_textedit.h" />
-    <ClInclude Include="..\source\imgui\imstb_truetype.h" />
-    <ClInclude Include="..\source\main\SearchExperiment.h" />
+    <ClInclude Include="..\src\gui\GUI.h" />
+    <ClInclude Include="..\src\gui\GUIGame.h" />
+    <ClInclude Include="..\src\imgui\imconfig-SFML.h" />
+    <ClInclude Include="..\src\imgui\imconfig.h" />
+    <ClInclude Include="..\src\imgui\imgui-SFML.h" />
+    <ClInclude Include="..\src\imgui\imgui-SFML_export.h" />
+    <ClInclude Include="..\src\imgui\imgui.h" />
+    <ClInclude Include="..\src\imgui\imgui_internal.h" />
+    <ClInclude Include="..\src\imgui\imgui_stdlib.h" />
+    <ClInclude Include="..\src\imgui\imstb_rectpack.h" />
+    <ClInclude Include="..\src\imgui\imstb_textedit.h" />
+    <ClInclude Include="..\src\imgui\imstb_truetype.h" />
+    <ClInclude Include="..\src\main\SearchExperiment.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\source\gui\GUI.cpp" />
-    <ClCompile Include="..\source\gui\GUIGame.cpp" />
-    <ClCompile Include="..\source\imgui\imgui-SFML.cpp" />
-    <ClCompile Include="..\source\imgui\imgui.cpp" />
-    <ClCompile Include="..\source\imgui\imgui_demo.cpp" />
-    <ClCompile Include="..\source\imgui\imgui_draw.cpp" />
-    <ClCompile Include="..\source\imgui\imgui_stdlib.cpp" />
-    <ClCompile Include="..\source\imgui\imgui_tables.cpp" />
-    <ClCompile Include="..\source\imgui\imgui_widgets.cpp" />
-    <ClCompile Include="..\source\main\main.cpp" />
-    <ClCompile Include="..\source\main\SearchExperiment.cpp" />
-    <ClCompile Include="..\source\TutorialCode.cpp" />
+    <ClCompile Include="..\src\gui\GUI.cpp" />
+    <ClCompile Include="..\src\gui\GUIGame.cpp" />
+    <ClCompile Include="..\src\imgui\imgui-SFML.cpp" />
+    <ClCompile Include="..\src\imgui\imgui.cpp" />
+    <ClCompile Include="..\src\imgui\imgui_demo.cpp" />
+    <ClCompile Include="..\src\imgui\imgui_draw.cpp" />
+    <ClCompile Include="..\src\imgui\imgui_stdlib.cpp" />
+    <ClCompile Include="..\src\imgui\imgui_tables.cpp" />
+    <ClCompile Include="..\src\imgui\imgui_widgets.cpp" />
+    <ClCompile Include="..\src\main\main.cpp" />
+    <ClCompile Include="..\src\main\SearchExperiment.cpp" />
+    <ClCompile Include="..\src\TutorialCode.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
 </Project>
+
 
 
 

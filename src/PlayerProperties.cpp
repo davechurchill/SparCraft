@@ -52,12 +52,12 @@ void PlayerProperties::Capture(const BWAPI::Player & player)
 {
 	for(int i(0); i<NUM_UPGRADES; ++i)
 	{
-		upgradeLevel[i] = player->getUpgradeLevel(i);
+		upgradeLevel[i] = player.getUpgradeLevel(BWAPI::UpgradeType(i));
 	}
 
 	for(int i(0); i<NUM_TECHS; ++i)
 	{
-		hasResearched[i] = player->hasResearched(i);
+		hasResearched[i] = player.hasResearched(BWAPI::TechType(i));
 	}
 }
 

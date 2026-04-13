@@ -3,6 +3,7 @@
 #include "Common.h"
 #include "Array.hpp"
 #include "Unit.h"
+#include <algorithm>
 
 namespace SparCraft
 {
@@ -52,11 +53,11 @@ public:
         resetVectors();
     }
 
-	Map(BWAPI::GameWrapper & game) 
-        : _walkTileWidth(game->mapWidth() * 4)
-		, _walkTileHeight(game->mapHeight() * 4)
-		, _buildTileWidth(game->mapWidth())
-		, _buildTileHeight(game->mapHeight())
+	Map(BWAPI::Game & game) 
+        : _walkTileWidth(static_cast<size_t>(game.mapWidth()) * 4)
+		, _walkTileHeight(static_cast<size_t>(game.mapHeight()) * 4)
+		, _buildTileWidth(static_cast<size_t>(game.mapWidth()))
+		, _buildTileHeight(static_cast<size_t>(game.mapHeight()))
 	{
 		resetVectors();
 
@@ -64,7 +65,7 @@ public:
 		{
 			for (size_t y(0); y<_walkTileHeight; ++y)
 			{
-				setMapData(x, y, game->isWalkable(x, y));
+				setMapData(x, y, game.isWalkable(static_cast<int>(x), static_cast<int>(y)));
 			}
 		}
 	}
@@ -141,13 +142,13 @@ public:
 		_mapData[walkTileX][walkTileY] = val;
 	}
 
-	void setUnitData(BWAPI::GameWrapper & game)
+	void setUnitData(BWAPI::Game & game)
 	{
 		_unitData = bvv(getBuildTileWidth(), std::vector<bool>(getBuildTileHeight(), true));
 
-		for (BWAPI::UnitInterface * unit : game->getAllUnits())
+		for (BWAPI::Unit * unit : game.getAllUnits())
 		{
-			if (!unit->getType().isBuilding())
+			if (unit && !unit->getType().isBuilding())
 			{
 				addUnit(unit);
 			}
@@ -156,50 +157,71 @@ public:
 
 	const bool canBuildHere(BWAPI::TilePosition pos)
 	{
-		return _unitData[pos.x][pos.y] && _buildingData[pos.x][pos.y];
+        const int x = pos.x();
+        const int y = pos.y();
+        if (x < 0 || y < 0 || x >= static_cast<int>(getBuildTileWidth()) || y >= static_cast<int>(getBuildTileHeight()))
+        {
+            return false;
+        }
+		return _unitData[static_cast<size_t>(x)][static_cast<size_t>(y)] && _buildingData[static_cast<size_t>(x)][static_cast<size_t>(y)];
 	}
 
-	void setBuildingData(BWAPI::GameWrapper & game)
+	void setBuildingData(BWAPI::Game & game)
 	{
 		_buildingData = bvv(getBuildTileWidth(), std::vector<bool>(getBuildTileHeight(), true));
 
-		for (BWAPI::UnitInterface * unit : game->getAllUnits())
+		for (BWAPI::Unit * unit : game.getAllUnits())
 		{
-			if (unit->getType().isBuilding())
+			if (unit && unit->getType().isBuilding())
 			{
 				addUnit(unit);
 			}
 		}
 	}
 
-	void addUnit(BWAPI::Unit & unit)
+	void addUnit(const BWAPI::Unit * unit)
 	{
+        if (!unit)
+        {
+            return;
+        }
+
+        const BWAPI::UnitType unitType = unit->getType();
+        const BWAPI::Position unitPosition = unit->getPosition();
         
-		if (unit->getType().isBuilding())
+		if (unitType.isBuilding())
 		{
-			int tx = unit->getPosition().x / TILE_SIZE;
-			int ty = unit->getPosition().y / TILE_SIZE;
-			int sx = unit->getType().tileWidth(); 
-			int sy = unit->getType().tileHeight();
-			for(int x = tx; x < tx + sx && x < (int)getBuildTileWidth(); ++x)
+			int tx = unitPosition.x() / TILE_SIZE;
+			int ty = unitPosition.y() / TILE_SIZE;
+			int sx = unitType.tileWidth(); 
+			int sy = unitType.tileHeight();
+            int startX = std::max(0, tx);
+            int endX = std::min(tx + sx, static_cast<int>(getBuildTileWidth()));
+            int startY = std::max(0, ty);
+            int endY = std::min(ty + sy, static_cast<int>(getBuildTileHeight()));
+			for(int x = startX; x < endX; ++x)
 			{
-				for(int y = ty; y < ty + sy && y < (int)getBuildTileHeight(); ++y)
+				for(int y = startY; y < endY; ++y)
 				{
-					_buildingData[x][y] = true;
+					_buildingData[x][y] = false;
 				}
 			}
 		}
 		else
 		{
-			int startX = (unit->getPosition().x - unit->getType().dimensionLeft()) / TILE_SIZE;
-			int endX   = (unit->getPosition().x + unit->getType().dimensionRight() + TILE_SIZE - 1) / TILE_SIZE; // Division - round up
-			int startY = (unit->getPosition().y - unit->getType().dimensionUp()) / TILE_SIZE;
-			int endY   = (unit->getPosition().y + unit->getType().dimensionDown() + TILE_SIZE - 1) / TILE_SIZE;
-			for (int x = startX; x < endX && x < (int)getBuildTileWidth(); ++x)
+			int startX = (unitPosition.x() - unitType.dimensionLeft()) / TILE_SIZE;
+			int endX   = (unitPosition.x() + unitType.dimensionRight() + TILE_SIZE - 1) / TILE_SIZE; // Division - round up
+			int startY = (unitPosition.y() - unitType.dimensionUp()) / TILE_SIZE;
+			int endY   = (unitPosition.y() + unitType.dimensionDown() + TILE_SIZE - 1) / TILE_SIZE;
+            startX = std::max(0, startX);
+            endX = std::min(endX, static_cast<int>(getBuildTileWidth()));
+            startY = std::max(0, startY);
+            endY = std::min(endY, static_cast<int>(getBuildTileHeight()));
+			for (int x = startX; x < endX; ++x)
 			{
-				for (int y = startY; y < endY && y < (int)getBuildTileHeight(); ++y)
+				for (int y = startY; y < endY; ++y)
 				{
-					_unitData[x][y] = true;
+					_unitData[x][y] = false;
 				}
 			}
 		}
