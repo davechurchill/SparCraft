@@ -2,39 +2,50 @@
 
 #include "../SparCraft.h"
 
+#include <SFML/Graphics.hpp>
+
 namespace SparCraft
 {
 
 class GUI;
+
 class GUIGame
 {
-	GUI &           _gui;
-    Game            _game;
-    double          _previousDrawGameTimer;
-    double          _previousTurnTimer;
-    GameState       _initialState;
+    GUI & _gui;
+    Game _game;
+
+    double _previousDrawGameTimer;
+    double _previousTurnTimer;
+
+    GameState _initialState;
 
     std::vector<std::vector<std::string> > _params[2];
     std::vector<std::vector<std::string> > _results[2];
-    std::vector<std::vector<std::string> > _exp;
 
-    void drawGame();
-    void drawInfo();
-    void drawHPBars();
-    void drawUnit(const Unit & unit);
-    void drawParameters(int x, int y);
-    void drawSearchResults(int x, int y);
+    bool _paused;
+    bool _stepOneTurn;
+    bool _renderWorld;
+    bool _renderHPBars;
 
-    void setResults(const IDType & player, const std::vector<std::vector<std::string> > & r);
-    void setParams(const IDType & player, const std::vector<std::vector<std::string> > & p);
+    void drawGame(sf::RenderTarget & target);
+    void drawHPBars(sf::RenderTarget & target);
+    void drawUnit(const Unit & unit, sf::RenderTarget & target);
+
+    void drawControlsWindow();
+    void drawPlayerDataWindow();
+    void drawUnitsWindow();
+
+    void setResults(const size_t & player, const std::vector<std::vector<std::string> > & r);
+    void setParams(const size_t & player, const std::vector<std::vector<std::string> > & p);
 
 public:
 
-    GUIGame(GUI & gui);
+    explicit GUIGame(GUI & gui);
 
     const Game & getGame() const;
     void setGame(const Game & g);
-    void onFrame();
+
+    void onFrame(sf::RenderTarget & target);
 };
 
 }

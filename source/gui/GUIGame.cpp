@@ -1,251 +1,343 @@
 #include "GUIGame.h"
-#include "GUITools.h"
+
 #include "GUI.h"
+
+#include "../imgui/imgui.h"
+#include <algorithm>
 
 using namespace SparCraft;
 
-GLfloat White[4] = {1.0f, 1.0f, 1.0f, 1.0f};
-
-GLfloat PlayerColors[2][4] = {{1.0f, 0.0f, 0.0f, 1.0f}, {0.0f, 1.0f, 0.0f, 1.0f}};
-GLfloat PlayerColorsDark[2][4] = {{0.7f, 0.0f, 0.0f, 1.0f}, {0.0f, 0.7f, 0.0f, 1.0f}};
-
-GUIGame::GUIGame(GUI & gui)
-    : _game(GameState(), 0)
-    , _gui(gui)
+namespace
 {
+    const sf::Color PlayerColors[2] = {
+        sf::Color(220, 70, 70),
+        sf::Color(70, 200, 90)
+    };
 
+    const sf::Color PlayerColorsDark[2] = {
+        sf::Color(140, 40, 40),
+        sf::Color(40, 120, 60)
+    };
+
+    ImVec4 ToImVec4(const sf::Color & c)
+    {
+        return ImVec4(c.r / 255.0f, c.g / 255.0f, c.b / 255.0f, c.a / 255.0f);
+    }
+
+    void DrawNameValueTable(const char * id, const std::vector<std::vector<std::string> > & values)
+    {
+        if (values.size() != 2 || values[0].empty())
+        {
+            ImGui::TextUnformatted("No data");
+            return;
+        }
+
+        if (ImGui::BeginTable(id, 2, ImGuiTableFlags_Borders | ImGuiTableFlags_RowBg | ImGuiTableFlags_SizingStretchProp))
+        {
+            ImGui::TableSetupColumn("Name");
+            ImGui::TableSetupColumn("Value");
+            ImGui::TableHeadersRow();
+
+            const size_t rows = std::min(values[0].size(), values[1].size());
+            for (size_t i = 0; i < rows; ++i)
+            {
+                ImGui::TableNextRow();
+                ImGui::TableSetColumnIndex(0);
+                ImGui::TextUnformatted(values[0][i].c_str());
+                ImGui::TableSetColumnIndex(1);
+                ImGui::TextUnformatted(values[1][i].c_str());
+            }
+
+            ImGui::EndTable();
+        }
+    }
 }
 
-void GUIGame::onFrame()
+GUIGame::GUIGame(GUI & gui)
+    : _gui(gui)
+    , _game(GameState(), 0)
+    , _previousDrawGameTimer(0.0)
+    , _previousTurnTimer(0.0)
+    , _paused(false)
+    , _stepOneTurn(false)
+    , _renderWorld(true)
+    , _renderHPBars(true)
 {
-    drawGame();
-    drawHPBars();
+}
 
-    Timer turnTimer;
-    turnTimer.start();
-    if (!_game.gameOver())
+void GUIGame::onFrame(sf::RenderTarget & target)
+{
+    if ((!_paused || _stepOneTurn) && !_game.gameOver())
     {
+        Timer turnTimer;
+        turnTimer.start();
+
         _game.playNextTurn();
-        _previousTurnTimer =  turnTimer.getElapsedTimeInMilliSec();
 
-        for (size_t p(0); p < 2; ++p)
+        _previousTurnTimer = turnTimer.getElapsedTimeInMilliSec();
+        _stepOneTurn = false;
+
+        for (size_t p = 0; p < 2; ++p)
         {
-            Player_UCT *        uct = dynamic_cast<Player_UCT *>        (_game.getPlayer(p).get());
-            Player_AlphaBeta *  ab  = dynamic_cast<Player_AlphaBeta *>  (_game.getPlayer(p).get());
+            Player_UCT * uct = dynamic_cast<Player_UCT *>(_game.getPlayer(p).get());
+            Player_AlphaBeta * ab = dynamic_cast<Player_AlphaBeta *>(_game.getPlayer(p).get());
 
-            if (uct) 
-            { 
+            if (uct)
+            {
                 setParams(p, uct->getParams().getDescription());
                 setResults(p, uct->getResults().getDescription());
             }
 
-            if (ab) 
-            { 
-                setParams(p, ab->getParams().getDescription()); 
+            if (ab)
+            {
+                setParams(p, ab->getParams().getDescription());
                 setResults(p, ab->results().getDescription());
             }
         }
     }
 
-    drawParameters(5, 15);
-    drawSearchResults(5, 150);
-    drawInfo();
-}
+    Timer drawTimer;
+    drawTimer.start();
 
-void GUIGame::drawInfo()
-{
-    std::stringstream ss;
-    ss << "Frame Draw Time: " << _previousDrawGameTimer << "ms\n\n";
-    ss << "Turn Time: " << _previousTurnTimer << "ms";
-
-    GUITools::DrawString(Position(5, _gui.height()-20), ss.str(), White);
-}
-
-void GUIGame::drawGame()
-{
-    Timer drawGameTimer;
-    drawGameTimer.start();
-
-    const GameState & state = _game.getState();
-
-    for (size_t p(0); p < 2; ++p)
+    if (_renderWorld)
     {
-        for (size_t u(0); u < state.numUnits(p); u++)
-        {
-            drawUnit(state.getUnit(p, u));
-        }
+        drawGame(target);
     }
 
-    _previousDrawGameTimer = drawGameTimer.getElapsedTimeInMilliSec();
+    if (_renderHPBars)
+    {
+        drawHPBars(target);
+    }
+
+    _previousDrawGameTimer = drawTimer.getElapsedTimeInMilliSec();
+
+    drawControlsWindow();
+    drawPlayerDataWindow();
+    drawUnitsWindow();
 }
 
-void GUIGame::drawHPBars()
+void GUIGame::drawGame(sf::RenderTarget & target)
 {
     const GameState & state = _game.getState();
 
-    for (IDType p(0); p<Constants::Num_Players; ++p)
+    for (size_t p = 0; p < 2; ++p)
     {
-        for (IDType u(0); u<_initialState.numUnits(p); ++u)
+        for (size_t u = 0; u < state.numUnits(p); ++u)
         {
-            int barHeight = 12;
-
-            const Unit &			unit(state.getUnitDirect(p,u));
-
-            const Position			pos(1000+170*p,40+barHeight*u);
-            const BWAPI::UnitType	type(unit.type());
-
-            const int				x0(pos.x());
-            const int				x1(pos.x() + 150);
-            const int				y0(pos.y());
-            const int				y1(pos.y() + 15);
-
-            // draw the unit HP box
-            double	percHP = (double)unit.currentHP() / (double)unit.maxHP();
-            int		w = 150;
-            int		h = barHeight;
-            int		cw = (int)(w * percHP);
-            int		xx = pos.x() - w/2;
-            int		yy = pos.y() - h - (y1-y0)/2;
-
-            if (unit.isAlive())
-            {
-                GUITools::DrawRectGradient(Position(xx,yy),Position(xx+cw,yy+h),PlayerColors[p], PlayerColorsDark[p]);
-            }
-
-            //if (unit.ID() < 255)
-            //{
-            //	glEnable( GL_TEXTURE_2D );
-            //		glBindTexture( GL_TEXTURE_2D, unit.type().getID() );
-
-            //		// draw the unit to the screen
-            //		glColor4f(1, 1, 1, 1);
-            //		glBegin( GL_QUADS );
-            //			glTexCoord3d(0.0,0.0,.5); glVertex2i(xx, yy);
-            //			glTexCoord3d(0.0,1.0,.5); glVertex2i(xx, yy+h);
-            //			glTexCoord3d(1.0,1.0,.5); glVertex2i(xx+h,yy+h);
-            //			glTexCoord3d(1.0,0.0,.5); glVertex2i(xx+h, yy);
-            //		glEnd();
-            //	glDisable( GL_TEXTURE_2D );
-            //}
+            drawUnit(state.getUnit(p, u), target);
         }
     }
 }
 
-void GUIGame::drawParameters(int x, int y)
-{
-    int size = 11;
-    int spacing = 3;
-    int colwidth = 175;
-    int playerspacing = 350;
-
-    for (size_t pp(0); pp < 2; ++pp)
-    {
-        GUITools::DrawString(Position(x+pp*playerspacing, y), "Player 1 Settings", PlayerColors[pp]);
-
-        for (size_t p(0); _params[pp].size() > 0 && p<_params[pp][0].size(); ++p)
-        {
-            GUITools::DrawString(Position(x+pp*playerspacing, y+((p+1)*(size+spacing))), _params[pp][0][p], White);
-            GUITools::DrawString(Position(x+pp*playerspacing+colwidth, y+((p+1)*(size+spacing))), _params[pp][1][p], White);
-        }
-    }
-
-    //// Player 1 Settings
-    //if (_params[0].size() > 0)
-    //{
-    //    GUITools::DrawString(Position(x, y), "Player 1 Settings", PlayerColors[0]);
-
-    //    for (size_t p(0); _params[0].size() > 0 && p<_params[0][0].size(); ++p)
-    //    {
-    //        GUITools::DrawString(Position(x, y+((p+1)*(size+spacing))), _params[0][0][p], White);
-    //        GUITools::DrawString(Position(x+colwidth, y+((p+1)*(size+spacing))), _params[0][1][p], White);
-    //    }
-    //}
-
-    //if (_params[1].size() > 0)
-    //{
-    //    // Player 2 Settings
-    //    x += playerspacing;
-    //    glColor3f(0.0, 1.0, 0.0);
-    //    DrawText(x, y , size, "Player 2 Settings");
-    //    glColor3f(1.0, 1.0, 1.0);
-
-    //    for (size_t p(0); params[1].size() > 0 && p<params[1][0].size(); ++p)
-    //    {
-    //        DrawText(x, y+((p+1)*(size+spacing)), size, params[1][0][p]);
-    //        DrawText(x+colwidth, y+((p+1)*(size+spacing)), size, params[1][1][p]);
-    //    }
-    //}
-}
-
-void GUIGame::drawSearchResults(int x, int y)
-{
-	int size = 11;
-    int spacing = 3;
-    int colwidth = 175;
-    int playerspacing = 350;
-
-    for (size_t pp(0); pp < 2; ++pp)
-    {
-        GUITools::DrawString(Position(x+pp*playerspacing, y), "Player 1 Search Results", PlayerColors[pp]);
-
-        for (size_t p(0); _results[pp].size() > 0 && p<_results[pp][0].size(); ++p)
-        {
-            GUITools::DrawString(Position(x+pp*playerspacing, y+((p+1)*(size+spacing))), _results[pp][0][p], White);
-            GUITools::DrawString(Position(x+pp*playerspacing+colwidth, y+((p+1)*(size+spacing))), _results[pp][1][p], White);
-        }
-    }
-}
-
-void GUIGame::drawUnit(const Unit & unit)
+void GUIGame::drawUnit(const Unit & unit, sf::RenderTarget & target)
 {
     if (!unit.isAlive())
     {
         return;
     }
-    
-    const int healthBoxHeight = 4;
 
     const GameState & state = _game.getState();
     const BWAPI::UnitType & type = unit.type();
     const Position pos(unit.currentPosition(state.getTime()));
 
-    _gui.drawUnitType(unit.type(), pos);
+    _gui.drawUnitType(type, pos, target);
 
-    const int x0(pos.x() - type.dimensionUp());
-	const int x1(pos.x() + type.dimensionDown());
-	const int y0(pos.y() - type.dimensionUp());
-	const int y1(pos.y() + type.dimensionDown());
+    const int x0 = pos.x() - type.dimensionUp();
+    const int x1 = pos.x() + type.dimensionDown();
+    const int y0 = pos.y() - type.dimensionUp();
+    const int y1 = pos.y() + type.dimensionDown();
 
-    double	percHP = (double)unit.currentHP() / (double)unit.maxHP();
-	int		cw = (int)((x1-x0) * percHP);
-	int		xx = pos.x() - (x1-x0)/2;
-	int		yy = pos.y() - healthBoxHeight - (y1-y0)/2 - 5;
+    const float healthRatio = unit.maxHP() > 0 ? static_cast<float>(unit.currentHP()) / static_cast<float>(unit.maxHP()) : 0.0f;
+    const float barWidth = static_cast<float>(x1 - x0);
+    const float xx = static_cast<float>(pos.x() - (x1 - x0) / 2);
+    const float yy = static_cast<float>(pos.y() - 5 - (y1 - y0) / 2);
 
-    GUITools::DrawRect(Position(xx, yy), Position(xx+cw, yy+healthBoxHeight), PlayerColors[unit.player()]);
+    sf::RectangleShape hpBack(sf::Vector2f(barWidth, 4.0f));
+    hpBack.setPosition(sf::Vector2f(xx, yy));
+    hpBack.setFillColor(sf::Color(30, 30, 30, 220));
+    target.draw(hpBack);
+
+    sf::RectangleShape hpFill(sf::Vector2f(barWidth * healthRatio, 4.0f));
+    hpFill.setPosition(sf::Vector2f(xx, yy));
+    hpFill.setFillColor(PlayerColors[unit.player()]);
+    target.draw(hpFill);
 
     const Action & action = unit.previousAction();
-            
-	if (action.type() == ActionTypes::MOVE)
-	{
-		glColor4f(1, 1, 1, 0.75);
-		glBegin(GL_LINES);
-			glVertex2i(pos.x(), pos.y());
-			glVertex2i(unit.pos().x(), unit.pos().y());
-		glEnd( );
-	}
-	else if (action.type() == ActionTypes::ATTACK)
-	{
-		const Unit &	target(state.getUnit(state.getEnemy(unit.player()), action.index()));
-		const Position	targetPos(target.currentPosition(state.getTime()));
 
-        GUITools::DrawLine(pos, targetPos, 1, PlayerColors[unit.player()]);
-	}
+    if (action.type() == ActionTypes::MOVE)
+    {
+        _gui.drawLine(pos, unit.pos(), 1.0f, PlayerColors[unit.player()], target);
+    }
+    else if (action.type() == ActionTypes::ATTACK)
+    {
+        const size_t enemyPlayer = state.getEnemy(unit.player());
+        if (action.index() < state.numUnits(enemyPlayer))
+        {
+            const Unit & targetUnit = state.getUnit(enemyPlayer, action.index());
+            const Position targetPos(targetUnit.currentPosition(state.getTime()));
+            _gui.drawLine(pos, targetPos, 1.0f, PlayerColors[unit.player()], target);
+        }
+    }
+}
+
+void GUIGame::drawHPBars(sf::RenderTarget & target)
+{
+    const GameState & state = _game.getState();
+
+    for (size_t p = 0; p < Constants::Num_Players; ++p)
+    {
+        for (size_t u = 0; u < _initialState.numUnits(p); ++u)
+        {
+            const Unit & unit = state.getUnitDirect(p, u);
+
+            const float hpPercent = unit.maxHP() > 0 ? static_cast<float>(unit.currentHP()) / static_cast<float>(unit.maxHP()) : 0.0f;
+            const float w = 150.0f;
+            const float h = 10.0f;
+            const float cw = w * hpPercent;
+            const float xx = 1000.0f + (170.0f * p) - w / 2.0f;
+            const float yy = 40.0f + (h + 2.0f) * u;
+
+            sf::RectangleShape back(sf::Vector2f(w, h));
+            back.setPosition(sf::Vector2f(xx, yy));
+            back.setFillColor(sf::Color(22, 22, 22, 240));
+            target.draw(back);
+
+            if (unit.isAlive())
+            {
+                sf::RectangleShape fill(sf::Vector2f(cw, h));
+                fill.setPosition(sf::Vector2f(xx, yy));
+                fill.setFillColor(PlayerColors[p]);
+                target.draw(fill);
+            }
+        }
+    }
+}
+
+void GUIGame::drawControlsWindow()
+{
+    ImGui::Begin("SparCraft Controls");
+
+    ImGui::Checkbox("Pause Simulation", &_paused);
+    ImGui::Checkbox("Render World", &_renderWorld);
+    ImGui::Checkbox("Render HP Bars", &_renderHPBars);
+
+    if (ImGui::Button("Step One Turn"))
+    {
+        _stepOneTurn = true;
+    }
+
+    ImGui::Separator();
+    ImGui::Text("Rounds: %d", _game.getRounds());
+    ImGui::Text("Turn Time: %.2f ms", _previousTurnTimer);
+    ImGui::Text("Draw Time: %.2f ms", _previousDrawGameTimer);
+    ImGui::Text("State Eval (P1, LTD2): %d", _game.getState().eval(Players::Player_One, EvaluationMethods::LTD2).val());
+
+    if (_game.gameOver())
+    {
+        ImGui::Separator();
+        ImGui::TextColored(ImVec4(1.0f, 0.8f, 0.2f, 1.0f), "Game Over");
+    }
+
+    ImGui::End();
+}
+
+void GUIGame::drawPlayerDataWindow()
+{
+    ImGui::Begin("Search Data");
+
+    if (ImGui::BeginTabBar("PlayersTab"))
+    {
+        for (size_t p = 0; p < 2; ++p)
+        {
+            const std::string label = std::string("Player ") + std::to_string(p + 1);
+            if (ImGui::BeginTabItem(label.c_str()))
+            {
+                ImGui::TextColored(ToImVec4(PlayerColors[p]), "Settings");
+                DrawNameValueTable((std::string("settings") + std::to_string(p)).c_str(), _params[p]);
+
+                ImGui::Separator();
+                ImGui::TextColored(ToImVec4(PlayerColorsDark[p]), "Search Results");
+                DrawNameValueTable((std::string("results") + std::to_string(p)).c_str(), _results[p]);
+
+                ImGui::EndTabItem();
+            }
+        }
+
+        ImGui::EndTabBar();
+    }
+
+    ImGui::End();
+}
+
+void GUIGame::drawUnitsWindow()
+{
+    ImGui::Begin("Units");
+
+    const GameState & state = _game.getState();
+
+    for (size_t p = 0; p < 2; ++p)
+    {
+        const std::string header = std::string("Player ") + std::to_string(p + 1);
+        if (ImGui::CollapsingHeader(header.c_str(), ImGuiTreeNodeFlags_DefaultOpen))
+        {
+            const std::string tableId = std::string("units-table-") + std::to_string(p);
+            if (ImGui::BeginTable(tableId.c_str(), 6, ImGuiTableFlags_Borders | ImGuiTableFlags_RowBg | ImGuiTableFlags_SizingStretchProp))
+            {
+                ImGui::TableSetupColumn("ID");
+                ImGui::TableSetupColumn("Type");
+                ImGui::TableSetupColumn("HP");
+                ImGui::TableSetupColumn("X");
+                ImGui::TableSetupColumn("Y");
+                ImGui::TableSetupColumn("Alive");
+                ImGui::TableHeadersRow();
+
+                for (size_t u = 0; u < state.numUnits(p); ++u)
+                {
+                    const Unit & unit = state.getUnit(p, u);
+                    const Position pos(unit.currentPosition(state.getTime()));
+
+                    ImGui::TableNextRow();
+
+                    ImGui::TableSetColumnIndex(0);
+                    ImGui::Text("%d", static_cast<int>(unit.ID()));
+
+                    ImGui::TableSetColumnIndex(1);
+                    ImGui::TextUnformatted(unit.name().c_str());
+
+                    ImGui::TableSetColumnIndex(2);
+                    ImGui::Text("%d / %d", unit.currentHP(), unit.maxHP());
+
+                    ImGui::TableSetColumnIndex(3);
+                    ImGui::Text("%d", pos.x());
+
+                    ImGui::TableSetColumnIndex(4);
+                    ImGui::Text("%d", pos.y());
+
+                    ImGui::TableSetColumnIndex(5);
+                    ImGui::TextUnformatted(unit.isAlive() ? "yes" : "no");
+                }
+
+                ImGui::EndTable();
+            }
+        }
+    }
+
+    ImGui::End();
 }
 
 void GUIGame::setGame(const Game & g)
 {
     _game = g;
     _initialState = g.getState();
+
+    _paused = false;
+    _stepOneTurn = false;
+
+    for (size_t p = 0; p < 2; ++p)
+    {
+        _params[p].clear();
+        _results[p].clear();
+    }
 }
 
 const Game & GUIGame::getGame() const
@@ -253,12 +345,12 @@ const Game & GUIGame::getGame() const
     return _game;
 }
 
-void GUIGame::setResults(const IDType & player, const std::vector<std::vector<std::string> > & r)
+void GUIGame::setResults(const size_t & player, const std::vector<std::vector<std::string> > & r)
 {
-	_results[player] = r;
+    _results[player] = r;
 }
 
-void GUIGame::setParams(const IDType & player, const std::vector<std::vector<std::string> > & p)
+void GUIGame::setParams(const size_t & player, const std::vector<std::vector<std::string> > & p)
 {
-	_params[player] = p;
+    _params[player] = p;
 }

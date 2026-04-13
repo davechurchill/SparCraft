@@ -2,8 +2,7 @@ Compilation Instructions:
 
 1. Install the required libraries
 
-libsdl2-dev
-libsdl2-image-dev
+libsfml-dev
 
 2. Clone the BWAPI github repository somewhere on your system
 

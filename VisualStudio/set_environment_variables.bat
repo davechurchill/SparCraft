@@ -7,8 +7,6 @@ pause
 setx BWAPI_DIR %~dp0..\bin\bwapidata
 setx BOOST_DIR C:\libraries\boost_1_53_0
 setx EXTERNAL_LIB_DIR c:\libraries\external_lib_dir
-setx SDL_DIR C:\libraries\SDL-1.2.15
-setx SDL_IMAGE_DIR C:\libraries\SDL_image-1.2.12
-setx SDL_GFX_DIR c:\libraries\SDL_gfx-2.0.23
+setx SFML_DIR C:\libraries\SFML-3.0.1
 
 pause

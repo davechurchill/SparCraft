@@ -1,41 +1,30 @@
 #include "GUI.h"
-#include "BWAPI.h"
-#include <cassert>
-#include <iostream>
+
+#include <filesystem>
+#include <cstdlib>
 
 using namespace SparCraft;
 
-const size_t MaxStarCraftTextures                   = 512;
-const int GUI::TextureFont                 = 256;
+namespace
+{
+    const sf::Color BackgroundColor(18, 18, 22);
+}
 
-GLfloat ColorWhite[4] = {1.0f, 1.0f, 1.0f, 1.0f};
-
-GUI::GUI(int width, int height) 
+GUI::GUI(int width, int height)
     : _initialWidth(width)
     , _initialHeight(height)
-    , _cameraX(0)
-    , _cameraY(0)
-    , _previousMouseX(0)
-    , _previousMouseY(0)
     , _isStarted(false)
-    , _mousePressed(false)
-    , _shiftPressed(false)
-    , _currentFrame(0)
-    , _previousRenderTime(0)
     , _guiGame(*this)
 {
-    if (SDL_Init(SDL_INIT_VIDEO) != 0)
-    {
-        std::cout << "Could not initialize SDL\n";
-        exit(-1);
-    }
-
     onStart();
 }
 
 GUI::~GUI()
 {
-    SDL_Quit();
+    if (_isStarted)
+    {
+        ImGui::SFML::Shutdown();
+    }
 }
 
 bool GUI::isStarted() const
@@ -43,129 +32,46 @@ bool GUI::isStarted() const
     return _isStarted;
 }
 
-// This function must be called before OnFrame
 void GUI::onStart()
 {
-    // if we've already called OnStart, don't re-initialize everything
     if (_isStarted)
     {
         return;
     }
 
-    // the top-left corner of the scene will be 0, 0
-    _cameraX = 0;
-    _cameraY = 0;
+    _window.create(sf::VideoMode({ static_cast<unsigned>(_initialWidth), static_cast<unsigned>(_initialHeight) }), "SparCraft - SFML3 / ImGui");
+    _window.setFramerateLimit(60);
+    _window.setKeyRepeatEnabled(false);
 
-    // double buffer and swap attributes, makes switching scenes fast
-    SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER,1);
-    SDL_GL_SetSwapInterval(1);
+    if (!ImGui::SFML::Init(_window))
+    {
+        System::FatalError("Failed to initialize ImGui-SFML");
+    }
 
-    // set up the window that the OpenGL context will be bound to
-    _window = SDL_CreateWindow("StarCraft OpenGL Visualization", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, _initialWidth, _initialHeight, SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE);
+    ImGui::GetStyle().ScaleAllSizes(1.5f);
+    ImGui::GetIO().FontGlobalScale = 1.5f;
 
-    // set the glcontext to the window we just created
-    _glcontext = SDL_GL_CreateContext(_window);
-
-    // load all the Starcraft textures that we'll need
     loadTextures();
-
-    // enable alpha blending for transparency
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    glEnable(GL_BLEND);
-
-    // set up the viewport
-    glViewport(0, 0, width(), height());
 
     _isStarted = true;
 }
 
-void GUI::onFrame()
-{
-    SPARCRAFT_ASSERT(isStarted(), "Must initialize GUI before calling OnFrame()");
-
-    // Handle input events
-    handleEvents();
-
-    // Render the frame
-    glClear(GL_COLOR_BUFFER_BIT);
-    render();
-
-    SDL_GL_SwapWindow(_window);
-}
-
 void GUI::handleEvents()
 {
-    // Handle SDL events
-    SDL_Event event;
-    while (SDL_PollEvent(&event))
+    while (auto event = _window.pollEvent())
     {
-        const bool pressed(event.key.state == SDL_PRESSED);
-        switch (event.type)
+        ImGui::SFML::ProcessEvent(_window, *event);
+
+        if (event->is<sf::Event::Closed>())
         {
-            case SDL_MOUSEMOTION:
-            {
-                if ((_previousMouseX != 0 || _previousMouseY != 0) && (event.motion.state & SDL_BUTTON_LEFT))
-                {
-                    _cameraX -= event.motion.xrel;
-                    _cameraY -= event.motion.yrel;
-                }
+            std::exit(0);
+        }
 
-                _previousMouseX = event.motion.x;
-                _previousMouseY = event.motion.y;
-                break;
-            }
-            case SDL_KEYDOWN:
+        if (const auto * keyPressed = event->getIf<sf::Event::KeyPressed>())
+        {
+            if (keyPressed->scancode == sf::Keyboard::Scancode::Escape)
             {
-                switch (event.key.keysym.sym)
-                {
-                case SDLK_LSHIFT:
-                    _shiftPressed = pressed;
-                    break;
-                case SDLK_p:
-                {
-                    
-                }
-                }
-                break;
-            }
-            case SDL_KEYUP:
-            {
-                switch (event.key.keysym.sym)
-                {
-                case SDLK_LSHIFT:
-                    _shiftPressed = pressed;
-                    break;
-                }
-                break;
-            }
-            case SDL_MOUSEWHEEL:
-            {
-
-                break;
-            }
-            case SDL_MOUSEBUTTONDOWN:
-            {
-
-			
-                break;
-            }
-            case SDL_MOUSEBUTTONUP:
-            {
-                if (event.button.button == SDL_BUTTON_LEFT)
-                {
-
-                }
-                break;
-            }
-            case SDL_WINDOWEVENT_RESIZED:
-            {
-            
-                break;
-            }
-            case SDL_QUIT:
-            {
-                std::cerr << "SDL_QUIT caught\n\n";
-                exit(0);
+                std::exit(0);
             }
         }
     }
@@ -173,242 +79,106 @@ void GUI::handleEvents()
 
 void GUI::render()
 {
-    Timer renderTimer;
-    renderTimer.start();
-
-    glViewport(0, 0, width(), height());
-
-    glMatrixMode(GL_PROJECTION);
-    glPushMatrix();
-    {
-        glOrtho(0, width(), height(), 0, -1, 1);
-
-        glMatrixMode(GL_MODELVIEW);
-        glPushMatrix();
-        {
-            glTranslatef(static_cast<float>(-_cameraX),static_cast<float>(-_cameraY),0);
-              
-            _guiGame.onFrame();
-
-            //drawAllBWAPIUnits();
-            
-            //GUITools::DrawTexturedRect(Position(0,0), Position(200,200), TextureFont, ColorWhite);
-            //GUITools::DrawString(Position(300, 300), "Test String", ColorWhite);
-        }
-
-        glPopMatrix();
-    }
-    glMatrixMode(GL_PROJECTION);
-    glPopMatrix();
-
-    _currentFrame++;
+    _window.clear(BackgroundColor);
+    _guiGame.onFrame(_window);
+    ImGui::SFML::Render(_window);
+    _window.display();
 }
 
-int GUI::width()
+void GUI::onFrame()
 {
-    int x, y;
-    SDL_GetWindowSize(_window, &x, &y);
+    SPARCRAFT_ASSERT(isStarted(), "Must initialize GUI before calling onFrame()");
 
-    return x;
-}
-
-int GUI::height()
-{
-    int x, y;
-    SDL_GetWindowSize(_window, &x, &y);
-
-    return y;
-}
-
-void GUI::setCenter(int x, int y)
-{
-    _cameraX = -(width() - x) / 2;
-    _cameraY = -(height() - y) / 2;
-}
-
-void GUI::drawAllBWAPIUnits()
-{
-    Position p(0, 0);
-    size_t maxHeight = 0;
-
-    std::vector<int> allIDs;
-
-    for (const auto & kv : _techTypeTextureID)
-    {
-        allIDs.push_back(kv.second);
-    }
-
-    for (const auto & kv : _upgradeTypeTextureID)
-    {
-        allIDs.push_back(kv.second);
-    }
-
-    for (const auto & kv : _unitTypeTextureID)
-    {
-        allIDs.push_back(kv.second);
-    }
-
-    for (const auto & id : allIDs)
-    {
-        if (p.x() + _textureSizes[id].x() > width())
-        {
-            p = Position(0, p.y() + maxHeight);
-            maxHeight = 0;
-        }
-
-        GUITools::DrawTexturedRect(p, p + _textureSizes[id], id, ColorWhite);
-            
-        maxHeight = std::max((size_t)_textureSizes[id].y(), maxHeight);
-            
-        p = p + (Position(_textureSizes[id].x(), 0));
-    }
-}
-
-void GUI::drawUnitType(const BWAPI::UnitType & type, const Position & p)
-{
-    const int id = _unitTypeTextureID[type];
-    //GUITools::DrawString(p, type.getName(), ColorWhite);
-    Position pos = p - Position(_textureSizes[id].x()/2, _textureSizes[id].y()/2);
-
-    GUITools::DrawTexturedRect(pos, pos + _textureSizes[id], id, ColorWhite);
+    handleEvents();
+    ImGui::SFML::Update(_window, _deltaClock.restart());
+    render();
 }
 
 void GUI::loadTextures()
 {
-    std::string imageDir = "asset/images/";
+    const std::string imageDir = "asset/images/";
 
-    // set up the vectors that will hold the textures
-    _textures = std::vector<GLuint>(MaxStarCraftTextures, 0);
-    _textureSizes = std::vector<Position>(MaxStarCraftTextures);
-    glGenTextures(MaxStarCraftTextures, &_textures[0]);
-
-    // load all the starcraft unit textures
-    size_t textureNumber = 1;
     for (const BWAPI::UnitType & type : BWAPI::UnitTypes::allUnitTypes())
     {
-        if (loadTexture(textureNumber, imageDir + GetTextureFileName(type)))
+        const std::string fileName = imageDir + GetTextureFileName(type);
+
+        if (!std::filesystem::exists(fileName))
         {
-            _unitTypeTextureID[type] = textureNumber;
-            textureNumber++;
+            continue;
+        }
+
+        sf::Texture texture;
+        if (texture.loadFromFile(fileName))
+        {
+            _unitTextures.emplace(type.getID(), std::move(texture));
         }
     }
-
-    for (const BWAPI::TechType & type : BWAPI::TechTypes::allTechTypes())
-    {
-        if (loadTexture(textureNumber, imageDir + GetTextureFileName(type)))
-        {
-            _techTypeTextureID[type] = textureNumber;
-            textureNumber++;
-        }
-    }
-
-    for (const BWAPI::UpgradeType & type : BWAPI::UpgradeTypes::allUpgradeTypes())
-    {
-        if (loadTexture(textureNumber, imageDir + GetTextureFileName(type)))
-        {
-            _upgradeTypeTextureID[type] = textureNumber;
-            textureNumber++;
-        }
-    }
-    
-    loadTexture(TextureFont, imageDir + "fonts/alpha_trans.png");
-
-    std::cout << "\n\nSuccessfully loaded " << textureNumber << " textures\n\n";
-}
-
-bool GUI::loadTexture(int textureNumber, const std::string & fileName)
-{
-    struct stat buf;
-    if (stat(fileName.c_str(), &buf) == -1)
-    {
-        //std::cout << "Couldn't find texture: " << fileName << std::endl;
-        return false;
-    }
-
-    SDL_Surface *surface2 = IMG_Load(fileName.c_str());
-    GLenum texture_format = GL_RGBA;
-    GLint nOfColors = 4;
-
-    if (surface2 != NULL)
-    {
-        glBindTexture( GL_TEXTURE_2D, textureNumber );
-
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-        glTexImage2D(GL_TEXTURE_2D, 0, texture_format, surface2->w, surface2->h, 0, texture_format, GL_UNSIGNED_BYTE, surface2->pixels);
-    } 
-    else 
-    {
-        printf("SDL could not load image: %s\n", SDL_GetError());
-    }    
-
-    if (surface2) 
-    { 
-        _textureSizes[textureNumber] = Position(surface2->w, surface2->h);
-        SDL_FreeSurface( surface2 );
-    }
-
-    //std::cout << textureNumber << "Loaded: " << fileName << std::endl;
-
-    return true;
-}
-
-bool GUI::saveScreenshotBMP(const std::string & filename) 
-{
-    SDL_Surface * image = SDL_CreateRGBSurface(SDL_SWSURFACE, width(), height(), 32, 0x000000FF, 0x0000FF00, 0x00FF0000, 0);
-
-    glReadBuffer(GL_FRONT);
-    glReadPixels(0, 0, width(), height(), GL_RGBA, GL_UNSIGNED_BYTE, image->pixels);
-
-    SDL_SaveBMP(image, filename.c_str());
-    SDL_FreeSurface(image);
-
-    return true;
-}
-
-std::string GUI::GetTextureFileName(const BWAPI::TechType & type)
-{
-	std::string filename = "command_icons/" + type.getName() + ".png";
-
-	for (size_t i(0); i < filename.size(); ++i)
-	{
-		if (filename[i] == ' ')
-		{
-			filename[i] = '_';
-		}
-	}
-
-	return filename;
 }
 
 std::string GUI::GetTextureFileName(const BWAPI::UnitType & type)
 {
-	std::string filename = "units/" + type.getName() + ".png";
+    std::string filename = "units/" + type.getName() + ".png";
 
-	for (size_t i(0); i < filename.size(); ++i)
-	{
-		if (filename[i] == ' ')
-		{
-			filename[i] = '_';
-		}
-	}
+    for (char & c : filename)
+    {
+        if (c == ' ')
+        {
+            c = '_';
+        }
+    }
 
-	return filename;
+    return filename;
 }
 
-std::string GUI::GetTextureFileName(const BWAPI::UpgradeType & type)
+void GUI::drawUnitType(const BWAPI::UnitType & type, const Position & p, sf::RenderTarget & target) const
 {
-	std::string filename = "command_icons/" + type.getName() + ".png";
+    const auto texture = _unitTextures.find(type.getID());
+    if (texture != _unitTextures.end())
+    {
+        sf::Sprite sprite(texture->second);
+        const auto size = texture->second.getSize();
+        sprite.setOrigin({ static_cast<float>(size.x) * 0.5f, static_cast<float>(size.y) * 0.5f });
+        sprite.setPosition({ static_cast<float>(p.x()), static_cast<float>(p.y()) });
+        target.draw(sprite);
+        return;
+    }
 
-	for (size_t i(0); i < filename.size(); ++i)
-	{
-		if (filename[i] == ' ')
-		{
-			filename[i] = '_';
-		}
-	}
+    sf::CircleShape marker(8.0f, 12);
+    marker.setOrigin({ 8.0f, 8.0f });
+    marker.setPosition({ static_cast<float>(p.x()), static_cast<float>(p.y()) });
+    marker.setFillColor(sf::Color(60, 60, 60));
+    marker.setOutlineColor(sf::Color::White);
+    marker.setOutlineThickness(1.0f);
+    target.draw(marker);
+}
 
-	return filename;
+void GUI::drawLine(const Position & p1, const Position & p2, float thickness, const sf::Color & color, sf::RenderTarget & target) const
+{
+    (void)thickness;
+
+    sf::Vertex vertices[2] = {
+        sf::Vertex({ static_cast<float>(p1.x()), static_cast<float>(p1.y()) }, color),
+        sf::Vertex({ static_cast<float>(p2.x()), static_cast<float>(p2.y()) }, color)
+    };
+
+    target.draw(vertices, 2, sf::PrimitiveType::Lines);
+}
+
+int GUI::width() const
+{
+    return static_cast<int>(_window.getSize().x);
+}
+
+int GUI::height() const
+{
+    return static_cast<int>(_window.getSize().y);
+}
+
+void GUI::setCenter(int x, int y)
+{
+    sf::View view = _window.getView();
+    view.setCenter({ static_cast<float>(x), static_cast<float>(y) });
+    _window.setView(view);
 }
 
 void GUI::setGame(const Game & game)
@@ -421,3 +191,13 @@ const Game & GUI::getGame() const
     return _guiGame.getGame();
 }
 
+bool GUI::saveScreenshotBMP(const std::string & filename)
+{
+    (void)filename;
+    return false;
+}
+
+sf::RenderWindow & GUI::window()
+{
+    return _window;
+}
