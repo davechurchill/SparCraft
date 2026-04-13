@@ -1,2 +1,0 @@
-[TRACE] main start argc=2
-[TRACE] init: AnimationFrameData::init begin
