@@ -6,7 +6,7 @@ Player 0 NOKDPS
 Player 1 NOKDPS
 
 # Note: the engine loop starts at state index 2, so we create 3 states.
-State StateSymmetric 13 96 96 Terran_Marine 6
+State StateSymmetric 100 196 196 Terran_Marine 20
 
 ResultsFile sample_experiment/simple_gui true
 

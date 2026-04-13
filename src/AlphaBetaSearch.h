@@ -32,10 +32,10 @@ class AlphaBetaSearch
 	size_t                                  m_currentRootDepth;
 
 	Array<MoveArray, 
-          Constants::Max_Search_Depth>      m_allMoves;
+          Constants::Max_Search_Depth + 1>      m_allMoves;
 
 	Array2D<std::vector<Action>, 
-			Constants::Max_Search_Depth, 
+			Constants::Max_Search_Depth + 1, 
 			Constants::Max_Ordered_Moves>   m_orderedMoves;
 
     std::vector<PlayerPtr>					m_allScripts[Constants::Num_Players];
@@ -75,4 +75,3 @@ public:
 
 };
 }
-

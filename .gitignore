@@ -24,3 +24,5 @@ src/**/*.d
 *.ilk
 sparcraft_error_log.txt
 /.claude
+/vs/Win32
+bin/SparCraftTests.ilk

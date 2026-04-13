@@ -35,6 +35,7 @@ void AlphaBetaSearch::doSearch(GameState & initialState)
 
 	if (m_params.searchMethod() == SearchMethods::AlphaBeta)
 	{
+        m_currentRootDepth = m_params.maxDepth();
 		val = alphaBeta(initialState, m_params.maxDepth(), Players::Player_None, NULL, alpha, beta);
 		m_results.bestMoves = val.abMove().moveVec();
 		m_results.abValue   = val.score().val();
@@ -244,17 +245,6 @@ bool AlphaBetaSearch::getNextMoveVec(size_t playerToMove, MoveArray & moves, con
 		    return false;
 	    }
 
-	    // if there is a transposition table entry for this state
-	    if (TTval.found())
-	    {
-		    // if there was a valid move found with higher depth, just do that one
-		    const AlphaBetaMove & abMove = getAlphaBetaMove(TTval, playerToMove);
-		    if ((TTval.entry()->getDepth() >= depth) && abMove.isValid())
-		    {
-                // so return false
-			    return false;
-		    }
-	    }
     }
 
 	const Array<std::vector<Action>, Constants::Max_Ordered_Moves> & orderedMoves(m_orderedMoves[depth]);
