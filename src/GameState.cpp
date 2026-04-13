@@ -397,7 +397,8 @@ const Unit & GameState::getClosestOurUnit(const size_t & player, const size_t & 
 	const Unit & myUnit(getUnit(player,unitIndex));
 
 	size_t minDist(1000000);
-	size_t minUnitInd(0);
+	size_t minUnitInd(unitIndex);
+    bool foundUnit(false);
 
 	Position currentPos = myUnit.currentPosition(_currentTime);
 
@@ -415,10 +416,11 @@ const Unit & GameState::getClosestOurUnit(const size_t & player, const size_t & 
 		{
 			minDist = distSq;
 			minUnitInd = u;
+            foundUnit = true;
 		}
 	}
 
-	return getUnit(player, minUnitInd);
+	return foundUnit ? getUnit(player, minUnitInd) : myUnit;
 }
 
 const Unit & GameState::getClosestEnemyUnit(const size_t & player, const size_t & unitIndex, bool checkCloaked)
@@ -426,9 +428,15 @@ const Unit & GameState::getClosestEnemyUnit(const size_t & player, const size_t 
 	const size_t enemyPlayer(getEnemy(player));
 	const Unit & myUnit(getUnit(player,unitIndex));
 
+    if (_numUnits[enemyPlayer] == 0)
+    {
+        return myUnit;
+    }
+
 	PositionType minDist(1000000);
 	size_t minUnitInd(0);
     size_t minUnitID(std::numeric_limits<size_t>::max());
+    bool foundUnit(false);
 
 	Position currentPos = myUnit.currentPosition(_currentTime);
 
@@ -460,16 +468,18 @@ const Unit & GameState::getClosestEnemyUnit(const size_t & player, const size_t 
 			minDist = distSq;
 			minUnitInd = u;
             minUnitID = enemyUnit.ID();
+            foundUnit = true;
 		}
         else if ((distSq == minDist) && (enemyUnit.ID() < minUnitID))
         {
             minDist = distSq;
 			minUnitInd = u;
             minUnitID = enemyUnit.ID();
+            foundUnit = true;
         }
 	}
 
-	return getUnit(enemyPlayer, minUnitInd);
+	return foundUnit ? getUnit(enemyPlayer, minUnitInd) : getUnit(enemyPlayer, 0);
 }
 
 void GameState::checkFull(const size_t & player) const
@@ -494,8 +504,8 @@ void GameState::addUnit(const Unit & u)
     size_t unitID = _numUnits[Players::Player_One] + _numUnits[Players::Player_Two];
 
     // Set the unit and it's unitID
-	getUnit(u.player(), _numUnits[u.player()]) = u;
-    getUnit(u.player(), _numUnits[u.player()]).setUnitID(unitID);
+		_units[u.player()][_numUnits[u.player()]] = u;
+	    _units[u.player()][_numUnits[u.player()]].setUnitID(unitID);
 
     // Increment the number of units this player has
 	_numUnits[u.player()]++;
@@ -523,8 +533,8 @@ void GameState::addUnit(const BWAPI::UnitType type, const size_t playerID, const
     size_t unitID = _numUnits[Players::Player_One] + _numUnits[Players::Player_Two];
 
     // Set the unit and it's unitID
-	getUnit(playerID, _numUnits[playerID]) = Unit(type, playerID, pos);
-    getUnit(playerID, _numUnits[playerID]).setUnitID(unitID);
+		_units[playerID][_numUnits[playerID]] = Unit(type, playerID, pos);
+	    _units[playerID][_numUnits[playerID]].setUnitID(unitID);
 
     // Increment the number of units this player has
 	_numUnits[playerID]++;
@@ -548,7 +558,7 @@ void GameState::addUnitWithID(const Unit & u)
     System::checkSupportedUnitType(u.type());
 
     // Simply add the unit to the array
-	getUnit(u.player(), _numUnits[u.player()]) = u;
+		_units[u.player()][_numUnits[u.player()]] = u;
 
     // Increment the number of units this player has
 	_numUnits[u.player()]++;
@@ -613,12 +623,13 @@ Unit & GameState::getUnit(const size_t & player, const size_t & unitIndex)
         System::FatalError("GameState::getUnit() invalid player index: " + std::to_string(player));
     }
 
-    if (unitIndex >= _unitIndex[player].size())
+    const size_t accessibleUnits = std::max(_numUnits[player], _prevNumUnits[player]);
+    if (unitIndex >= accessibleUnits)
     {
         System::FatalError(
             "GameState::getUnit() unit index out of range. player=" + std::to_string(player) +
             " unitIndex=" + std::to_string(unitIndex) +
-            " indexSize=" + std::to_string(_unitIndex[player].size()));
+            " accessibleUnits=" + std::to_string(accessibleUnits));
     }
 
     const int storageIndex = _unitIndex[player][unitIndex];
@@ -641,12 +652,13 @@ const Unit & GameState::getUnit(const size_t & player, const size_t & unitIndex)
         System::FatalError("GameState::getUnit() const invalid player index: " + std::to_string(player));
     }
 
-    if (unitIndex >= _unitIndex[player].size())
+    const size_t accessibleUnits = std::max(_numUnits[player], _prevNumUnits[player]);
+    if (unitIndex >= accessibleUnits)
     {
         System::FatalError(
             "GameState::getUnit() const unit index out of range. player=" + std::to_string(player) +
             " unitIndex=" + std::to_string(unitIndex) +
-            " indexSize=" + std::to_string(_unitIndex[player].size()));
+            " accessibleUnits=" + std::to_string(accessibleUnits));
     }
 
     const int storageIndex = _unitIndex[player][unitIndex];
@@ -701,6 +713,7 @@ const bool GameState::playerDead(const size_t & player) const
 
 const size_t GameState::whoCanMove() const
 {
+    if (_numUnits[0] == 0 && _numUnits[1] == 0) { return Players::Player_Both; }
 	if (_numUnits[0] == 0) { return Players::Player_Two; }
 	if (_numUnits[1] == 0) { return Players::Player_One; }
 
@@ -748,6 +761,11 @@ const bool GameState::checkUniqueUnitIDs() const
 
 void GameState::updateGameTime()
 {
+    if (_numUnits[Players::Player_One] == 0 && _numUnits[Players::Player_Two] == 0)
+    {
+        return;
+    }
+
 	const size_t who(whoCanMove());
 
 	if (who == Players::Player_One)
@@ -943,7 +961,7 @@ const Unit & GameState::getUnitDirect(const size_t & player, const size_t & unit
 
 const bool GameState::bothCanMove() const
 {
-	return getUnit(0, 0).firstTimeFree() == getUnit(1, 0).firstTimeFree();
+	return whoCanMove() == Players::Player_Both;
 }
 
 void GameState::setTime(const TimeType & time)

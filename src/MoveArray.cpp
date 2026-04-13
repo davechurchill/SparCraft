@@ -71,7 +71,7 @@ void MoveArray::shuffleMoveActions()
         // shuffle the movement actions for this unit
         if (moveEnd != -1 && moveBegin != -1 && moveEnd != moveBegin)
         {
-            std::shuffle(&_moves[u][moveBegin], &_moves[u][moveEnd], rng);
+            std::shuffle(&_moves[u][moveBegin], &_moves[u][moveEnd + 1], rng);
             resetMoveIterator();
         }
     }

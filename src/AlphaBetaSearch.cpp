@@ -438,15 +438,15 @@ AlphaBetaValue AlphaBetaSearch::alphaBeta(GameState & state, size_t depth, const
 			firstMove = false;
 
 			// if this is the 2nd move of a simultaneous move state
-			if (prevSimMove)
-			{
-				// do the previous move selected by the first player to move during this state
-                child.makeMoves(*prevSimMove);
-			}
+				if (prevSimMove)
+				{
+					// do the previous move selected by the first player to move during this state
+	                child.makeMoves(*prevSimMove);
+				}
 
-			// do the moves of the current player
-            child.makeMoves(moveVec);
-			child.finishedMoving();
+				// do the moves of the current player
+	            child.makeMoves(moveVec, prevSimMove != NULL);
+				child.finishedMoving();
 
 			// get the alpha beta value
 			val = alphaBeta(child, depth-1, playerToMove, NULL, alpha, beta);

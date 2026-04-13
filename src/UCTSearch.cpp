@@ -285,18 +285,20 @@ UCTNode & UCTSearch::UCTNodeSelect(UCTNode & parent)
 
 void UCTSearch::updateState(UCTNode & node, GameState & state, bool isLeaf)
 {
+    const bool secondSimNode = (node.getNodeType() == SearchNodeType::SecondSimNode);
+
     // if it's the first sim move with children, or the root node
     if ((node.getNodeType() != SearchNodeType::FirstSimNode) || isLeaf)
     {
         // if this is a second sim node
-        if (node.getNodeType() == SearchNodeType::SecondSimNode)
+        if (secondSimNode)
         {
             // make the parent's moves on the state because they haven't been done yet
             state.makeMoves(node.getParent()->getMove());
         }
 
         // do the current node moves and call finished moving
-        state.makeMoves(node.getMove());
+        state.makeMoves(node.getMove(), secondSimNode);
         state.finishedMoving();
     }
 }
@@ -406,18 +408,20 @@ void UCTSearch::printSubTree(UCTNode & node, GameState s, std::string filename)
 
 void UCTSearch::printSubTreeGraphViz(UCTNode & node, GraphViz::Graph & g, GameState state)
 {
+    const bool secondSimNode = (node.getNodeType() == SearchNodeType::SecondSimNode);
+
     if (node.getNodeType() == SearchNodeType::FirstSimNode && node.hasChildren())
     {
         // don't make any moves if it is a first simnode
     }
     else
     {
-        if (node.getNodeType() == SearchNodeType::SecondSimNode)
+        if (secondSimNode)
         {
             state.makeMoves(node.getParent()->getMove());
         }
 
-        state.makeMoves(node.getMove());
+        state.makeMoves(node.getMove(), secondSimNode);
         state.finishedMoving();
     }
 

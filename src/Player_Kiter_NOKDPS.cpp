@@ -55,10 +55,10 @@ void Player_Kiter_NOKDPS::getMoves(GameState & state, const MoveArray & moves, s
                     printf("wtf\n");
                 }
 			}
-			else if (move.type() == ActionTypes::HEAL)
-			{
-				const Unit & target				(state.getUnit(move.player(), move.index()));
-				double dpsHPValue =				(target.dpf() / hpRemaining[move.index()]);
+				else if (move.type() == ActionTypes::HEAL)
+				{
+					const Unit & target				(state.getUnit(move.player(), move.index()));
+					double dpsHPValue =				(target.dpf() / (target.currentHP() > 0 ? target.currentHP() : 1));
 
 				if (dpsHPValue > actionHighestDPS)
 				{
@@ -116,11 +116,11 @@ void Player_Kiter_NOKDPS::getMoves(GameState & state, const MoveArray & moves, s
 			}
 		}
 
-		Action theMove(moves.getMove(u, actionMoveIndex));
-		if (theMove.type() == ActionTypes::ATTACK)
-		{
-			hpRemaining[theMove.index()] -= state.getUnit(_playerID, theMove.unit()).damage();
-		}
+			Action theMove(moves.getMove(u, bestMoveIndex));
+			if (theMove.type() == ActionTypes::ATTACK)
+			{
+				hpRemaining[theMove.index()] -= state.getUnit(_playerID, theMove.unit()).damage();
+			}
 			
 		moveVec.push_back(moves.getMove(u, bestMoveIndex));
 	}

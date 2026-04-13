@@ -21,3 +21,4 @@ src/**/*.d
 /vs/SparCraft
 /vs/SparCraft_main
 /vs/x64
+*.ilk

@@ -2,12 +2,14 @@
 
 using namespace SparCraft;
 
-Player_AlphaBeta::Player_AlphaBeta (const size_t & playerID) 
+Player_AlphaBeta::Player_AlphaBeta (const size_t & playerID)
+    : alphaBeta(nullptr)
 {
 	_playerID = playerID;
 }
 
 Player_AlphaBeta::Player_AlphaBeta (const size_t & playerID, const AlphaBetaSearchParameters & params, TTPtr table)
+    : alphaBeta(nullptr)
 {
 	_playerID = playerID;
 	_params = params;
@@ -38,7 +40,9 @@ void Player_AlphaBeta::setParameters(AlphaBetaSearchParameters & p)
 
 void Player_AlphaBeta::setTranspositionTable(TTPtr table)
 {
-	TT = table;
+	TT = table ? table : TTPtr(new TranspositionTable());
+    delete alphaBeta;
+    alphaBeta = new AlphaBetaSearch(_params, TT);
 }
 
 void Player_AlphaBeta::getMoves(GameState & state, const MoveArray & moves, std::vector<Action> & moveVec)

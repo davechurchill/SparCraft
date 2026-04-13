@@ -19,7 +19,7 @@ class AlphaBetaSearch;
  `----------------------------------------------------------------------*/
 class Player_AlphaBeta : public Player
 {
-	AlphaBetaSearch * alphaBeta;
+	AlphaBetaSearch * alphaBeta = nullptr;
 	TTPtr TT;
 	AlphaBetaSearchParameters _params;
 public:
