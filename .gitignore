@@ -23,3 +23,4 @@ src/**/*.d
 /vs/x64
 *.ilk
 sparcraft_error_log.txt
+/.claude

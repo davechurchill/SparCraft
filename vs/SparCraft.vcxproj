@@ -204,7 +204,7 @@
     <ClInclude Include="..\src\GameState.h" />
     <ClInclude Include="..\src\GraphViz.hpp" />
     <ClInclude Include="..\src\Hash.h" />
-    <ClInclude Include="..\src\Logger.h" />
+    <ClInclude Include="..\src\Logger.hpp" />
     <ClInclude Include="..\src\Map.hpp" />
     <ClInclude Include="..\src\MoveArray.h" />
     <ClInclude Include="..\src\Player.h" />
@@ -228,7 +228,7 @@
     <ClInclude Include="..\src\SparCraft.h" />
     <ClInclude Include="..\src\SparCraftAssert.h" />
     <ClInclude Include="..\src\SparCraftException.h" />
-    <ClInclude Include="..\src\Timer.h" />
+    <ClInclude Include="..\src\Timer.hpp" />
     <ClInclude Include="..\src\TranspositionTable.h" />
     <ClInclude Include="..\src\UCTMemoryPool.hpp" />
     <ClInclude Include="..\src\UCTNode.h" />
@@ -252,7 +252,6 @@
     <ClCompile Include="..\src\Game.cpp" />
     <ClCompile Include="..\src\GameState.cpp" />
     <ClCompile Include="..\src\Hash.cpp" />
-    <ClCompile Include="..\src\Logger.cpp" />
     <ClCompile Include="..\src\MoveArray.cpp" />
     <ClCompile Include="..\src\Player.cpp" />
     <ClCompile Include="..\src\PlayerProperties.cpp" />
@@ -272,7 +271,6 @@
     <ClCompile Include="..\src\SparCraft.cpp" />
     <ClCompile Include="..\src\SparCraftAssert.cpp" />
     <ClCompile Include="..\src\SparCraftException.cpp" />
-    <ClCompile Include="..\src\Timer.cpp" />
     <ClCompile Include="..\src\TranspositionTable.cpp" />
     <ClCompile Include="..\src\UCTSearch.cpp" />
     <ClCompile Include="..\src\Unit.cpp" />
@@ -284,13 +282,3 @@
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
 </Project>
-
-
-
-
-
-
-
-
-
-

@@ -1,7 +1,8 @@
 {
   "permissions": {
     "allow": [
-      "Bash(powershell -Command \"Rename-Item 'c:\\\\dev\\\\code\\\\SparCraft\\\\VisualStudio' 'vs'\")"
+      "Bash(powershell -Command \"Rename-Item 'c:\\\\dev\\\\code\\\\SparCraft\\\\VisualStudio' 'vs'\")",
+      "Bash(xargs grep:*)"
     ],
     "additionalDirectories": [
       "c:\\dev\\code\\SparCraft\\bin\\asset\\images\\starcraft_images"

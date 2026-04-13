@@ -19,9 +19,6 @@
     <ClCompile Include="..\src\PortfolioGreedySearch.cpp">
       <Filter>search\Greedy</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\Timer.cpp">
-      <Filter>util</Filter>
-    </ClCompile>
     <ClCompile Include="..\src\TranspositionTable.cpp">
       <Filter>search\AlphaBeta</Filter>
     </ClCompile>
@@ -97,9 +94,6 @@
     <ClCompile Include="..\src\AnimationFrameData.cpp">
       <Filter>data</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\Logger.cpp">
-      <Filter>util</Filter>
-    </ClCompile>
     <ClCompile Include="..\src\Action.cpp">
       <Filter>simulation</Filter>
     </ClCompile>
@@ -143,9 +137,6 @@
     </ClInclude>
     <ClInclude Include="..\src\Position.hpp">
       <Filter>simulation</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\Timer.h">
-      <Filter>util</Filter>
     </ClInclude>
     <ClInclude Include="..\src\TranspositionTable.h">
       <Filter>search\AlphaBeta</Filter>
@@ -246,9 +237,6 @@
     <ClInclude Include="..\src\AnimationFrameData.h">
       <Filter>data</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\Logger.h">
-      <Filter>util</Filter>
-    </ClInclude>
     <ClInclude Include="..\src\Action.h">
       <Filter>simulation</Filter>
     </ClInclude>
@@ -260,6 +248,12 @@
     </ClInclude>
     <ClInclude Include="..\src\SparCraftException.h">
       <Filter>common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Logger.hpp">
+      <Filter>util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Timer.hpp">
+      <Filter>util</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
