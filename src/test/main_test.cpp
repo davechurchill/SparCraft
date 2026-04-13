@@ -4,11 +4,10 @@
 #include "GameState.h"
 #include "Game.h"
 #include "AllPlayers.h"
-#include "MoveArray.h"
+#include "MoveArray.hpp"
 #include "Array.hpp"
 #include "Position.hpp"
 #include "BaseTypes.hpp"
-#include "MoveSet.hpp"
 #include <memory>
 #include <array>
 #include <cmath>
@@ -928,74 +927,3 @@ TEST_CASE("Array — can fill to full capacity")
     REQUIRE(arr[7] == 7);
 }
 
-// -----------------------------------------------------------------------
-// BitSet / MoveSet
-// -----------------------------------------------------------------------
-TEST_CASE("BitSet — empty set reports zero actions")
-{
-    BitSet b;
-    REQUIRE(b.numActions() == 0);
-    REQUIRE(b.isEmpty());
-}
-
-TEST_CASE("BitSet — add and contains")
-{
-    BitSet b;
-    b.add(3);
-    b.add(7);
-    REQUIRE(b.contains(3));
-    REQUIRE(b.contains(7));
-    REQUIRE_FALSE(b.contains(0));
-    REQUIRE(b.numActions() == 2);
-}
-
-TEST_CASE("BitSet — subtract removes a bit")
-{
-    BitSet b;
-    b.add(3);
-    b.add(7);
-    b.subtract(3);
-    REQUIRE_FALSE(b.contains(3));
-    REQUIRE(b.contains(7));
-    REQUIRE(b.numActions() == 1);
-}
-
-TEST_CASE("BitSet — popAction removes and returns the bit")
-{
-    BitSet b;
-    b.add(5);
-    int action = b.popAction();
-    REQUIRE(action == 5);
-    REQUIRE(b.isEmpty());
-}
-
-TEST_CASE("BitSet — randomAction returns a valid member")
-{
-    BitSet b;
-    b.add(2);
-    b.add(5);
-    b.add(9);
-
-    for (int i = 0; i < 50; ++i)
-    {
-        int a = b.randomAction();
-        REQUIRE((a == 2 || a == 5 || a == 9));
-    }
-}
-
-TEST_CASE("BitSet — randomAction can return all members")
-{
-    // With enough samples every bit in the set should be chosen at least once
-    BitSet b;
-    b.add(1);
-    b.add(2);
-    b.add(3);
-
-    std::set<int> seen;
-    for (int i = 0; i < 300; ++i)
-        seen.insert(b.randomAction());
-
-    REQUIRE(seen.count(1));
-    REQUIRE(seen.count(2));
-    REQUIRE(seen.count(3));
-}

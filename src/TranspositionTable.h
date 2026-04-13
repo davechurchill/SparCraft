@@ -39,7 +39,7 @@ public:
 	const size_t getDepth()									const;
 	const int getType()										const;
 	const TTBestMove & getBestMove(const size_t player)		const;
-	void setBestMove(const size_tfirstPlayer, const AlphaBetaMove & bestFirstMove, const AlphaBetaMove & bestSecondMove);
+	void setBestMove(const size_t firstPlayer, const AlphaBetaMove & bestFirstMove, const AlphaBetaMove & bestSecondMove);
 
 	void print() const
 	{

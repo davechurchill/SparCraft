@@ -2,7 +2,7 @@
 
 #include "Common.h"
 #include "GameState.h"
-#include "MoveArray.h"
+#include "MoveArray.hpp"
 #include "Unit.h"
 #include <memory>
 

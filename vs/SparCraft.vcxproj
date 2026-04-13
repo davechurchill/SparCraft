@@ -206,7 +206,7 @@
     <ClInclude Include="..\src\Hash.h" />
     <ClInclude Include="..\src\Logger.hpp" />
     <ClInclude Include="..\src\Map.hpp" />
-    <ClInclude Include="..\src\MoveArray.h" />
+    <ClInclude Include="..\src\MoveArray.hpp" />
     <ClInclude Include="..\src\Player.h" />
     <ClInclude Include="..\src\PlayerProperties.h" />
     <ClInclude Include="..\src\Player_AlphaBeta.h" />
@@ -252,7 +252,6 @@
     <ClCompile Include="..\src\Game.cpp" />
     <ClCompile Include="..\src\GameState.cpp" />
     <ClCompile Include="..\src\Hash.cpp" />
-    <ClCompile Include="..\src\MoveArray.cpp" />
     <ClCompile Include="..\src\Player.cpp" />
     <ClCompile Include="..\src\PlayerProperties.cpp" />
     <ClCompile Include="..\src\Player_AlphaBeta.cpp" />

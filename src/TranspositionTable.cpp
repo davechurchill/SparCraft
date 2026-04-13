@@ -35,7 +35,7 @@ const StateEvalScore & TTEntry::getScore()						const { return m_score; }
 const size_t TTEntry::getDepth()								const { return m_depth; }
 const int TTEntry::getType()									const { return m_type;  }
 const TTBestMove & TTEntry::getBestMove(const size_t player)	const { return m_bestMoves[player];  }
-void TTEntry::setBestMove(const size_tfirstPlayer, const AlphaBetaMove & bestFirstMove, const AlphaBetaMove & bestSecondMove)
+void TTEntry::setBestMove(const size_t firstPlayer, const AlphaBetaMove & bestFirstMove, const AlphaBetaMove & bestSecondMove)
 {
 	m_bestMoves[firstPlayer] = TTBestMove(bestFirstMove, bestSecondMove);
 }

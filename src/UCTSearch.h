@@ -7,7 +7,7 @@
 #include "Action.h"
 #include "GraphViz.hpp"
 #include "Array.hpp"
-#include "MoveArray.h"
+#include "MoveArray.hpp"
 #include "UCTSearchParameters.hpp"
 #include "UCTSearchResults.hpp"
 #include "Player.h"

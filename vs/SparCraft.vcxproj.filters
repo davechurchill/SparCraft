@@ -64,9 +64,6 @@
     <ClCompile Include="..\src\AllPlayers.cpp">
       <Filter>simulation\players</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\MoveArray.cpp">
-      <Filter>util</Filter>
-    </ClCompile>
     <ClCompile Include="..\src\Player_Cluster.cpp">
       <Filter>simulation\players\script</Filter>
     </ClCompile>
@@ -201,7 +198,7 @@
     <ClInclude Include="..\src\AllPlayers.h">
       <Filter>simulation\players</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\MoveArray.h">
+    <ClInclude Include="..\src\MoveArray.hpp">
       <Filter>util</Filter>
     </ClInclude>
     <ClInclude Include="..\src\Player_Cluster.h">

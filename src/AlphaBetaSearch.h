@@ -7,7 +7,7 @@
 #include "GameState.h"
 #include "Action.h"
 #include "Array.hpp"
-#include "MoveArray.h"
+#include "MoveArray.hpp"
 #include "TranspositionTable.h"
 #include "Player.h"
 

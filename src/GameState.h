@@ -2,7 +2,7 @@
 
 #include "Common.h"
 #include <algorithm>
-#include "MoveArray.h"
+#include "MoveArray.hpp"
 #include "Hash.h"
 #include "Map.hpp"
 #include "Unit.h"
