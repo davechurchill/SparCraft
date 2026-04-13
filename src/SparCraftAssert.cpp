@@ -84,11 +84,11 @@ namespace Assert
         const std::string failureMessage = BuildFailureMessage(condition, file, line, formattedMessage);
         
         #if !defined(EMSCRIPTEN)
-            std::cerr << "Assertion thrown!\n";
-            std::cerr << failureMessage;
+            SCLog() << "Assertion thrown!\n";
+            SCLog() << failureMessage;
             throw SparCraftException(failureMessage, state);
         #else
-            printf("C++ AI: AI Exception Thrown:\n %s\n", failureMessage.c_str());
+            SCLog() << "C++ AI: AI Exception Thrown:\n" << failureMessage << '\n';
             throw SparCraftException(failureMessage);
         #endif
     }

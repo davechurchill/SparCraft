@@ -74,7 +74,7 @@ void GUIGame::onFrame(sf::RenderTarget & target)
 
         _game.playNextTurn();
 
-        _previousTurnTimer = turnTimer.getElapsedTimeInMilliSec();
+        _previousTurnTimer = turnTimer.elapsedMS();
         _stepOneTurn = false;
 
         for (size_t p = 0; p < 2; ++p)
@@ -109,7 +109,7 @@ void GUIGame::onFrame(sf::RenderTarget & target)
         drawHPBars(target);
     }
 
-    _previousDrawGameTimer = drawTimer.getElapsedTimeInMilliSec();
+    _previousDrawGameTimer = drawTimer.elapsedMS();
 
     drawControlsWindow();
     drawUnitsWindow();
@@ -361,3 +361,4 @@ void GUIGame::setParams(const size_t & player, const std::vector<std::vector<std
 {
     _params[player] = p;
 }
+

@@ -31,7 +31,7 @@ std::vector<Action> PortfolioGreedySearch::search(const size_t & player, const G
     setAllScripts(player, state, originalScriptData, seedScript);
     setAllScripts(enemyPlayer, state, originalScriptData, enemySeedScript);
 
-    double ms = t.getElapsedTimeInMilliSec();
+    double ms = t.elapsedMS();
     //printf("\nFirst Part %lf ms\n", ms);
 
     // do the initial root portfolio search for our player
@@ -77,7 +77,7 @@ void PortfolioGreedySearch::doPortfolioSearch(const size_t & player, const GameS
         // for each unit that can move
         for (size_t unitIndex(0); unitIndex<state.numUnits(player); ++unitIndex)
         {
-            if (_timeLimit > 0 && t.getElapsedTimeInMilliSec() > _timeLimit)
+            if (_timeLimit > 0 && t.elapsedMS() > _timeLimit)
             {
                 break;
             }

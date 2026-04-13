@@ -7,7 +7,7 @@
 #include "Action.h"
 #include "UnitScriptData.h"
 #include <memory>
-#include "Timer.h"
+#include "Timer.hpp"
 
 namespace SparCraft
 {

@@ -42,7 +42,7 @@ void UCTSearch::doSearch(GameState & initialState, std::vector<Action> & move)
 
         if (traversals && (traversals % 5 == 0))
         {
-            if (_params.timeLimit() && (t.getElapsedTimeInMilliSec() >= _params.timeLimit()))
+            if (_params.timeLimit() && (t.elapsedMS() >= _params.timeLimit()))
             {
                 break;
             }
@@ -70,7 +70,7 @@ void UCTSearch::doSearch(GameState & initialState, std::vector<Action> & move)
         //system("\"C:\\Program Files (x86)\\Graphviz2.30\\bin\\dot.exe\" < __uct.txt -Tpng > uct.png");
     }
 
-    double ms = t.getElapsedTimeInMilliSec();
+    double ms = t.elapsedMS();
     _results.timeElapsed = ms;
     //printf("Search took %lf ms\n", ms);
     //printf("Hello\n");
@@ -78,7 +78,7 @@ void UCTSearch::doSearch(GameState & initialState, std::vector<Action> & move)
 
 const bool UCTSearch::searchTimeOut()
 {
-	return (_params.timeLimit() && (_searchTimer.getElapsedTimeInMilliSec() >= _params.timeLimit()));
+	return (_params.timeLimit() && (_searchTimer.elapsedMS() >= _params.timeLimit()));
 }
 
 const bool UCTSearch::terminalState(GameState & state, const size_t & depth) const
@@ -501,3 +501,4 @@ UCTSearchResults & UCTSearch::getResults()
 {
     return _results;
 }
+

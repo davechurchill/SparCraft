@@ -12,7 +12,7 @@
 #include <ios>
 #include <iostream>
 #include <cstdlib>
-#include "Logger.h"
+#include "Logger.hpp"
 #include "SparCraftAssert.h"
 
 extern char SPARCRAFT_LOGFILE[100];

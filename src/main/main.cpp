@@ -21,11 +21,11 @@ int main(int argc, char *argv[])
     {
         if (e == SparCraft::System::SPARCRAFT_FATAL_ERROR)
         {
-            std::cerr << "\nSparCraft FatalError Exception, Shutting Down\n\n";
+            SparCraft::SCLog() << "\nSparCraft FatalError Exception, Shutting Down\n\n";
         }
         else
         {
-            std::cerr << "\nUnknown Exception, Shutting Down\n\n";
+            SparCraft::SCLog() << "\nUnknown Exception, Shutting Down\n\n";
         }
     }
    

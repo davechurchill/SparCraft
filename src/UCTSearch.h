@@ -2,7 +2,7 @@
 
 #include <limits>
 
-#include "Timer.h"
+#include "Timer.hpp"
 #include "GameState.h"
 #include "Action.h"
 #include "GraphViz.hpp"

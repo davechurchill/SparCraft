@@ -41,7 +41,7 @@ void AlphaBetaSearch::doSearch(GameState & initialState)
 		val = IDAlphaBeta(initialState, _params.maxDepth());
 	}
 
-	_results.timeElapsed = _searchTimer.getElapsedTimeInMilliSec();
+	_results.timeElapsed = _searchTimer.elapsedMS();
 }
 
 AlphaBetaValue AlphaBetaSearch::IDAlphaBeta(GameState & initialState, const size_t & maxDepth)
@@ -86,7 +86,7 @@ AlphaBetaValue AlphaBetaSearch::IDAlphaBeta(GameState & initialState, const size
 		}
 
 		long long unsigned nodes = _results.nodesExpanded;
-		double ms = _searchTimer.getElapsedTimeInMilliSec();
+		double ms = _searchTimer.elapsedMS();
 
 		//printTTResults();
 		//fprintf(stdout, "%s %8d %9d %9d %13.4lf %14llu %12d %12llu %15.2lf\n", "IDA", d, val.score().val(), (int)val.abMove().moveTuple(), ms, nodes, (int)_TT->numFound(), getResults().ttcuts, 1000*nodes/ms);
@@ -176,7 +176,7 @@ TTLookupValue AlphaBetaSearch::TTlookup(const GameState & state, StateEvalScore 
 
 const bool AlphaBetaSearch::searchTimeOut()
 {
-	return (_params.timeLimit() && (_results.nodesExpanded % 50 == 0) && (_searchTimer.getElapsedTimeInMilliSec() >= _params.timeLimit()));
+	return (_params.timeLimit() && (_results.nodesExpanded % 50 == 0) && (_searchTimer.elapsedMS() >= _params.timeLimit()));
 }
 
 const bool AlphaBetaSearch::terminalState(GameState & state, const size_t & depth) const
@@ -536,3 +536,4 @@ void AlphaBetaSearch::printTTResults() const
 	printf("         No Move       %9d\n", (int)_results.ttFoundButNoMove);
 	printf("\n");
 }
+

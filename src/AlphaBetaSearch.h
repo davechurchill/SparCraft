@@ -3,7 +3,7 @@
 #include <limits>
 
 #include "AllPlayers.h"
-#include "Timer.h"
+#include "Timer.hpp"
 #include "GameState.h"
 #include "Action.h"
 #include "Array.hpp"

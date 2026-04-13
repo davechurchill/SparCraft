@@ -22,3 +22,4 @@ src/**/*.d
 /vs/SparCraft_main
 /vs/x64
 *.ilk
+sparcraft_error_log.txt

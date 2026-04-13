@@ -45,7 +45,7 @@ void Game::play()
         playNextTurn();
     }
 
-    gameTimeMS = t.getElapsedTimeInMilliSec();
+    gameTimeMS = t.elapsedMS();
 }
 
 void Game::playNextTurn()
@@ -152,7 +152,7 @@ void Game::playIndividualScripts(UnitScriptData & scriptData)
         rounds++;
     }
 
-    gameTimeMS = t.getElapsedTimeInMilliSec();
+    gameTimeMS = t.elapsedMS();
 }
 
 PlayerPtr Game::getPlayer(const size_t & player)
@@ -193,3 +193,4 @@ const size_t Game::getPlayerToMove()
 
     return (whoCanMove == Players::Player_Both) ? Players::Player_One : whoCanMove;
 }
+

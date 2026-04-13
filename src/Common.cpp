@@ -9,10 +9,10 @@ namespace SparCraft
     {
         void FatalError(const std::string & errorMessage)
         {
-            std::cerr << "\n\n\nSparCraft Fatal Error: \n\n\n      " << errorMessage << "\n\n";
+            SCLog() << "\n\n\nSparCraft Fatal Error: \n\n\n      " << errorMessage << "\n\n";
 
-			/*std::ofstream logStream;
-			logStream.open(SPARCRAFT_LOGFILE, std::ofstream::app);
+				/*std::ofstream logStream;
+				logStream.open(SPARCRAFT_LOGFILE, std::ofstream::app);
 			logStream << "\n\n\nSparCraft Fatal Error: \n\n\n      " << errorMessage << "\n\n";
 			logStream.flush();
 			logStream.close();*/
