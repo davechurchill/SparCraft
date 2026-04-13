@@ -400,14 +400,11 @@ void SearchExperiment::parseStateDescriptionFile(const std::string & fileName)
 
 BWAPI::UnitType SearchExperiment::getUnitType(const std::string & unitTypeString)
 {
-    BWAPI::UnitType type;
+    BWAPI::UnitType type = BWAPI::UnitTypes::getUnitType(unitTypeString);
 
-    for (const BWAPI::UnitType & t : BWAPI::UnitTypes::allUnitTypes())
+    if (type == BWAPI::UnitTypes::None || type == BWAPI::UnitTypes::Unknown)
     {
-        if (t.getName().compare(unitTypeString) == 0)
-        {
-            type = t;
-        }
+        System::FatalError("Unknown unit type token in experiment file: " + unitTypeString);
     }
 
     System::checkSupportedUnitType(type);
@@ -672,15 +669,7 @@ GameState SearchExperiment::getSymmetricState( std::vector<std::string> & unitTy
     // for each unit type to add
     for (size_t i(0); i<unitTypes.size(); ++i)
     {
-        BWAPI::UnitType type;
-        for (const BWAPI::UnitType & t : BWAPI::UnitTypes::allUnitTypes())
-        {
-            if (t.getName().compare(unitTypes[i]) == 0)
-            {
-                type = t;
-                break;
-            } 
-        }
+        BWAPI::UnitType type = getUnitType(unitTypes[i]);
 
         // add the symmetric unit for each count in the numUnits Vector
         for (int u(0); u<numUnits[i]; ++u)
@@ -710,15 +699,7 @@ void SearchExperiment::addSeparatedState(  std::vector<std::string> & unitTypes,
     // for each unit type to add
     for (size_t i(0); i<unitTypes.size(); ++i)
     {
-        BWAPI::UnitType type;
-        for (const BWAPI::UnitType & t : BWAPI::UnitTypes::allUnitTypes())
-        {
-            if (t.getName().compare(unitTypes[i]) == 0)
-            {
-                type = t;
-                break;
-            } 
-        }
+        BWAPI::UnitType type = getUnitType(unitTypes[i]);
 
         // add the symmetric unit for each count in the numUnits Vector
         for (int u(0); u<numUnits[i]; ++u)

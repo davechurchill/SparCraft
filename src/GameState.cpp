@@ -621,12 +621,58 @@ void GameState::sortUnits()
 
 Unit & GameState::getUnit(const size_t & player, const size_t & unitIndex)
 {
-    return _units[player][_unitIndex[player][unitIndex]];
+    if (player >= Constants::Num_Players)
+    {
+        System::FatalError("GameState::getUnit() invalid player index: " + std::to_string(player));
+    }
+
+    if (unitIndex >= _unitIndex[player].size())
+    {
+        System::FatalError(
+            "GameState::getUnit() unit index out of range. player=" + std::to_string(player) +
+            " unitIndex=" + std::to_string(unitIndex) +
+            " indexSize=" + std::to_string(_unitIndex[player].size()));
+    }
+
+    const int storageIndex = _unitIndex[player][unitIndex];
+    if (storageIndex < 0 || static_cast<size_t>(storageIndex) >= _units[player].size())
+    {
+        System::FatalError(
+            "GameState::getUnit() storage index out of range. player=" + std::to_string(player) +
+            " unitIndex=" + std::to_string(unitIndex) +
+            " storageIndex=" + std::to_string(storageIndex) +
+            " unitStorageSize=" + std::to_string(_units[player].size()));
+    }
+
+    return _units[player][static_cast<size_t>(storageIndex)];
 }
 
 const Unit & GameState::getUnit(const size_t & player, const size_t & unitIndex) const
 {
-    return _units[player][_unitIndex[player][unitIndex]];
+    if (player >= Constants::Num_Players)
+    {
+        System::FatalError("GameState::getUnit() const invalid player index: " + std::to_string(player));
+    }
+
+    if (unitIndex >= _unitIndex[player].size())
+    {
+        System::FatalError(
+            "GameState::getUnit() const unit index out of range. player=" + std::to_string(player) +
+            " unitIndex=" + std::to_string(unitIndex) +
+            " indexSize=" + std::to_string(_unitIndex[player].size()));
+    }
+
+    const int storageIndex = _unitIndex[player][unitIndex];
+    if (storageIndex < 0 || static_cast<size_t>(storageIndex) >= _units[player].size())
+    {
+        System::FatalError(
+            "GameState::getUnit() const storage index out of range. player=" + std::to_string(player) +
+            " unitIndex=" + std::to_string(unitIndex) +
+            " storageIndex=" + std::to_string(storageIndex) +
+            " unitStorageSize=" + std::to_string(_units[player].size()));
+    }
+
+    return _units[player][static_cast<size_t>(storageIndex)];
 }
 
 const size_t GameState::closestEnemyUnitDistance(const Unit & unit) const
@@ -895,6 +941,19 @@ const size_t GameState::prevNumUnits(const size_t & player) const
 
 const Unit & GameState::getUnitDirect(const size_t & player, const size_t & unit) const
 {
+    if (player >= Constants::Num_Players)
+    {
+        System::FatalError("GameState::getUnitDirect() invalid player index: " + std::to_string(player));
+    }
+
+    if (unit >= _units[player].size())
+    {
+        System::FatalError(
+            "GameState::getUnitDirect() unit index out of range. player=" + std::to_string(player) +
+            " unit=" + std::to_string(unit) +
+            " unitStorageSize=" + std::to_string(_units[player].size()));
+    }
+
 	return _units[player][unit];
 }
 
@@ -1023,7 +1082,7 @@ void GameState::print(int indent) const
 			const Unit & unit(getUnit(p, u));
 
 			TABS(indent);
-			fprintf(stderr, "  P%d %5d %5d    (%3d, %3d)     %s\n", unit.player(), unit.currentHP(), unit.firstTimeFree(), unit.x(), unit.y(), unit.name().c_str());
+			fprintf(stderr, "  P%d %5d %5d    (%3d, %3d)     %s\n", static_cast<int>(unit.player()), unit.currentHP(), unit.firstTimeFree(), unit.x(), unit.y(), unit.name().c_str());
 		}
 	}
 	fprintf(stderr, "\n\n");

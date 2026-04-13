@@ -1,0 +1,14 @@
+# Minimal SFML/ImGui visualization example for SparCraft
+# Run from the bin/ directory:
+#   .\SparCraft.exe .\sample_experiment\simple_gui.txt
+
+Player 0 NOKDPS
+Player 1 NOKDPS
+
+# Note: the engine loop starts at state index 2, so we create 3 states.
+State StateSymmetric 3 96 96 Terran_Marine 6
+
+ResultsFile sample_experiment/simple_gui true
+
+# Display syntax requires: Display <true|false> <ImageDirToken>
+Display true asset/images/

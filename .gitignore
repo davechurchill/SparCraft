@@ -10,3 +10,7 @@ src/*.o
 src/**/*.o
 src/**/*.d
 /build
+/bin/sample_experiment/sample_results
+/VisualStudio/.vs
+/VisualStudio/SparCraft
+/VisualStudio/SparCraft_main

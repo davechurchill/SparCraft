@@ -1,0 +1,5 @@
+Player 0 NOKDPS
+Player 1 NOKDPS
+State StateSymmetric 3 96 96 Terran_Marine 6
+ResultsFile sample_experiment/simple_gui true
+Display true asset/images/

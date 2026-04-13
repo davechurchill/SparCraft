@@ -1,0 +1,5 @@
+Player 0 NOKDPS
+Player 1 NOKDPS
+State StateSymmetric 3 32 32 Terran_Marine 1
+ResultsFile sample_experiment/minimal_test true
+Display false asset/images/

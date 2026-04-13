@@ -4,6 +4,8 @@ namespace SparCraft
 {
     void init()
     {
+        BWAPI::BWAPI_init();
+
         // Initialize Data for Attack Frame Animations
         SparCraft::AnimationFrameData::init();
 
