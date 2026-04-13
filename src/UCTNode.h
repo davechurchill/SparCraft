@@ -38,7 +38,7 @@ public:
 
     }
 
-    UCTNode (UCTNode * parent, const size_t player, const size_t nodeType, const std::vector<Action> & move, const size_t maxChildren, std::vector<UCTNode> * fromPool = NULL)
+    UCTNode (UCTNode * parent, const size_t player, const size_t nodeType, const std::vector<Action> & move, const size_t maxChildren)
         : m_numVisits            (0)
         , m_numWins              (0)
         , m_uctVal               (0)
@@ -77,7 +77,7 @@ public:
         m_move = move;
     }
 
-    void addChild(UCTNode * parent, const size_t player, const size_t nodeType, const std::vector<Action> & move, const size_t maxChildren, std::vector<UCTNode> * fromPool = NULL)
+    void addChild(UCTNode * parent, const size_t player, const size_t nodeType, const std::vector<Action> & move, const size_t maxChildren)
     {
         m_children.push_back(UCTNode(parent, player, nodeType, move, maxChildren));
     }
@@ -104,7 +104,7 @@ public:
     UCTNode & bestUCTValueChild(const bool maxPlayer, const UCTSearchParameters & params) 
     {
         UCTNode * bestChild = NULL;
-        double bestVal = maxPlayer ? std::numeric_limits<double>::min() : std::numeric_limits<double>::max();
+        double bestVal = maxPlayer ? std::numeric_limits<double>::lowest() : std::numeric_limits<double>::max();
 
         for (size_t c(0); c < numChildren(); ++c)
         {

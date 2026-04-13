@@ -2,9 +2,8 @@
 
 using namespace SparCraft;
 
-UCTSearch::UCTSearch(const UCTSearchParameters & params) 
+UCTSearch::UCTSearch(const UCTSearchParameters & params)
 	: m_params(params)
-    , m_memoryPool(NULL)
 {
     for (size_t p(0); p<Constants::Num_Players; ++p)
     {
@@ -22,17 +21,11 @@ UCTSearch::UCTSearch(const UCTSearchParameters & params)
     }
 }
 
-void UCTSearch::setMemoryPool(UCTMemoryPool * pool)
-{
-    m_memoryPool = pool;
-}
-
 void UCTSearch::doSearch(GameState & initialState, std::vector<Action> & move)
 {
-    Timer t;
-    t.start();
+    m_searchTimer.start();
 
-    m_rootNode = UCTNode(NULL, Players::Player_None, SearchNodeType::RootNode, m_actionVec, m_params.maxChildren(), m_memoryPool ? m_memoryPool->alloc() : NULL);
+    m_rootNode = UCTNode(NULL, Players::Player_None, SearchNodeType::RootNode, m_actionVec, m_params.maxChildren());
 
     // do the required number of traversals
     for (size_t traversals(0); traversals < m_params.maxTraversals(); ++traversals)
@@ -42,7 +35,7 @@ void UCTSearch::doSearch(GameState & initialState, std::vector<Action> & move)
 
         if (traversals && (traversals % 5 == 0))
         {
-            if (m_params.timeLimit() && (t.elapsedMS() >= m_params.timeLimit()))
+            if (m_params.timeLimit() && (m_searchTimer.elapsedMS() >= m_params.timeLimit()))
             {
                 break;
             }
@@ -70,10 +63,7 @@ void UCTSearch::doSearch(GameState & initialState, std::vector<Action> & move)
         //system("\"C:\\Program Files (x86)\\Graphviz2.30\\bin\\dot.exe\" < __uct.txt -Tpng > uct.png");
     }
 
-    double ms = t.elapsedMS();
-    m_results.timeElapsed = ms;
-    //printf("Search took %lf ms\n", ms);
-    //printf("Hello\n");
+    m_results.timeElapsed = m_searchTimer.elapsedMS();
 }
 
 const bool UCTSearch::searchTimeOut()
@@ -145,7 +135,7 @@ const size_t UCTSearch::getChildNodeType(UCTNode & parent, const GameState & pre
 
 const bool UCTSearch::getNextMove(size_t playerToMove, MoveArray & moves, const size_t moveNumber, std::vector<Action> & actionVec)
 {
-    if (moveNumber > m_params.maxChildren())
+    if (moveNumber >= m_params.maxChildren())
     {
         return false;
     }
@@ -240,7 +230,7 @@ UCTNode & UCTSearch::UCTNodeSelect(UCTNode & parent)
 {
     UCTNode *   bestNode    = NULL;
     bool        maxPlayer   = isRoot(parent) || (parent.getChild(0).getPlayer() == m_params.maxPlayer());
-    double      bestVal     = maxPlayer ? std::numeric_limits<double>::min() : std::numeric_limits<double>::max();
+    double      bestVal     = maxPlayer ? std::numeric_limits<double>::lowest() : std::numeric_limits<double>::max();
          
     // loop through each child to find the best node
     for (size_t c(0); c < parent.numChildren(); ++c)
@@ -376,17 +366,9 @@ void UCTSearch::generateChildren(UCTNode & node, GameState & state)
     for (size_t child(0); (child < m_params.maxChildren()) && getNextMove(playerToMove, m_moveArray, child, m_actionVec); ++child)
     {
         // add the child to the tree
-        node.addChild(&node, playerToMove, getChildNodeType(node, state), m_actionVec, m_params.maxChildren(), m_memoryPool ? m_memoryPool->alloc() : NULL);
+        node.addChild(&node, playerToMove, getChildNodeType(node, state), m_actionVec, m_params.maxChildren());
         m_results.nodesCreated++;
     }
-}
-
-StateEvalScore UCTSearch::performPlayout(GameState & state)
-{
-    GameState copy(state);
-    copy.finishedMoving();
-
-    return copy.eval(m_params.maxPlayer(), m_params.evalMethod(), m_params.simScript(Players::Player_One), m_params.simScript(Players::Player_Two));
 }
 
 const bool UCTSearch::isRoot(UCTNode & node) const

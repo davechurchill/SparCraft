@@ -14,7 +14,6 @@
 #include "AllPlayers.h"
 #include "UCTNode.h"
 #include "GraphViz.hpp"
-#include "UCTMemoryPool.hpp"
 #include <memory>
 
 namespace SparCraft
@@ -29,9 +28,6 @@ class UCTSearch
     UCTSearchResults        m_results;
 	Timer		            m_searchTimer;
     UCTNode                 m_rootNode;
-    UCTMemoryPool *         m_memoryPool;
-
-    GameState               m_currentState;
 
 	// we will use these as variables to save stack allocation every time
     std::vector<Action>                 m_actionVec;
@@ -50,8 +46,6 @@ public:
     // UCT-specific functions
     UCTNode &       UCTNodeSelect(UCTNode & parent);
     StateEvalScore  traverse(UCTNode & node, GameState & currentState);
-	void            uct(GameState & state, size_t depth, const size_t lastPlayerToMove, std::vector<Action> * firstSimMove);
-
 	void            doSearch(GameState & initialState, std::vector<Action> & move);
     
     // Move and Child generation functions
@@ -66,11 +60,7 @@ public:
 	const bool      searchTimeOut();
 	const bool      isRoot(UCTNode & node) const;
 	const bool      terminalState(GameState & state, const size_t depth) const;
-    const bool      isFirstSimMove(UCTNode & node, GameState & state);
-    const bool      isSecondSimMove(UCTNode & node, GameState & state);
-    StateEvalScore  performPlayout(GameState & state);
     void            updateState(UCTNode & node, GameState & state, bool isLeaf);
-    void            setMemoryPool(UCTMemoryPool * pool);
     UCTSearchResults & getResults();
 
     // graph printing functions

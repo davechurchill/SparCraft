@@ -26,6 +26,7 @@ AlphaBetaSearch::AlphaBetaSearch(const AlphaBetaSearchParameters & params, TTPtr
 void AlphaBetaSearch::doSearch(GameState & initialState)
 {
 	m_searchTimer.start();
+	m_results.nodesExpanded = 0;
 
 	StateEvalScore alpha(-10000000, 1000000);
 	StateEvalScore beta	( 10000000, 1000000);
@@ -35,6 +36,8 @@ void AlphaBetaSearch::doSearch(GameState & initialState)
 	if (m_params.searchMethod() == SearchMethods::AlphaBeta)
 	{
 		val = alphaBeta(initialState, m_params.maxDepth(), Players::Player_None, NULL, alpha, beta);
+		m_results.bestMoves = val.abMove().moveVec();
+		m_results.abValue   = val.score().val();
 	}
 	else if (m_params.searchMethod() == SearchMethods::IDAlphaBeta)
 	{
