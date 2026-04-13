@@ -7,9 +7,9 @@ namespace SparCraft
 {
 class SparCraftException : public std::exception
 {
-    std::string _s;
-    GameState _state;
-    bool _hasState;
+    std::string m_s;
+    GameState m_state;
+    bool m_hasState;
 
 public :
 
@@ -22,3 +22,4 @@ public :
     const GameState & getState() const;
 }; 
 }
+

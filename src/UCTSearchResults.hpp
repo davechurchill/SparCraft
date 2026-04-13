@@ -22,7 +22,7 @@ public:
     std::vector<Action>     bestMoves;
 	ScoreType                   abValue;
 	
-    std::vector<std::vector<std::string> > _desc;    // 2-column description vector
+    std::vector<std::vector<std::string> > m_desc;    // 2-column description vector
 
 	UCTSearchResults() 
 		: nodesExpanded         (0)
@@ -38,23 +38,24 @@ public:
 
     std::vector<std::vector<std::string> > & getDescription()
     {
-        _desc.clear();
-        _desc.push_back(std::vector<std::string>());
-        _desc.push_back(std::vector<std::string>());
+        m_desc.clear();
+        m_desc.push_back(std::vector<std::string>());
+        m_desc.push_back(std::vector<std::string>());
 
         std::stringstream ss;
 
-        _desc[0].push_back("Traversals: ");
-        _desc[0].push_back("Nodes Visited: ");
-        _desc[0].push_back("Total Visits: ");
-        _desc[0].push_back("Nodes Created: ");
+        m_desc[0].push_back("Traversals: ");
+        m_desc[0].push_back("Nodes Visited: ");
+        m_desc[0].push_back("Total Visits: ");
+        m_desc[0].push_back("Nodes Created: ");
 
-        ss << traversals;       _desc[1].push_back(ss.str()); ss.str(std::string());
-        ss << nodesVisited;     _desc[1].push_back(ss.str()); ss.str(std::string());
-        ss << totalVisits;      _desc[1].push_back(ss.str()); ss.str(std::string());
-        ss << nodesCreated;     _desc[1].push_back(ss.str()); ss.str(std::string());
+        ss << traversals;       m_desc[1].push_back(ss.str()); ss.str(std::string());
+        ss << nodesVisited;     m_desc[1].push_back(ss.str()); ss.str(std::string());
+        ss << totalVisits;      m_desc[1].push_back(ss.str()); ss.str(std::string());
+        ss << nodesCreated;     m_desc[1].push_back(ss.str()); ss.str(std::string());
         
-        return _desc;
+        return m_desc;
     }
 };
 }
+

@@ -17,26 +17,26 @@ class Action;
 
 class Unit 
 {
-    BWAPI::UnitType     _unitType;				// the BWAPI unit type that we are mimicing
-    PositionType        _range;
+    BWAPI::UnitType     m_unitType;				// the BWAPI unit type that we are mimicing
+    PositionType        m_range;
 	
-	Position            _position;				// current location in a possibly infinite space
+	Position            m_position;				// current location in a possibly infinite space
 	
-	size_t              _unitID;				// unique unit ID to the state it's contained in
-    size_t              _playerID;				// the player who controls the unit
+	size_t              m_unitID;				// unique unit ID to the state it's contained in
+    size_t              m_playerID;				// the player who controls the unit
 	
-	HealthType          _currentHP;				// current HP of the unit
-	HealthType          _currentEnergy;
+	HealthType          m_currentHP;				// current HP of the unit
+	HealthType          m_currentEnergy;
 
-	TimeType            _timeCanMove;			// time the unit can next move
-	TimeType            _timeCanAttack;			// time the unit can next attack
+	TimeType            m_timeCanMove;			// time the unit can next move
+	TimeType            m_timeCanAttack;			// time the unit can next attack
 
-	Action              _previousAction;		// the previous action that the unit performed
-	TimeType            _previousActionTime;	// the time the previous move was performed
-	Position            _previousPosition;
+	Action              m_previousAction;		// the previous action that the unit performed
+	TimeType            m_previousActionTime;	// the time the previous move was performed
+	Position            m_previousPosition;
 
-    mutable TimeType    _prevCurrentPosTime;
-    mutable Position    _prevCurrentPos;
+    mutable TimeType    m_prevCurrentPosTime;
+    mutable Position    m_prevCurrentPos;
 
 public:
 
@@ -141,3 +141,4 @@ public:
 	}
 };
 }
+

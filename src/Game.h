@@ -19,9 +19,9 @@ class UnitScriptData;
 class Game
 {
 protected:
-	PlayerPtr			_players[2];
-	size_t				_numPlayers;
-	size_t				_playerToMoveMethod;
+	PlayerPtr			m_players[2];
+	size_t				m_numPlayers;
+	size_t				m_playerToMoveMethod;
 	size_t				rounds;
 	Timer				t;
 	double				gameTimeMS;
@@ -62,3 +62,4 @@ public:
 
 
 }
+

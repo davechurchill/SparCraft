@@ -4,16 +4,16 @@
 using namespace SparCraft;
 
 Unit::Unit()
-    : _unitType             (BWAPI::UnitTypes::None)
-    , _range                (0)
-    , _unitID               (255)
-    , _playerID             (255)
-    , _currentHP            (0)
-    , _currentEnergy        (0)
-    , _timeCanMove          (0)
-    , _timeCanAttack        (0)
-    , _previousActionTime   (0)
-    , _prevCurrentPosTime   (0)
+    : m_unitType             (BWAPI::UnitTypes::None)
+    , m_range                (0)
+    , m_unitID               (255)
+    , m_playerID             (255)
+    , m_currentHP            (0)
+    , m_currentEnergy        (0)
+    , m_timeCanMove          (0)
+    , m_timeCanAttack        (0)
+    , m_previousActionTime   (0)
+    , m_prevCurrentPosTime   (0)
 {
     
 }
@@ -21,38 +21,38 @@ Unit::Unit()
 // test constructor for setting all variables of a unit
 Unit::Unit(const BWAPI::UnitType unitType, const Position & pos, const size_t & unitID, const size_t & playerID, 
            const HealthType & hp, const HealthType & energy, const TimeType & tm, const TimeType & ta) 
-    : _unitType             (unitType)
-    , _range                (PlayerWeapon(&PlayerProperties::Get(playerID), unitType.groundWeapon()).GetMaxRange() + Constants::Range_Addition)
-    , _position             (pos)
-    , _unitID               (unitID)
-    , _playerID             (playerID)
-    , _currentHP            (hp)
-    , _currentEnergy        (energy)
-    , _timeCanMove          (tm)
-    , _timeCanAttack        (ta)
-    , _previousActionTime   (0)
-    , _prevCurrentPosTime   (0)
-    , _previousPosition     (pos)
-    , _prevCurrentPos       (pos)
+    : m_unitType             (unitType)
+    , m_range                (PlayerWeapon(&PlayerProperties::Get(playerID), unitType.groundWeapon()).GetMaxRange() + Constants::Range_Addition)
+    , m_position             (pos)
+    , m_unitID               (unitID)
+    , m_playerID             (playerID)
+    , m_currentHP            (hp)
+    , m_currentEnergy        (energy)
+    , m_timeCanMove          (tm)
+    , m_timeCanAttack        (ta)
+    , m_previousActionTime   (0)
+    , m_prevCurrentPosTime   (0)
+    , m_previousPosition     (pos)
+    , m_prevCurrentPos       (pos)
 {
     System::checkSupportedUnitType(unitType);
 }
 
 // constructor for units to construct basic units, sets some things automatically
 Unit::Unit(const BWAPI::UnitType unitType, const size_t & playerID, const Position & pos) 
-    : _unitType             (unitType)
-    , _range                (PlayerWeapon(&PlayerProperties::Get(playerID), unitType.groundWeapon()).GetMaxRange() + Constants::Range_Addition)
-    , _position             (pos)
-    , _unitID               (0)
-    , _playerID             (playerID)
-    , _currentHP            (maxHP())
-    , _currentEnergy        (unitType == BWAPI::UnitTypes::Terran_Medic ? Constants::Starting_Energy : 0)
-    , _timeCanMove          (0)
-    , _timeCanAttack        (0)
-    , _previousActionTime   (0)
-    , _prevCurrentPosTime   (0)
-    , _previousPosition     (pos)
-    , _prevCurrentPos       (pos)
+    : m_unitType             (unitType)
+    , m_range                (PlayerWeapon(&PlayerProperties::Get(playerID), unitType.groundWeapon()).GetMaxRange() + Constants::Range_Addition)
+    , m_position             (pos)
+    , m_unitID               (0)
+    , m_playerID             (playerID)
+    , m_currentHP            (maxHP())
+    , m_currentEnergy        (unitType == BWAPI::UnitTypes::Terran_Medic ? Constants::Starting_Energy : 0)
+    , m_timeCanMove          (0)
+    , m_timeCanAttack        (0)
+    , m_previousActionTime   (0)
+    , m_prevCurrentPosTime   (0)
+    , m_previousPosition     (pos)
+    , m_prevCurrentPos       (pos)
 {
     System::checkSupportedUnitType(unitType);
 }
@@ -103,7 +103,7 @@ const bool Unit::operator < (const Unit & rhs) const
 // compares a unit based on unit id
 const bool Unit::equalsID(const Unit & rhs) const
 { 
-    return _unitID == rhs._unitID; 
+    return m_unitID == rhs.m_unitID; 
 }
 // returns whether or not this unit can see a given unit at a given time
 bool Unit::canSeeTarget(const Unit & unit, const TimeType & gameTime) const
@@ -151,7 +151,7 @@ const bool Unit::canHealTarget(const Unit & unit, const TimeType & gameTime) con
 
 const Position & Unit::position() const
 {
-    return _position;
+    return m_position;
 }
 
 // take an attack, subtract the hp
@@ -171,25 +171,25 @@ void Unit::takeAttack(const Unit & attacker)
 
     //std::cout << type().getName() << " took " << (int)attacker.player() << " " << damage << "\n";
 
-    updateCurrentHP(_currentHP - damage);
+    updateCurrentHP(m_currentHP - damage);
 }
 
 void Unit::takeHeal(const Unit & healer)
 {
-    updateCurrentHP(_currentHP + healer.healAmount());
+    updateCurrentHP(m_currentHP + healer.healAmount());
 }
 
 // returns whether or not this unit is alive
 const bool Unit::isAlive() const
 {
-    return _currentHP > 0;
+    return m_currentHP > 0;
 }
 
 // attack a unit, set the times accordingly
 void Unit::attack(const Action & move, const Unit & target, const TimeType & gameTime)
 {
     // if this is a repeat attack
-    if (_previousAction.type() == ActionTypes::ATTACK || _previousAction.type() == ActionTypes::RELOAD)
+    if (m_previousAction.type() == ActionTypes::ATTACK || m_previousAction.type() == ActionTypes::RELOAD)
     {
         // add the repeat attack animation duration
         // can't attack again until attack cooldown is up
@@ -197,7 +197,7 @@ void Unit::attack(const Action & move, const Unit & target, const TimeType & gam
         updateAttackActionTime    (gameTime + attackCooldown());
     }
     // if there previous action was a MOVE action, add the move penalty
-    else if (_previousAction.type() == ActionTypes::MOVE)
+    else if (m_previousAction.type() == ActionTypes::MOVE)
     {
         updateMoveActionTime      (gameTime + attackInitFrameTime() + 2);
         updateAttackActionTime    (gameTime + attackCooldown() + Constants::Move_Penalty);
@@ -212,7 +212,7 @@ void Unit::attack(const Action & move, const Unit & target, const TimeType & gam
     // if the unit is not mobile, set its next move time to its next attack time
     if (!isMobile())
     {
-        updateMoveActionTime(_timeCanAttack);
+        updateMoveActionTime(m_timeCanAttack);
     }
 
     setPreviousAction(move, gameTime);
@@ -221,7 +221,7 @@ void Unit::attack(const Action & move, const Unit & target, const TimeType & gam
 // attack a unit, set the times accordingly
 void Unit::heal(const Action & move, const Unit & target, const TimeType & gameTime)
 {
-    _currentEnergy -= healCost();
+    m_currentEnergy -= healCost();
 
     // can't attack again until attack cooldown is up
     updateAttackActionTime        (gameTime + healCooldown());
@@ -238,7 +238,7 @@ void Unit::heal(const Action & move, const Unit & target, const TimeType & gameT
 // unit update for moving based on a given Move
 void Unit::move(const Action & move, const TimeType & gameTime) 
 {
-    _previousPosition = pos();
+    m_previousPosition = pos();
 
     // get the distance to the move action destination
     PositionType dist = move.pos().getDistance(pos());
@@ -253,8 +253,8 @@ void Unit::move(const Action & move, const TimeType & gameTime)
     updateAttackActionTime(std::max(nextAttackActionTime(), nextMoveActionTime()));
 
     // update the position
-    //_position.addPosition(dist * dir.x(), dist * dir.y());
-    _position.moveTo(move.pos());
+    //m_position.addPosition(dist * dir.x(), dist * dir.y());
+    m_position.moveTo(move.pos());
 
     setPreviousAction(move, gameTime);
 }
@@ -263,7 +263,7 @@ void Unit::move(const Action & move, const TimeType & gameTime)
 void Unit::waitUntilAttack(const Action & move, const TimeType & gameTime)
 {
     // do nothing until we can attack again
-    updateMoveActionTime(_timeCanAttack);
+    updateMoveActionTime(m_timeCanAttack);
     setPreviousAction(move, gameTime);
 }
 
@@ -288,60 +288,60 @@ const PositionType Unit::getDistanceSqToPosition(const Position & p, const TimeT
 const Position & Unit::currentPosition(const TimeType & gameTime) const
 {
     // if the previous move was MOVE, then we need to calculate where the unit is now
-    if (_previousAction.type() == ActionTypes::MOVE)
+    if (m_previousAction.type() == ActionTypes::MOVE)
     {
         // if gameTime is equal to previous move time then we haven't moved yet
-        if (gameTime == _previousActionTime)
+        if (gameTime == m_previousActionTime)
         {
-            return _previousPosition;
+            return m_previousPosition;
         }
         // else if game time is >= time we can move, then we have arrived at the destination
-        else if (gameTime >= _timeCanMove)
+        else if (gameTime >= m_timeCanMove)
         {
-            return _position;
+            return m_position;
         }
         // otherwise we are still moving, so calculate the current position
-        else if (gameTime == _prevCurrentPosTime)
+        else if (gameTime == m_prevCurrentPosTime)
         {
-            return _prevCurrentPos;
+            return m_prevCurrentPos;
         }
         else
         {
-            TimeType moveDuration = _timeCanMove - _previousActionTime;
-            float moveTimeRatio = (float)(gameTime - _previousActionTime) / moveDuration;
-            _prevCurrentPosTime = gameTime;
+            TimeType moveDuration = m_timeCanMove - m_previousActionTime;
+            float moveTimeRatio = (float)(gameTime - m_previousActionTime) / moveDuration;
+            m_prevCurrentPosTime = gameTime;
 
             // calculate the new current position
-            _prevCurrentPos = _position;
-            _prevCurrentPos.subtractPosition(_previousPosition);
-            _prevCurrentPos.scalePosition(moveTimeRatio);
-            _prevCurrentPos.addPosition(_previousPosition);
+            m_prevCurrentPos = m_position;
+            m_prevCurrentPos.subtractPosition(m_previousPosition);
+            m_prevCurrentPos.scalePosition(moveTimeRatio);
+            m_prevCurrentPos.addPosition(m_previousPosition);
 
-            //_prevCurrentPos = _previousPosition + (_position - _previousPosition).scale(moveTimeRatio);
-            return _prevCurrentPos;
+            //m_prevCurrentPos = m_previousPosition + (m_position - m_previousPosition).scale(moveTimeRatio);
+            return m_prevCurrentPos;
         }
     }
     // if it wasn't a MOVE, then we just return the Unit position
     else
     {
-        return _position;
+        return m_position;
     }
 }
 
 void Unit::setPreviousPosition(const TimeType & gameTime)
 {
-    TimeType moveDuration = _timeCanMove - _previousActionTime;
-    float moveTimeRatio = (float)(gameTime - _previousActionTime) / moveDuration;
-    _prevCurrentPosTime = gameTime;
-    _prevCurrentPos = _previousPosition + (_position - _previousPosition).scale(moveTimeRatio);
+    TimeType moveDuration = m_timeCanMove - m_previousActionTime;
+    float moveTimeRatio = (float)(gameTime - m_previousActionTime) / moveDuration;
+    m_prevCurrentPosTime = gameTime;
+    m_prevCurrentPos = m_previousPosition + (m_position - m_previousPosition).scale(moveTimeRatio);
 }
 
 // returns the damage a unit does
 const HealthType Unit::damage() const	
 { 
-    return _unitType == BWAPI::UnitTypes::Protoss_Zealot ? 
-        2 * (HealthType)_unitType.groundWeapon().damageAmount() : 
-    (HealthType)_unitType.groundWeapon().damageAmount(); 
+    return m_unitType == BWAPI::UnitTypes::Protoss_Zealot ? 
+        2 * (HealthType)m_unitType.groundWeapon().damageAmount() : 
+    (HealthType)m_unitType.groundWeapon().damageAmount(); 
 }
 
 const HealthType Unit::healAmount() const
@@ -351,104 +351,104 @@ const HealthType Unit::healAmount() const
 
 void Unit::print() const 
 { 
-    printf("%s %5d [%5d %5d] (%5d, %5d)\n", _unitType.getName().c_str(), currentHP(), nextAttackActionTime(), nextMoveActionTime(), x(), y()); 
+    printf("%s %5d [%5d %5d] (%5d, %5d)\n", m_unitType.getName().c_str(), currentHP(), nextAttackActionTime(), nextMoveActionTime(), x(), y()); 
 }
 
 void Unit::updateCurrentHP(const HealthType & newHP) 
 { 
-    _currentHP = std::min(maxHP(), newHP); 
+    m_currentHP = std::min(maxHP(), newHP); 
 }
 
 void Unit::updateAttackActionTime(const TimeType & newTime)
 { 
-    _timeCanAttack = newTime; 
+    m_timeCanAttack = newTime; 
 }
 
 void Unit::updateMoveActionTime(const TimeType & newTime)
 { 
-    _timeCanMove = newTime; 
+    m_timeCanMove = newTime; 
 } 
 
 void Unit::setCooldown(TimeType attack, TimeType move)
 { 
-    _timeCanAttack = attack; _timeCanMove = move; 
+    m_timeCanAttack = attack; m_timeCanMove = move; 
 }
 
 void Unit::setUnitID(const size_t & id)
 { 
-    _unitID = id; 
+    m_unitID = id; 
 }
 
 void Unit::setPreviousAction(const Action & m, const TimeType & previousMoveTime) 
 {	
     // if it was an attack move, store the unitID of the opponent unit
-    _previousAction = m;
-    _previousActionTime = previousMoveTime; 
+    m_previousAction = m;
+    m_previousActionTime = previousMoveTime; 
 }
 
 const bool Unit::canAttackNow() const
 { 
-    return !canHeal() && _timeCanAttack <= _timeCanMove; 
+    return !canHeal() && m_timeCanAttack <= m_timeCanMove; 
 }
 
 const bool Unit::canMoveNow() const
 { 
-    return isMobile() && _timeCanMove <= _timeCanAttack; 
+    return isMobile() && m_timeCanMove <= m_timeCanAttack; 
 }
 
 const bool Unit::canHealNow() const
 { 
-    return canHeal() && (currentEnergy() >= healCost()) && (_timeCanAttack <= _timeCanMove); 
+    return canHeal() && (currentEnergy() >= healCost()) && (m_timeCanAttack <= m_timeCanMove); 
 }
 
 const bool Unit::canKite() const
 { 
-    return _timeCanMove < _timeCanAttack; 
+    return m_timeCanMove < m_timeCanAttack; 
 }
 
 const bool Unit::isMobile() const
 { 
-    return _unitType.canMove(); 
+    return m_unitType.canMove(); 
 }
 
 const bool Unit::canHeal() const
 { 
-    return _unitType == BWAPI::UnitTypes::Terran_Medic; 
+    return m_unitType == BWAPI::UnitTypes::Terran_Medic; 
 }
 
 const bool Unit::isOrganic() const
 { 
-    return _unitType.isOrganic(); 
+    return m_unitType.isOrganic(); 
 }
 
 const size_t Unit::ID() const	
 { 
-    return _unitID; 
+    return m_unitID; 
 }
 
 const size_t Unit::player() const
 { 
-    return _playerID; 
+    return m_playerID; 
 }
 
 const Position & Unit::pos() const
 { 
-    return _position; 
+    return m_position; 
 }
 
 const PositionType Unit::x() const 
 { 
-    return _position.x(); 
+    return m_position.x(); 
 }
 
 const PositionType Unit::y() const 
 { 
-    return _position.y(); 
+    return m_position.y(); 
 }
 
 const PositionType Unit::range() const 
 { 
-    return _range; 
+    return m_range; 
 }
 
 const PositionType Unit::healRange() const
@@ -458,22 +458,22 @@ const PositionType Unit::healRange() const
 
 const HealthType Unit::maxHP() const 
 { 
-    return (HealthType)_unitType.maxHitPoints() + (HealthType)_unitType.maxShields(); 
+    return (HealthType)m_unitType.maxHitPoints() + (HealthType)m_unitType.maxShields(); 
 }
 
 const HealthType Unit::currentHP() const 
 { 
-    return (HealthType)_currentHP; 
+    return (HealthType)m_currentHP; 
 }
 
 const HealthType Unit::currentEnergy() const 
 { 
-    return (HealthType)_currentEnergy; 
+    return (HealthType)m_currentEnergy; 
 }
 
 const HealthType Unit::maxEnergy() const
 { 
-    return (HealthType)_unitType.maxEnergy(); 
+    return (HealthType)m_unitType.maxEnergy(); 
 }
 
 const HealthType Unit::healCost() const	
@@ -488,12 +488,12 @@ const float Unit::dpf() const
 
 const TimeType Unit::moveCooldown() const 
 { 
-    return (TimeType)((double)Constants::Move_Distance / _unitType.topSpeed()); 
+    return (TimeType)((double)Constants::Move_Distance / m_unitType.topSpeed()); 
 }
 
 const TimeType Unit::attackCooldown() const 
 { 
-    return (TimeType)_unitType.groundWeapon().damageCooldown(); 
+    return (TimeType)m_unitType.groundWeapon().damageCooldown(); 
 }
 
 const TimeType Unit::healCooldown() const 
@@ -503,62 +503,62 @@ const TimeType Unit::healCooldown() const
 
 const TimeType Unit::nextAttackActionTime() const 
 { 
-    return _timeCanAttack; 
+    return m_timeCanAttack; 
 }
 
 const TimeType Unit::nextMoveActionTime() const	
 { 
-    return _timeCanMove; 
+    return m_timeCanMove; 
 }
 
 const TimeType Unit::previousActionTime() const	
 { 
-    return _previousActionTime; 
+    return m_previousActionTime; 
 }
 
 const TimeType Unit::firstTimeFree() const	
 { 
-    return _timeCanAttack <= _timeCanMove ? _timeCanAttack : _timeCanMove; 
+    return m_timeCanAttack <= m_timeCanMove ? m_timeCanAttack : m_timeCanMove; 
 }
 
 const TimeType Unit::attackInitFrameTime() const	
 { 
-    return AnimationFrameData::getAttackFrames(_unitType).first; 
+    return AnimationFrameData::getAttackFrames(m_unitType).first; 
 }
 
 const TimeType Unit::attackRepeatFrameTime() const	
 {
-    return AnimationFrameData::getAttackFrames(_unitType).second; 
+    return AnimationFrameData::getAttackFrames(m_unitType).second; 
 }
 
 const int Unit::typeID() const	
 { 
-    return _unitType.getID(); 
+    return m_unitType.getID(); 
 }
 
 const double Unit::speed() const 
 { 
-    return _unitType.topSpeed(); 
+    return m_unitType.topSpeed(); 
 }
 
 const BWAPI::UnitType Unit::type() const 
 { 
-    return _unitType; 
+    return m_unitType; 
 }
 
 const Action & Unit::previousAction() const 
 { 
-    return _previousAction; 
+    return m_previousAction; 
 }
 
 const BWAPI::UnitSizeType Unit::getSize() const
 {
-    return _unitType.size();
+    return m_unitType.size();
 }
 
 const PlayerWeapon Unit::getWeapon(const Unit & target) const
 {
-    return PlayerWeapon(&PlayerProperties::Get(player()), target.type().isFlyer() ? _unitType.airWeapon() : _unitType.groundWeapon());
+    return PlayerWeapon(&PlayerProperties::Get(player()), target.type().isFlyer() ? m_unitType.airWeapon() : m_unitType.groundWeapon());
 }
 
 const HealthType Unit::getArmor() const
@@ -568,12 +568,12 @@ const HealthType Unit::getArmor() const
 
 const BWAPI::WeaponType Unit::getWeapon(BWAPI::UnitType target) const
 {
-    return target.isFlyer() ? _unitType.airWeapon() : _unitType.groundWeapon();
+    return target.isFlyer() ? m_unitType.airWeapon() : m_unitType.groundWeapon();
 }
 
 const std::string Unit::name() const 
 { 
-    std::string n(_unitType.getName());
+    std::string n(m_unitType.getName());
     std::replace(n.begin(), n.end(), ' ', '_');
     return n;
 }
@@ -583,27 +583,27 @@ const HashType Unit::calculateHash(const size_t & hashNum, const TimeType & game
 {
     Position currentPos = currentPosition(gameTime);
 
-    return	  Hash::values[hashNum].positionHash(_playerID, currentPos.x(), currentPos.y()) 
-            ^ Hash::values[hashNum].getAttackHash(_playerID, nextAttackActionTime() - gameTime) 
-            ^ Hash::values[hashNum].getMoveHash(_playerID, nextMoveActionTime() - gameTime)
-            ^ Hash::values[hashNum].getCurrentHPHash(_playerID, currentHP())
-            ^ Hash::values[hashNum].getUnitTypeHash(_playerID, typeID());
+    return	  Hash::values[hashNum].positionHash(m_playerID, currentPos.x(), currentPos.y()) 
+            ^ Hash::values[hashNum].getAttackHash(m_playerID, nextAttackActionTime() - gameTime) 
+            ^ Hash::values[hashNum].getMoveHash(m_playerID, nextMoveActionTime() - gameTime)
+            ^ Hash::values[hashNum].getCurrentHPHash(m_playerID, currentHP())
+            ^ Hash::values[hashNum].getUnitTypeHash(m_playerID, typeID());
 }
 
 // calculates the hash of this unit based on a given game time, and prints debug info
 void Unit::debugHash(const size_t & hashNum, const TimeType & gameTime) const
 {
-    std::cout << " Pos   " << Hash::values[hashNum].positionHash(_playerID, position().x(), position().y());
-    std::cout << " Att   " << Hash::values[hashNum].getAttackHash(_playerID, nextAttackActionTime() - gameTime);
-    std::cout << " Mov   " << Hash::values[hashNum].getMoveHash(_playerID, nextMoveActionTime() - gameTime);
-    std::cout << " HP    " << Hash::values[hashNum].getCurrentHPHash(_playerID, currentHP());
-    std::cout << " Typ   " << Hash::values[hashNum].getUnitTypeHash(_playerID, typeID()) << "\n";;
+    std::cout << " Pos   " << Hash::values[hashNum].positionHash(m_playerID, position().x(), position().y());
+    std::cout << " Att   " << Hash::values[hashNum].getAttackHash(m_playerID, nextAttackActionTime() - gameTime);
+    std::cout << " Mov   " << Hash::values[hashNum].getMoveHash(m_playerID, nextMoveActionTime() - gameTime);
+    std::cout << " HP    " << Hash::values[hashNum].getCurrentHPHash(m_playerID, currentHP());
+    std::cout << " Typ   " << Hash::values[hashNum].getUnitTypeHash(m_playerID, typeID()) << "\n";;
 
-    HashType hash = Hash::values[hashNum].positionHash(_playerID, position().x(), position().y()); std::cout << hash << "\n";
-    hash ^= Hash::values[hashNum].getAttackHash(_playerID, nextAttackActionTime() - gameTime) ; std::cout << hash << "\n";
-    hash ^= Hash::values[hashNum].getMoveHash(_playerID, nextMoveActionTime() - gameTime); std::cout << hash << "\n";
-    hash ^= Hash::values[hashNum].getCurrentHPHash(_playerID, currentHP()); std::cout << hash << "\n";
-    hash ^= Hash::values[hashNum].getUnitTypeHash(_playerID, typeID()); std::cout << hash << "\n";
+    HashType hash = Hash::values[hashNum].positionHash(m_playerID, position().x(), position().y()); std::cout << hash << "\n";
+    hash ^= Hash::values[hashNum].getAttackHash(m_playerID, nextAttackActionTime() - gameTime) ; std::cout << hash << "\n";
+    hash ^= Hash::values[hashNum].getMoveHash(m_playerID, nextMoveActionTime() - gameTime); std::cout << hash << "\n";
+    hash ^= Hash::values[hashNum].getCurrentHPHash(m_playerID, currentHP()); std::cout << hash << "\n";
+    hash ^= Hash::values[hashNum].getUnitTypeHash(m_playerID, typeID()); std::cout << hash << "\n";
 }
 
 const std::string Unit::debugString() const
@@ -614,13 +614,14 @@ const std::string Unit::debugString() const
     ss << "Unit ID:             " << (int)ID()                                      << "\n";
     ss << "Player:              " << (int)player()                                  << "\n";
     ss << "Range:               " << range()                                        << "\n";
-    ss << "Position:            " << "(" << _position.x() << "," << _position.y()   << ")\n";
+    ss << "Position:            " << "(" << m_position.x() << "," << m_position.y()   << ")\n";
     ss << "Current HP:          " << currentHP()                                    << "\n";
     ss << "Next Move Time:      " << nextMoveActionTime()                           << "\n";
     ss << "Next Attack Time:    " << nextAttackActionTime()                         << "\n";
     ss << "Previous Action:     " << previousAction().debugString()                 << "\n";
-    ss << "Previous Pos Time:   " << _prevCurrentPosTime                            << "\n";
-    ss << "Previous Pos:        " << "(" << _prevCurrentPos.x() << "," << _prevCurrentPos.y()   << ")\n";
+    ss << "Previous Pos Time:   " << m_prevCurrentPosTime                            << "\n";
+    ss << "Previous Pos:        " << "(" << m_prevCurrentPos.x() << "," << m_prevCurrentPos.y()   << ")\n";
 
     return ss.str();
 }
+

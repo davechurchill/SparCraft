@@ -3,24 +3,24 @@
 using namespace SparCraft;
 
 AlphaBetaMove::AlphaBetaMove()
-    : _isValid(false)
+    : m_isValid(false)
 {
 }
 
 AlphaBetaMove::AlphaBetaMove(const std::vector<Action> & move,const bool & isValid)
-    : _move(move)
-    ,_isValid(isValid)
+    : m_move(move)
+    ,m_isValid(isValid)
 {
 }
 
 const bool AlphaBetaMove::isValid() const 
 { 
-    return _isValid; 
+    return m_isValid; 
 }
 
 const std::vector<Action> & AlphaBetaMove::moveVec() const 
 { 
-    return _move; 
+    return m_move; 
 }
 
 TTBestMove::TTBestMove()
@@ -28,19 +28,19 @@ TTBestMove::TTBestMove()
 }
 
 TTBestMove::TTBestMove(const AlphaBetaMove & first,const AlphaBetaMove & second)
-    : _firstMove(first)
-    ,_secondMove(second)
+    : m_firstMove(first)
+    ,m_secondMove(second)
 {
 }
 
 const AlphaBetaMove & TTBestMove::firstMove() const 
 { 
-    return _firstMove; 
+    return m_firstMove; 
 }
 
 const AlphaBetaMove & TTBestMove::secondMove() const 
 { 
-    return _secondMove; 
+    return m_secondMove; 
 }
 
 AlphaBetaValue::AlphaBetaValue()
@@ -48,17 +48,18 @@ AlphaBetaValue::AlphaBetaValue()
 }
 
 AlphaBetaValue::AlphaBetaValue(const StateEvalScore & score,const AlphaBetaMove & abMove)
-    : _score(score)
-    ,_move(abMove)
+    : m_score(score)
+    ,m_move(abMove)
 {
 }
 
 const StateEvalScore & AlphaBetaValue::score() const 
 { 
-    return _score; 
+    return m_score; 
 }
 
 const AlphaBetaMove & AlphaBetaValue::abMove() const 
 { 
-    return _move; 
+    return m_move; 
 }
+

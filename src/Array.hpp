@@ -5,33 +5,33 @@ namespace SparCraft
 template <class T, size_t elem>
 class Array
 {
-	size_t	_size;
-	size_t  _capacity;
-	T		_arr[elem];
+	size_t	m_size;
+	size_t  m_capacity;
+	T		m_arr[elem];
 
 public:
 
 	Array<T, elem> ()
-		: _size(0)
-		, _capacity(elem)
+		: m_size(0)
+		, m_capacity(elem)
 	{
 	}
 
 	Array<T, elem> (const T & fill)
-		: _size(0)
-		, _capacity(elem)
+		: m_size(0)
+		, m_capacity(elem)
 	{
-		std::fill(_arr, _arr + elem, fill);
+		std::fill(m_arr, m_arr + elem, fill);
 	}
 
 	T & get(const size_t & index)
 	{
-		return _arr[index];
+		return m_arr[index];
 	}
 
 	const T & get(const size_t & index) const
 	{
-		return _arr[index];
+		return m_arr[index];
 	}
 
 	T & operator [] (const size_t & index)
@@ -59,12 +59,12 @@ public:
 
 	const size_t capacity() const
 	{
-		return _capacity;
+		return m_capacity;
 	}
 
 	const bool containsSize(const T & e) const
 	{
-		for (size_t i(0); i<_size; ++i)
+		for (size_t i(0); i<m_size; ++i)
 		{
 			if (get(i) == e)
 			{
@@ -77,14 +77,14 @@ public:
 
 	void inc()
 	{
-		_size++;
+		m_size++;
 	}		
 
 	void add(const T & e)
 	{
-		assert(_size < (capacity()-1));
-		get(_size) = e;
-		_size++;
+		assert(m_size < (capacity()-1));
+		get(m_size) = e;
+		m_size++;
 	}
 
 	void addUnique(const T & e)
@@ -97,39 +97,39 @@ public:
 
 	const T & back() const
 	{
-		assert(_size > 0);
-		return get(_size);
+		assert(m_size > 0);
+		return get(m_size);
 	}
 
 	void clear()
 	{
-		_size = 0;
+		m_size = 0;
 	}
 
 	const size_t & size() const
 	{
-		return _size;
+		return m_size;
 	}
 
 	void fill(const T & e)
 	{
-		std::fill(_arr, _arr + elem, e);
+		std::fill(m_arr, m_arr + elem, e);
 	}
 };
 
 template <class T, size_t rows, size_t cols>
 class Array2D
 {
-	size_t					_rows;
-	size_t					_cols;
+	size_t					m_rows;
+	size_t					m_cols;
 
-	Array< Array<T, cols>, rows>	_arr;
+	Array< Array<T, cols>, rows>	m_arr;
 
 public:
 
 	Array2D<T, rows, cols>()
-		: _rows(rows)
-		, _cols(cols)
+		: m_rows(rows)
+		, m_cols(cols)
 	{
 	}
 
@@ -140,46 +140,47 @@ public:
 			return *this;
 		}
 
-		for (size_t r(0); r<_rows; ++r)
+		for (size_t r(0); r<m_rows; ++r)
 		{
-			_arr[r] = rhs._arr[r];
+			m_arr[r] = rhs.m_arr[r];
 		}
 
 		return *this;
 	}
 
 	Array2D<T, rows, cols> (const Array2D<T, rows, cols> & rhs)
-		: _rows(rhs._rows)
-		, _cols(rhs._cols)
-		, _arr(rhs._arr)
+		: m_rows(rhs.m_rows)
+		, m_cols(rhs.m_cols)
+		, m_arr(rhs.m_arr)
 	{
 		
 	}
 
 	const size_t getRows() const
 	{
-		return _arr.capacity();
+		return m_arr.capacity();
 	}
 	
 	Array<T, cols> & operator [] (const size_t & index)
 	{
-		assert(index < _rows);
-		return _arr[index];
+		assert(index < m_rows);
+		return m_arr[index];
 	}
 	
 	const Array<T, cols> & operator [] (const size_t & index) const
 	{
-		assert(index < _rows);
-		return _arr[index];
+		assert(index < m_rows);
+		return m_arr[index];
 	}
 
 	void fill(const T & e)
 	{
-		for (size_t i(0); i<_rows; ++i)
+		for (size_t i(0); i<m_rows; ++i)
 		{
-			_arr[i].fill(e);
+			m_arr[i].fill(e);
 		}
 	}
 
 };
 }
+

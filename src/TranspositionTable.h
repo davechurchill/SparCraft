@@ -18,11 +18,11 @@ public:
 
 private:
 
-	HashType			_hash2;
-	StateEvalScore		_score;
-	size_t				_depth;
-	TTBestMove			_bestMoves[2];
-	int					_type;
+	HashType			m_hash2;
+	StateEvalScore		m_score;
+	size_t				m_depth;
+	TTBestMove			m_bestMoves[2];
+	int					m_type;
 
 public:
 
@@ -43,37 +43,37 @@ public:
 
 	void print() const
 	{
-		printf ("%d, %d, %d, %d\n", (int) _hash2, (int) _score.val(), (int) _depth, (int) _type);
+		printf ("%d, %d, %d, %d\n", (int) m_hash2, (int) m_score.val(), (int) m_depth, (int) m_type);
 	}
 };
 
 
 class TTLookupValue
 {
-	bool		_found;		// did we find a value?
-	bool		_cut;		// should we produce a cut?
-	TTEntry *	_entry;		// the entry we found
+	bool		m_found;		// did we find a value?
+	bool		m_cut;		// should we produce a cut?
+	TTEntry *	m_entry;		// the entry we found
 
 public:
 
 	TTLookupValue()
-		: _found(false)
-		, _cut(false)
-		, _entry(NULL)
+		: m_found(false)
+		, m_cut(false)
+		, m_entry(NULL)
 	{
 	}
 
 	TTLookupValue(const bool found, const bool cut, TTEntry * entry)
-		: _found(found)
-		, _cut(cut)
-		, _entry(entry)
+		: m_found(found)
+		, m_cut(cut)
+		, m_entry(entry)
 	{
 		
 	}
 
-	const bool found() const	{ return _found; }
-	const bool cut() const		{ return _cut; }
-	TTEntry * entry() const		{ return _entry; }
+	const bool found() const	{ return m_found; }
+	const bool cut() const		{ return m_cut; }
+	TTEntry * entry() const		{ return m_entry; }
 };
 
 class TranspositionTable 
@@ -133,3 +133,4 @@ public:
 
 typedef	std::shared_ptr<TranspositionTable> TTPtr;
 }
+

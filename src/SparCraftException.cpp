@@ -3,19 +3,19 @@
 using namespace SparCraft;
 
 SparCraftException::SparCraftException(std::string ss) 
-    : _s(ss) 
-    , _hasState(false)
+    : m_s(ss) 
+    , m_hasState(false)
 {
 }
 
 SparCraftException::SparCraftException(std::string ss, const GameState * state) 
-    : _s(ss) 
-    , _hasState(false)
+    : m_s(ss) 
+    , m_hasState(false)
 {
     if (state != nullptr)
     {
-        _state = *state;
-        _hasState = true;
+        m_state = *state;
+        m_hasState = true;
     }
 }
 
@@ -25,15 +25,16 @@ SparCraftException::~SparCraftException() throw ()
 
 const char* SparCraftException::what() const throw() 
 { 
-    return _s.c_str(); 
+    return m_s.c_str(); 
 }
 
 bool SparCraftException::hasState() const 
 { 
-    return _hasState; 
+    return m_hasState; 
 }
 
 const GameState & SparCraftException::getState() const 
 { 
-    return _state; 
+    return m_state; 
 }
+

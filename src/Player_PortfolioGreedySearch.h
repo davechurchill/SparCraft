@@ -8,10 +8,10 @@ namespace SparCraft
 {
 class Player_PortfolioGreedySearch : public Player
 {
-	size_t _seed;
-	size_t _iterations;
-    size_t _responses;
-    size_t _timeLimit;
+	size_t m_seed;
+	size_t m_iterations;
+    size_t m_responses;
+    size_t m_timeLimit;
 public:
 	Player_PortfolioGreedySearch (const size_t & playerID);
     Player_PortfolioGreedySearch (const size_t & playerID, const size_t & seed, const size_t & iter, const size_t & responses, const size_t & timeLimit);
@@ -19,3 +19,4 @@ public:
     size_t getType() { return PlayerModels::PortfolioGreedySearch; }
 };
 }
+

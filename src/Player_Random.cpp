@@ -5,7 +5,7 @@ using namespace SparCraft;
 Player_Random::Player_Random (const size_t & playerID)
 	: rand(0, std::numeric_limits<int>::max(), Constants::Seed_Player_Random_Time ? static_cast<unsigned int>(std::time(0)) : 0)
 {
-	_playerID = playerID;
+	m_playerID = playerID;
 }
 
 void Player_Random::getMoves(GameState & state, const MoveArray & moves, std::vector<Action> & moveVec)
@@ -17,3 +17,4 @@ void Player_Random::getMoves(GameState & state, const MoveArray & moves, std::ve
 		moveVec.push_back(moves.getMove(u, rand.nextInt() % moves.numMoves(u)));
 	}
 }
+

@@ -3,52 +3,52 @@
 using namespace SparCraft;
 
 AlphaBetaSearch::AlphaBetaSearch(const AlphaBetaSearchParameters & params, TTPtr TT) 
-	: _params(params)
-	, _currentRootDepth(0)
+	: m_params(params)
+	, m_currentRootDepth(0)
 	, _TT(TT ? TT : TTPtr(new TranspositionTable()))
 {
     for (size_t p(0); p<Constants::Num_Players; ++p)
     {
         // set ordered move script player objects
-        for (size_t s(0); s<_params.getOrderedMoveScripts().size(); ++s)
+        for (size_t s(0); s<m_params.getOrderedMoveScripts().size(); ++s)
         {
-            _allScripts[p].push_back(AllPlayers::getPlayerPtr(p, _params.getOrderedMoveScripts()[s]));
+            m_allScripts[p].push_back(AllPlayers::getPlayerPtr(p, m_params.getOrderedMoveScripts()[s]));
         }
 
         // set player model objects
-        if (_params.playerModel(p) != PlayerModels::None)
+        if (m_params.playerModel(p) != PlayerModels::None)
         {
-            _playerModels[p] = AllPlayers::getPlayerPtr(p, _params.playerModel(p));
+            m_playerModels[p] = AllPlayers::getPlayerPtr(p, m_params.playerModel(p));
         }
     }
 }
 
 void AlphaBetaSearch::doSearch(GameState & initialState)
 {
-	_searchTimer.start();
+	m_searchTimer.start();
 
 	StateEvalScore alpha(-10000000, 1000000);
 	StateEvalScore beta	( 10000000, 1000000);
 
 	AlphaBetaValue val;
 
-	if (_params.searchMethod() == SearchMethods::AlphaBeta)
+	if (m_params.searchMethod() == SearchMethods::AlphaBeta)
 	{
-		val = alphaBeta(initialState, _params.maxDepth(), Players::Player_None, NULL, alpha, beta);
+		val = alphaBeta(initialState, m_params.maxDepth(), Players::Player_None, NULL, alpha, beta);
 	}
-	else if (_params.searchMethod() == SearchMethods::IDAlphaBeta)
+	else if (m_params.searchMethod() == SearchMethods::IDAlphaBeta)
 	{
-		val = IDAlphaBeta(initialState, _params.maxDepth());
+		val = IDAlphaBeta(initialState, m_params.maxDepth());
 	}
 
-	_results.timeElapsed = _searchTimer.elapsedMS();
+	m_results.timeElapsed = m_searchTimer.elapsedMS();
 }
 
 AlphaBetaValue AlphaBetaSearch::IDAlphaBeta(GameState & initialState, const size_t & maxDepth)
 {
 	AlphaBetaValue val;
-	_results.nodesExpanded = 0;
-	_results.maxDepthReached = 0;
+	m_results.nodesExpanded = 0;
+	m_results.maxDepthReached = 0;
 
 	for (size_t d(1); d < maxDepth; ++d)
 	{
@@ -56,16 +56,16 @@ AlphaBetaValue AlphaBetaSearch::IDAlphaBeta(GameState & initialState, const size
 		StateEvalScore alpha(-10000000, 999999);
 		StateEvalScore beta	( 10000000, 999999);
 		
-		_results.maxDepthReached = d;
-		_currentRootDepth = d;
+		m_results.maxDepthReached = d;
+		m_currentRootDepth = d;
 
 		// perform ID-AB until time-out
 		try
 		{
 			val = alphaBeta(initialState, d, Players::Player_None, NULL, alpha, beta);
 
-			_results.bestMoves = val.abMove().moveVec();
-			_results.abValue = val.score().val();
+			m_results.bestMoves = val.abMove().moveVec();
+			m_results.abValue = val.score().val();
 		}
 		// if we do time-out
 		catch (int e)
@@ -79,14 +79,14 @@ AlphaBetaValue AlphaBetaSearch::IDAlphaBeta(GameState & initialState, const size
 				const size_t playerToMove(getPlayerToMove(initialState, 1, Players::Player_None, true));
 				initialState.generateMoves(moves, playerToMove);
 				PlayerPtr bestScript(new Player_NOKDPS(playerToMove));
-				bestScript->getMoves(initialState, moves, _results.bestMoves);
+				bestScript->getMoves(initialState, moves, m_results.bestMoves);
 			}
 
 			break;
 		}
 
-		long long unsigned nodes = _results.nodesExpanded;
-		double ms = _searchTimer.elapsedMS();
+		long long unsigned nodes = m_results.nodesExpanded;
+		double ms = m_searchTimer.elapsedMS();
 
 		//printTTResults();
 		//fprintf(stdout, "%s %8d %9d %9d %13.4lf %14llu %12d %12llu %15.2lf\n", "IDA", d, val.score().val(), (int)val.abMove().moveTuple(), ms, nodes, (int)_TT->numFound(), getResults().ttcuts, 1000*nodes/ms);
@@ -104,7 +104,7 @@ void AlphaBetaSearch::TTsave(	GameState & state, const StateEvalScore & value, c
 	bool valid = entry && entry->isValid();
 	size_t edepth = entry ? entry->getDepth() : 0;
 
-	_results.ttSaveAttempts++;
+	m_results.ttSaveAttempts++;
 	
 	if (valid && (edepth > depth)) 
 	{
@@ -155,19 +155,19 @@ TTLookupValue AlphaBetaSearch::TTlookup(const GameState & state, StateEvalScore 
 		if (alpha >= beta) 
 		{
 			// this will be a cut
-			_results.ttcuts++;
+			m_results.ttcuts++;
 			return TTLookupValue(true, true, entry);
 		}
 		else
 		{
 			// found but no cut
-			_results.ttFoundNoCut++;
+			m_results.ttFoundNoCut++;
 			return TTLookupValue(true, false, entry);
 		}
 	}
 	else if (entry)
 	{
-		_results.ttFoundLessDepth++;
+		m_results.ttFoundLessDepth++;
 		return TTLookupValue(true, false, entry);
 	}
 
@@ -176,7 +176,7 @@ TTLookupValue AlphaBetaSearch::TTlookup(const GameState & state, StateEvalScore 
 
 const bool AlphaBetaSearch::searchTimeOut()
 {
-	return (_params.timeLimit() && (_results.nodesExpanded % 50 == 0) && (_searchTimer.elapsedMS() >= _params.timeLimit()));
+	return (m_params.timeLimit() && (m_results.nodesExpanded % 50 == 0) && (m_searchTimer.elapsedMS() >= m_params.timeLimit()));
 }
 
 const bool AlphaBetaSearch::terminalState(GameState & state, const size_t & depth) const
@@ -203,17 +203,17 @@ const AlphaBetaMove & AlphaBetaSearch::getAlphaBetaMove(const TTLookupValue & TT
 void AlphaBetaSearch::generateOrderedMoves(GameState & state, MoveArray & moves, const TTLookupValue & TTval, const size_t & playerToMove, const size_t & depth)
 {
 	// get the array where we will store the moves and clear it
-	Array<std::vector<Action>, Constants::Max_Ordered_Moves> & orderedMoves(_orderedMoves[depth]);
+	Array<std::vector<Action>, Constants::Max_Ordered_Moves> & orderedMoves(m_orderedMoves[depth]);
 	orderedMoves.clear();
 
 	// if we are using opponent modeling, get the move and then return, we don't want to put any more moves in
-	if (_params.playerModel(playerToMove) != PlayerModels::None)
+	if (m_params.playerModel(playerToMove) != PlayerModels::None)
 	{
         // put the vector into the ordered moves array
         orderedMoves.add(std::vector<Action>());
 
         // generate the moves into that vector
-        _playerModels[playerToMove]->getMoves(state, moves, orderedMoves[0]);
+        m_playerModels[playerToMove]->getMoves(state, moves, orderedMoves[0]);
 		
 		return;
 	}
@@ -224,7 +224,7 @@ void AlphaBetaSearch::generateOrderedMoves(GameState & state, MoveArray & moves,
 		// get the abMove we stored for this player
 		const AlphaBetaMove & abMove = getAlphaBetaMove(TTval, playerToMove);
 
-		_results.ttFoundCheck++;
+		m_results.ttFoundCheck++;
 
 		// Two checks:
 		// 1) Is the move 'valid' ie: was it actually set inside the TT
@@ -233,12 +233,12 @@ void AlphaBetaSearch::generateOrderedMoves(GameState & state, MoveArray & moves,
 		if (abMove.isValid())
 		{
 			orderedMoves.add(abMove.moveVec());
-			_results.ttMoveOrders++;
+			m_results.ttMoveOrders++;
 			return;
 		}
 		else
 		{
-			_results.ttFoundButNoMove++;
+			m_results.ttFoundButNoMove++;
 		}
 	}*/
 
@@ -248,12 +248,12 @@ void AlphaBetaSearch::generateOrderedMoves(GameState & state, MoveArray & moves,
     }
 
     // if we are using script move ordering, insert the script moves we want
-    if (_params.moveOrderingMethod() == MoveOrderMethod::ScriptFirst)
+    if (m_params.moveOrderingMethod() == MoveOrderMethod::ScriptFirst)
     {
-        for (size_t s(0); s<_params.getOrderedMoveScripts().size(); s++)
+        for (size_t s(0); s<m_params.getOrderedMoveScripts().size(); s++)
 	    {
             std::vector<Action> moveVec;
-		    _allScripts[playerToMove][s]->getMoves(state, moves, moveVec);
+		    m_allScripts[playerToMove][s]->getMoves(state, moves, moveVec);
 		    orderedMoves.add(moveVec);
 	    }
 
@@ -266,7 +266,7 @@ void AlphaBetaSearch::generateOrderedMoves(GameState & state, MoveArray & moves,
 
 bool AlphaBetaSearch::getNextMoveVec(size_t playerToMove, MoveArray & moves, const size_t & moveNumber, const TTLookupValue & TTval, const size_t & depth, std::vector<Action> & moveVec) const
 {
-    if (_params.maxChildren() && (moveNumber >= _params.maxChildren()))
+    if (m_params.maxChildren() && (moveNumber >= m_params.maxChildren()))
     {
         return false;
     }
@@ -275,7 +275,7 @@ bool AlphaBetaSearch::getNextMoveVec(size_t playerToMove, MoveArray & moves, con
     if (moveNumber == 1)
     {
         // if we are player modeling, we should have only generated the first move
-        if (_params.playerModel(playerToMove) != PlayerModels::None)
+        if (m_params.playerModel(playerToMove) != PlayerModels::None)
 	    {
             // so return false
 		    return false;
@@ -294,7 +294,7 @@ bool AlphaBetaSearch::getNextMoveVec(size_t playerToMove, MoveArray & moves, con
 	    }
     }
 
-	const Array<std::vector<Action>, Constants::Max_Ordered_Moves> & orderedMoves(_orderedMoves[depth]);
+	const Array<std::vector<Action>, Constants::Max_Ordered_Moves> & orderedMoves(m_orderedMoves[depth]);
     moveVec.clear();
    
 	// if this move should be from the ordered list, return it from the list
@@ -332,8 +332,8 @@ const size_t AlphaBetaSearch::getPlayerToMove(GameState & state, const size_t & 
 		}
 
 		// pick the first move based on our policy
-		const size_t policy(_params.playerToMoveMethod());
-		const size_t maxPlayer(_params.maxPlayer());
+		const size_t policy(m_params.playerToMoveMethod());
+		const size_t maxPlayer(m_params.maxPlayer());
 
 		if (policy == SparCraft::PlayerToMove::Alternate)
 		{
@@ -367,7 +367,7 @@ const bool AlphaBetaSearch::isTranspositionLookupState(GameState & state, const 
 AlphaBetaValue AlphaBetaSearch::alphaBeta(GameState & state, size_t depth, const size_t lastPlayerToMove, std::vector<Action> * prevSimMove, StateEvalScore alpha, StateEvalScore beta)
 {
 	// update statistics
-	_results.nodesExpanded++;
+	m_results.nodesExpanded++;
 
 	if (searchTimeOut())
 	{
@@ -377,16 +377,16 @@ AlphaBetaValue AlphaBetaSearch::alphaBeta(GameState & state, size_t depth, const
 	if (terminalState(state, depth))
 	{
 		// return the value, but the move will not be valid since none was performed
-        StateEvalScore evalScore = state.eval(_params.maxPlayer(), _params.evalMethod(), _params.simScript(Players::Player_One), _params.simScript(Players::Player_Two));
+        StateEvalScore evalScore = state.eval(m_params.maxPlayer(), m_params.evalMethod(), m_params.simScript(Players::Player_One), m_params.simScript(Players::Player_Two));
 		
-		return AlphaBetaValue(StateEvalScore(evalScore.val(), state.getNumMovements(_params.maxPlayer()) + evalScore.numMoves() ), AlphaBetaMove());
+		return AlphaBetaValue(StateEvalScore(evalScore.val(), state.getNumMovements(m_params.maxPlayer()) + evalScore.numMoves() ), AlphaBetaMove());
 	}
 
 	// figure out which player is to move
 	const size_t playerToMove(getPlayerToMove(state, depth, lastPlayerToMove, !prevSimMove));
 
 	// is the player to move the max player?
-	bool maxPlayer = (playerToMove == _params.maxPlayer());
+	bool maxPlayer = (playerToMove == m_params.maxPlayer());
 
 	// Transposition Table Logic
 	TTLookupValue TTval;
@@ -404,7 +404,7 @@ AlphaBetaValue AlphaBetaSearch::alphaBeta(GameState & state, size_t depth, const
 	bool bestMoveSet(false);
 
 	// move generation
-	MoveArray & moves = _allMoves[depth];
+	MoveArray & moves = m_allMoves[depth];
 	state.generateMoves(moves, playerToMove);
     moves.shuffleMoveActions();
 	generateOrderedMoves(state, moves, TTval, playerToMove, depth);
@@ -503,7 +503,7 @@ AlphaBetaValue AlphaBetaSearch::alphaBeta(GameState & state, size_t depth, const
 
 AlphaBetaSearchResults & AlphaBetaSearch::getResults()
 {
-	return _results;
+	return m_results;
 }
 
 const size_t AlphaBetaSearch::getEnemy(const size_t & player) const
@@ -513,14 +513,14 @@ const size_t AlphaBetaSearch::getEnemy(const size_t & player) const
 
 const bool AlphaBetaSearch::isRoot(const size_t & depth) const
 {
-	return depth == _currentRootDepth;
+	return depth == m_currentRootDepth;
 }
 
 void AlphaBetaSearch::printTTResults() const
 {
 	printf("\n");
 	printf("Total Usage            %9d\n", (int)_TT->getUsage());
-	printf("Save Attempt           %9d\n", (int)_results.ttSaveAttempts);
+	printf("Save Attempt           %9d\n", (int)m_results.ttSaveAttempts);
 	printf("   Save Succeed        %9d\n", (int)_TT->numSaves());
 	printf("      Save Empty       %9d\n", (int)_TT->saveEmpty);
 	printf("      Save Self        %9d\n", (int)_TT->saveOverwriteSelf);
@@ -529,11 +529,11 @@ void AlphaBetaSearch::printTTResults() const
 	printf("   Not Found           %9d\n", (int)_TT->numNotFound());
 	printf("   Collisions          %9d\n", (int)_TT->numCollisions());
 	printf("   Found               %9d\n", (int)_TT->numFound());
-	printf("      Less Depth       %9d\n", (int)_results.ttFoundLessDepth);
-	printf("      More Depth       %9d\n", ((int)_results.ttFoundCheck + (int)_results.ttcuts));
-	printf("         Cut           %9d\n", (int)_results.ttcuts);
-	printf("         Move          %9d\n", (int)_results.ttMoveOrders);
-	printf("         No Move       %9d\n", (int)_results.ttFoundButNoMove);
+	printf("      Less Depth       %9d\n", (int)m_results.ttFoundLessDepth);
+	printf("      More Depth       %9d\n", ((int)m_results.ttFoundCheck + (int)m_results.ttcuts));
+	printf("         Cut           %9d\n", (int)m_results.ttcuts);
+	printf("         Move          %9d\n", (int)m_results.ttMoveOrders);
+	printf("         No Move       %9d\n", (int)m_results.ttFoundButNoMove);
 	printf("\n");
 }
 

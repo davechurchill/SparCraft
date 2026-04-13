@@ -10,8 +10,8 @@ namespace SparCraft
 {
 class Player_UCT : public Player
 {
-    UCTSearchParameters     _params;
-    UCTSearchResults        _prevResults;
+    UCTSearchParameters     m_params;
+    UCTSearchResults        m_prevResults;
 public:
     Player_UCT (const size_t & playerID, const UCTSearchParameters & params);
 	void getMoves(GameState & state, const MoveArray & moves, std::vector<Action> & moveVec);
@@ -20,3 +20,4 @@ public:
     UCTSearchResults & getResults();
 };
 }
+

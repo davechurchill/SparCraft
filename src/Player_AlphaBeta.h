@@ -21,7 +21,7 @@ class Player_AlphaBeta : public Player
 {
 	AlphaBetaSearch * alphaBeta = nullptr;
 	TTPtr TT;
-	AlphaBetaSearchParameters _params;
+	AlphaBetaSearchParameters m_params;
 public:
 	Player_AlphaBeta (const size_t & playerID);
 	Player_AlphaBeta (const size_t & playerID, const AlphaBetaSearchParameters & params, TTPtr table);
@@ -35,3 +35,4 @@ public:
 };
 
 }
+

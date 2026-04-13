@@ -4,7 +4,7 @@ using namespace SparCraft;
 
 Player_AttackWeakest::Player_AttackWeakest (const size_t & playerID) 
 {
-	_playerID = playerID;
+	m_playerID = playerID;
 }
 
 void Player_AttackWeakest::getMoves(GameState & state, const MoveArray & moves, std::vector<Action> & moveVec)
@@ -18,8 +18,8 @@ void Player_AttackWeakest::getMoves(GameState & state, const MoveArray & moves, 
 		size_t actionLowestHP					(1000000);
 		unsigned long long closestMoveDist		(std::numeric_limits<unsigned long long>::max());
 		
-		const Unit & ourUnit				(state.getUnit(_playerID, u));
-		const Unit & closestUnit			(ourUnit.canHeal() ? state.getClosestOurUnit(_playerID, u) : state.getClosestEnemyUnit(_playerID, u));
+		const Unit & ourUnit				(state.getUnit(m_playerID, u));
+		const Unit & closestUnit			(ourUnit.canHeal() ? state.getClosestOurUnit(m_playerID, u) : state.getClosestEnemyUnit(m_playerID, u));
 
 		for (size_t m(0); m<moves.numMoves(u); ++m)
 		{
@@ -74,3 +74,4 @@ void Player_AttackWeakest::getMoves(GameState & state, const MoveArray & moves, 
 		moveVec.push_back(moves.getMove(u, bestMoveIndex));
 	}
 }
+

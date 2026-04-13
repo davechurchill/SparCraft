@@ -10,76 +10,76 @@ namespace SparCraft
 class UCTNode
 {
     // uct stat counting variables
-    size_t                      _numVisits;         // total visits to this node
-    double                      _numWins;           // wins from this node
-    double                      _uctVal;            // previous computed UCT value
+    size_t                      m_numVisits;         // total visits to this node
+    double                      m_numWins;           // wins from this node
+    double                      m_uctVal;            // previous computed UCT value
             
     // game specific variables
-    size_t                      _player;            // the player who made a move to generate this node
-    size_t                      _nodeType;
-    std::vector<Action>     _move;              // the ove that generated this node
+    size_t                      m_player;            // the player who made a move to generate this node
+    size_t                      m_nodeType;
+    std::vector<Action>     m_move;              // the ove that generated this node
 
     // holds children
-    std::vector<UCTNode>        _children;
+    std::vector<UCTNode>        m_children;
 
     // nodes for traversing the tree
-    UCTNode *                   _parent;
+    UCTNode *                   m_parent;
     
 public:
 
     UCTNode ()
-        : _numVisits            (0)
-        , _numWins              (0)
-        , _uctVal               (0)
-        , _player               (Players::Player_None)
-        , _nodeType             (SearchNodeType::Default)
-        , _parent               (NULL)
+        : m_numVisits            (0)
+        , m_numWins              (0)
+        , m_uctVal               (0)
+        , m_player               (Players::Player_None)
+        , m_nodeType             (SearchNodeType::Default)
+        , m_parent               (NULL)
     {
 
     }
 
     UCTNode (UCTNode * parent, const size_t player, const size_t nodeType, const std::vector<Action> & move, const size_t & maxChildren, std::vector<UCTNode> * fromPool = NULL)
-        : _numVisits            (0)
-        , _numWins              (0)
-        , _uctVal               (0)
-        , _player               (player)
-        , _nodeType             (nodeType)
-        , _move                 (move)
-        , _parent               (parent)
+        : m_numVisits            (0)
+        , m_numWins              (0)
+        , m_uctVal               (0)
+        , m_player               (player)
+        , m_nodeType             (nodeType)
+        , m_move                 (move)
+        , m_parent               (parent)
     {
-        _children.reserve(maxChildren);
+        m_children.reserve(maxChildren);
     }
 
-    const size_t    numVisits()                 const           { return _numVisits; }
-    const double    numWins()                   const           { return _numWins; }
-    const size_t    numChildren()               const           { return _children.size(); }
-    const double    getUCTVal()                 const           { return _uctVal; }
+    const size_t    numVisits()                 const           { return m_numVisits; }
+    const double    numWins()                   const           { return m_numWins; }
+    const size_t    numChildren()               const           { return m_children.size(); }
+    const double    getUCTVal()                 const           { return m_uctVal; }
     const bool      hasChildren()               const           { return numChildren() > 0; }
-    const size_t    getNodeType()               const           { return _nodeType; }
-    const size_t    getPlayer()                 const           { return _player; }
+    const size_t    getNodeType()               const           { return m_nodeType; }
+    const size_t    getPlayer()                 const           { return m_player; }
 
-    UCTNode *       getParent()                 const           { return _parent; }
-    UCTNode &       getChild(const size_t & c)                  { return _children[c]; }
+    UCTNode *       getParent()                 const           { return m_parent; }
+    UCTNode &       getChild(const size_t & c)                  { return m_children[c]; }
 
-    void            setUCTVal(double val)                       { _uctVal = val; }
-    void            incVisits()                                 { _numVisits++; }
-    void            addWins(double val)                         { _numWins += val; }
+    void            setUCTVal(double val)                       { m_uctVal = val; }
+    void            incVisits()                                 { m_numVisits++; }
+    void            addWins(double val)                         { m_numWins += val; }
 
-    std::vector<UCTNode> & getChildren()                        { return _children; }
+    std::vector<UCTNode> & getChildren()                        { return m_children; }
 
     const std::vector<Action> & getMove() const
     {
-        return _move;
+        return m_move;
     }
 
     void setMove(const std::vector<Action> & move)
     {
-        _move = move;
+        m_move = move;
     }
 
     void addChild(UCTNode * parent, const size_t player, const size_t nodeType, const std::vector<Action> & move, const size_t & maxChildren, std::vector<UCTNode> * fromPool = NULL)
     {
-        _children.push_back(UCTNode(parent, player, nodeType, move, maxChildren));
+        m_children.push_back(UCTNode(parent, player, nodeType, move, maxChildren));
     }
 
     UCTNode & mostVisitedChild() 
@@ -133,3 +133,4 @@ public:
     }
 };
 }
+

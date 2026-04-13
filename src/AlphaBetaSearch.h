@@ -25,21 +25,21 @@ class Player;
 
 class AlphaBetaSearch
 {
-	AlphaBetaSearchParameters               _params;
-	AlphaBetaSearchResults                  _results;
-	SparCraft::Timer                        _searchTimer;
+	AlphaBetaSearchParameters               m_params;
+	AlphaBetaSearchResults                  m_results;
+	SparCraft::Timer                        m_searchTimer;
 
-	size_t                                  _currentRootDepth;
+	size_t                                  m_currentRootDepth;
 
 	Array<MoveArray, 
-          Constants::Max_Search_Depth>      _allMoves;
+          Constants::Max_Search_Depth>      m_allMoves;
 
 	Array2D<std::vector<Action>, 
 			Constants::Max_Search_Depth, 
-			Constants::Max_Ordered_Moves>   _orderedMoves;
+			Constants::Max_Ordered_Moves>   m_orderedMoves;
 
-    std::vector<PlayerPtr>					_allScripts[Constants::Num_Players];
-    PlayerPtr                               _playerModels[Constants::Num_Players];
+    std::vector<PlayerPtr>					m_allScripts[Constants::Num_Players];
+    PlayerPtr                               m_playerModels[Constants::Num_Players];
 
 	TTPtr                                   _TT;
 
@@ -77,3 +77,4 @@ public:
 	void printTTResults() const;
 };
 }
+

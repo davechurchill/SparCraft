@@ -4,25 +4,26 @@ using namespace SparCraft;
 
 Player_PortfolioGreedySearch::Player_PortfolioGreedySearch (const size_t & playerID) 
 {
-	_playerID = playerID;
-	_iterations = 1;
-    _responses = 0;
-	_seed = PlayerModels::NOKDPS;
+	m_playerID = playerID;
+	m_iterations = 1;
+    m_responses = 0;
+	m_seed = PlayerModels::NOKDPS;
 }
 
 Player_PortfolioGreedySearch::Player_PortfolioGreedySearch (const size_t & playerID, const size_t & seed, const size_t & iter, const size_t & responses, const size_t & timeLimit)
 {
-	_playerID = playerID;
-	_iterations = iter;
-    _responses = responses;
-	_seed = seed;
-    _timeLimit = timeLimit;
+	m_playerID = playerID;
+	m_iterations = iter;
+    m_responses = responses;
+	m_seed = seed;
+    m_timeLimit = timeLimit;
 }
 
 void Player_PortfolioGreedySearch::getMoves(GameState & state, const MoveArray & moves, std::vector<Action> & moveVec)
 {
     moveVec.clear();
-	PortfolioGreedySearch pgs(_playerID, _seed, _iterations, _responses, _timeLimit);
+	PortfolioGreedySearch pgs(m_playerID, m_seed, m_iterations, m_responses, m_timeLimit);
 
-	moveVec = pgs.search(_playerID, state);
+	moveVec = pgs.search(m_playerID, state);
 }
+

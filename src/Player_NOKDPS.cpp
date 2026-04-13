@@ -4,13 +4,13 @@ using namespace SparCraft;
 
 Player_NOKDPS::Player_NOKDPS (const size_t & playerID) 
 {
-	_playerID = playerID;
+	m_playerID = playerID;
 }
 
 void Player_NOKDPS::getMoves(GameState & state, const MoveArray & moves, std::vector<Action> & moveVec)
 {
     moveVec.clear();
-	size_t enemy(state.getEnemy(_playerID));
+	size_t enemy(state.getEnemy(m_playerID));
 
 	Array<int, Constants::Max_Units> hpRemaining;
 
@@ -27,8 +27,8 @@ void Player_NOKDPS::getMoves(GameState & state, const MoveArray & moves, std::ve
 		size_t closestMoveIndex					(0);
 		unsigned long long closestMoveDist		(std::numeric_limits<unsigned long long>::max());
 		
-		const Unit & ourUnit				(state.getUnit(_playerID, u));
-		const Unit & closestUnit(ourUnit.canHeal() ? state.getClosestOurUnit(_playerID, u) : ourUnit.type().isDetector() ? state.getClosestEnemyUnit(_playerID, u, false):state.getClosestEnemyUnit(_playerID, u, true));
+		const Unit & ourUnit				(state.getUnit(m_playerID, u));
+		const Unit & closestUnit(ourUnit.canHeal() ? state.getClosestOurUnit(m_playerID, u) : ourUnit.type().isDetector() ? state.getClosestEnemyUnit(m_playerID, u, false):state.getClosestEnemyUnit(m_playerID, u, true));
 		
 		for (size_t m(0); m<moves.numMoves(u); ++m)
 		{
@@ -49,7 +49,7 @@ void Player_NOKDPS::getMoves(GameState & state, const MoveArray & moves, std::ve
                 if (move.index() >= state.numUnits(enemy))
                 {
                     int e = (int)enemy;
-                    int pl = (int)_playerID;
+                    int pl = (int)m_playerID;
                     printf("wtf\n");
                 }
 			}
@@ -92,9 +92,10 @@ void Player_NOKDPS::getMoves(GameState & state, const MoveArray & moves, std::ve
 			Action theMove(moves.getMove(u, bestMoveIndex));
 			if (theMove.type() == ActionTypes::ATTACK)
 			{
-				hpRemaining[theMove.index()] -= state.getUnit(_playerID, theMove.unit()).damage();
+				hpRemaining[theMove.index()] -= state.getUnit(m_playerID, theMove.unit()).damage();
 			}
 			
 		moveVec.push_back(moves.getMove(u, bestMoveIndex));
 	}
 }
+

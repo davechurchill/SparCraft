@@ -8,18 +8,18 @@ UnitScriptData::UnitScriptData()
 
 std::vector<Action> & UnitScriptData::getMoves(const size_t & player, const size_t & actualScript)
 {
-    return _allScriptMoves[player][actualScript];
+    return m_allScriptMoves[player][actualScript];
 }
 
 Action & UnitScriptData::getMove(const size_t & player, const size_t & unitIndex, const size_t & actualScript)
 {
-    return _allScriptMoves[player][actualScript][unitIndex];
+    return m_allScriptMoves[player][actualScript][unitIndex];
 }
 
 void UnitScriptData::calculateMoves(const size_t & player, MoveArray & moves, GameState & state, std::vector<Action> & moveVec)
 {
     // generate all script moves for this player at this state and store them in allScriptMoves
-    for (size_t scriptIndex(0); scriptIndex<_scriptVec[player].size(); ++scriptIndex)
+    for (size_t scriptIndex(0); scriptIndex<m_scriptVec[player].size(); ++scriptIndex)
     {
         // get the associated player pointer
         const PlayerPtr & pp = getPlayerPtr(player, scriptIndex);
@@ -48,7 +48,7 @@ void UnitScriptData::calculateMoves(const size_t & player, MoveArray & moves, Ga
 
 const size_t & UnitScriptData::getUnitScript(const size_t & player, const int & id) const
 {
-    return (*_unitScriptMap[player].find(id)).second;
+    return (*m_unitScriptMap[player].find(id)).second;
 }
     
 const size_t & UnitScriptData::getUnitScript(const Unit & unit) const
@@ -58,32 +58,33 @@ const size_t & UnitScriptData::getUnitScript(const Unit & unit) const
 
 const size_t & UnitScriptData::getScript(const size_t & player, const size_t & index)
 {
-    return _scriptVec[player][index];
+    return m_scriptVec[player][index];
 }
 
 const PlayerPtr & UnitScriptData::getPlayerPtr(const size_t & player, const size_t & index)
 {
-    return _playerPtrVec[player][index];
+    return m_playerPtrVec[player][index];
 }
 
 const size_t UnitScriptData::getNumScripts(const size_t & player) const
 {
-    return _scriptSet[player].size();
+    return m_scriptSet[player].size();
 }
 
 void UnitScriptData::setUnitScript(const size_t & player, const int & id, const size_t & script)
 {
-    if (_scriptSet[player].find(script) == _scriptSet[player].end())
+    if (m_scriptSet[player].find(script) == m_scriptSet[player].end())
     {
-        _scriptSet[player].insert(script);
-        _scriptVec[player].push_back(script);
-        _playerPtrVec[player].push_back(PlayerPtr(AllPlayers::getPlayerPtr(player, script)));
+        m_scriptSet[player].insert(script);
+        m_scriptVec[player].push_back(script);
+        m_playerPtrVec[player].push_back(PlayerPtr(AllPlayers::getPlayerPtr(player, script)));
     }
         
-    _unitScriptMap[player][id] = script;
+    m_unitScriptMap[player][id] = script;
 }
 
 void UnitScriptData::setUnitScript(const Unit & unit, const size_t & script)
 {
     setUnitScript(unit.player(), (int)unit.ID(), script);
 }
+

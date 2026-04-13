@@ -12,14 +12,14 @@ typedef std::vector< std::vector<bool> > bvv;
 
 class Map
 {
-	size_t					_walkTileWidth;
-	size_t					_walkTileHeight;
-	size_t					_buildTileWidth;
-	size_t					_buildTileHeight;
-	bvv						_mapData;	            // true if walk tile [x][y] is walkable
+	size_t					m_walkTileWidth;
+	size_t					m_walkTileHeight;
+	size_t					m_buildTileWidth;
+	size_t					m_buildTileHeight;
+	bvv						m_mapData;	            // true if walk tile [x][y] is walkable
 
-	bvv						_unitData;	            // true if unit on build tile [x][y]
-	bvv						_buildingData;          // true if building on build tile [x][y]
+	bvv						m_unitData;	            // true if unit on build tile [x][y]
+	bvv						m_buildingData;          // true if building on build tile [x][y]
 
 	const Position getWalkPosition(const Position & pixelPosition) const
 	{
@@ -28,42 +28,42 @@ class Map
 
     void resetVectors()
     {
-        _mapData =          bvv(_walkTileWidth,  std::vector<bool>(_walkTileHeight,  true));
-		_unitData =         bvv(_buildTileWidth, std::vector<bool>(_buildTileHeight, false));
-		_buildingData =     bvv(_buildTileWidth, std::vector<bool>(_buildTileHeight, false));
+        m_mapData =          bvv(m_walkTileWidth,  std::vector<bool>(m_walkTileHeight,  true));
+		m_unitData =         bvv(m_buildTileWidth, std::vector<bool>(m_buildTileHeight, false));
+		m_buildingData =     bvv(m_buildTileWidth, std::vector<bool>(m_buildTileHeight, false));
     }
 
 public:
 
 	Map() 
-        : _walkTileWidth(0)
-		, _walkTileHeight(0)
-		, _buildTileWidth(0)
-		, _buildTileHeight(0)
+        : m_walkTileWidth(0)
+		, m_walkTileHeight(0)
+		, m_buildTileWidth(0)
+		, m_buildTileHeight(0)
     {
     }
 
     // constructor which sets a completely walkable map
     Map(const size_t & bottomRightBuildTileX, const size_t & bottomRightBuildTileY)
-        : _walkTileWidth(bottomRightBuildTileX * 4)
-		, _walkTileHeight(bottomRightBuildTileY * 4)
-		, _buildTileWidth(bottomRightBuildTileX)
-		, _buildTileHeight(bottomRightBuildTileY)
+        : m_walkTileWidth(bottomRightBuildTileX * 4)
+		, m_walkTileHeight(bottomRightBuildTileY * 4)
+		, m_buildTileWidth(bottomRightBuildTileX)
+		, m_buildTileHeight(bottomRightBuildTileY)
     {
         resetVectors();
     }
 
 	Map(BWAPI::Game & game) 
-        : _walkTileWidth(static_cast<size_t>(game.mapWidth()) * 4)
-		, _walkTileHeight(static_cast<size_t>(game.mapHeight()) * 4)
-		, _buildTileWidth(static_cast<size_t>(game.mapWidth()))
-		, _buildTileHeight(static_cast<size_t>(game.mapHeight()))
+        : m_walkTileWidth(static_cast<size_t>(game.mapWidth()) * 4)
+		, m_walkTileHeight(static_cast<size_t>(game.mapHeight()) * 4)
+		, m_buildTileWidth(static_cast<size_t>(game.mapWidth()))
+		, m_buildTileHeight(static_cast<size_t>(game.mapHeight()))
 	{
 		resetVectors();
 
-		for (size_t x(0); x<_walkTileWidth; ++x)
+		for (size_t x(0); x<m_walkTileWidth; ++x)
 		{
-			for (size_t y(0); y<_walkTileHeight; ++y)
+			for (size_t y(0); y<m_walkTileHeight; ++y)
 			{
 				setMapData(x, y, game.isWalkable(static_cast<int>(x), static_cast<int>(y)));
 			}
@@ -82,22 +82,22 @@ public:
 
 	const size_t & getWalkTileWidth() const
 	{
-		return _walkTileWidth;
+		return m_walkTileWidth;
 	}
 
 	const size_t & getWalkTileHeight() const
 	{
-		return _walkTileHeight;
+		return m_walkTileHeight;
 	}
 
 	const size_t & getBuildTileWidth() const
 	{
-		return _buildTileWidth;
+		return m_buildTileWidth;
 	}
 
 	const size_t & getBuildTileHeight() const
 	{
-		return _buildTileHeight;
+		return m_buildTileHeight;
 	}
 
 	const bool isWalkable(const SparCraft::Position & pixelPosition) const
@@ -129,22 +129,22 @@ public:
 
 	const bool getMapData(const size_t & walkTileX, const size_t & walkTileY) const
 	{
-		return _mapData[walkTileX][walkTileY];
+		return m_mapData[walkTileX][walkTileY];
 	}
 
 	const bool getUnitData(const size_t & buildTileX, const size_t & buildTileY) const
 	{
-		return _unitData[buildTileX][buildTileY];
+		return m_unitData[buildTileX][buildTileY];
 	}
 
 	void setMapData(const size_t & walkTileX, const size_t & walkTileY, const bool val)
 	{
-		_mapData[walkTileX][walkTileY] = val;
+		m_mapData[walkTileX][walkTileY] = val;
 	}
 
 	void setUnitData(BWAPI::Game & game)
 	{
-		_unitData = bvv(getBuildTileWidth(), std::vector<bool>(getBuildTileHeight(), true));
+		m_unitData = bvv(getBuildTileWidth(), std::vector<bool>(getBuildTileHeight(), true));
 
 		for (BWAPI::Unit * unit : game.getAllUnits())
 		{
@@ -163,12 +163,12 @@ public:
         {
             return false;
         }
-		return _unitData[static_cast<size_t>(x)][static_cast<size_t>(y)] && _buildingData[static_cast<size_t>(x)][static_cast<size_t>(y)];
+		return m_unitData[static_cast<size_t>(x)][static_cast<size_t>(y)] && m_buildingData[static_cast<size_t>(x)][static_cast<size_t>(y)];
 	}
 
 	void setBuildingData(BWAPI::Game & game)
 	{
-		_buildingData = bvv(getBuildTileWidth(), std::vector<bool>(getBuildTileHeight(), true));
+		m_buildingData = bvv(getBuildTileWidth(), std::vector<bool>(getBuildTileHeight(), true));
 
 		for (BWAPI::Unit * unit : game.getAllUnits())
 		{
@@ -203,7 +203,7 @@ public:
 			{
 				for(int y = startY; y < endY; ++y)
 				{
-					_buildingData[x][y] = false;
+					m_buildingData[x][y] = false;
 				}
 			}
 		}
@@ -221,7 +221,7 @@ public:
 			{
 				for (int y = startY; y < endY; ++y)
 				{
-					_unitData[x][y] = false;
+					m_unitData[x][y] = false;
 				}
 			}
 		}
@@ -272,13 +272,13 @@ public:
 		std::string line;
 		
 		getline(fin, line);
-		_walkTileWidth = atoi(line.c_str());
+		m_walkTileWidth = atoi(line.c_str());
 
 		getline(fin, line);
-		_walkTileHeight = atoi(line.c_str());
+		m_walkTileHeight = atoi(line.c_str());
 
-        _buildTileWidth = _walkTileWidth/4;
-        _buildTileHeight = _walkTileHeight/4;
+        m_buildTileWidth = m_walkTileWidth/4;
+        m_buildTileHeight = m_walkTileHeight/4;
 
 		resetVectors();
 
@@ -288,7 +288,7 @@ public:
 
 			for (size_t x(0); x<getWalkTileWidth(); ++x)
 			{
-				_mapData[x][y] = line[x] == '1' ? true : false;
+				m_mapData[x][y] = line[x] == '1' ? true : false;
 			}
 		}
 
@@ -296,3 +296,4 @@ public:
 	}
 };
 }
+

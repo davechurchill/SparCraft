@@ -3,41 +3,41 @@
 using namespace SparCraft;
 
 TTEntry::TTEntry()
-	: _hash2(0)
-	, _depth(0)
-	, _type(TTEntry::NONE)
+	: m_hash2(0)
+	, m_depth(0)
+	, m_type(TTEntry::NONE)
 {
 
 }
 
 TTEntry::TTEntry(const HashType & hash2, const StateEvalScore & score, const size_t & depth, const int & type, 
 				const size_t & firstPlayer, const AlphaBetaMove & bestFirstMove, const AlphaBetaMove & bestSecondMove)
-	: _hash2(hash2)
-	, _score(score)
-	, _depth(depth)
-	, _type(type)
+	: m_hash2(hash2)
+	, m_score(score)
+	, m_depth(depth)
+	, m_type(type)
 {
-	_bestMoves[firstPlayer] = TTBestMove(bestFirstMove, bestSecondMove);
+	m_bestMoves[firstPlayer] = TTBestMove(bestFirstMove, bestSecondMove);
 }
 
 const bool TTEntry::hashMatches(const HashType & hash2) const
 {
-	return hash2 == _hash2;
+	return hash2 == m_hash2;
 }
 
 const bool TTEntry::isValid() const
 {
-	return _type != TTEntry::NONE;
+	return m_type != TTEntry::NONE;
 }
 
-const HashType & TTEntry::getHash()								const { return _hash2; }
-const StateEvalScore & TTEntry::getScore()						const { return _score; }
-const size_t & TTEntry::getDepth()								const { return _depth; }
-const int & TTEntry::getType()									const { return _type;  }
-const TTBestMove & TTEntry::getBestMove(const size_t & player)	const { return _bestMoves[player];  }
+const HashType & TTEntry::getHash()								const { return m_hash2; }
+const StateEvalScore & TTEntry::getScore()						const { return m_score; }
+const size_t & TTEntry::getDepth()								const { return m_depth; }
+const int & TTEntry::getType()									const { return m_type;  }
+const TTBestMove & TTEntry::getBestMove(const size_t & player)	const { return m_bestMoves[player];  }
 void TTEntry::setBestMove(const size_t &firstPlayer, const AlphaBetaMove & bestFirstMove, const AlphaBetaMove & bestSecondMove)
 {
-	_bestMoves[firstPlayer] = TTBestMove(bestFirstMove, bestSecondMove);
+	m_bestMoves[firstPlayer] = TTBestMove(bestFirstMove, bestSecondMove);
 }
 
 TranspositionTable::TranspositionTable () 
@@ -208,3 +208,4 @@ void TranspositionTable::print()
 {
 	std::cout << "TT stats: " << lookups << " lookups, " << found << " found, " << notFound << " not found, " << collisions << " collions. " << minIndex << " min, " << maxIndex << " max.\n";
 }
+

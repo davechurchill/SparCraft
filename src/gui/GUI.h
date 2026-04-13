@@ -19,16 +19,16 @@ namespace SparCraft
 
 class GUI
 {
-    int _initialWidth;
-    int _initialHeight;
-    bool _isStarted;
+    int m_initialWidth;
+    int m_initialHeight;
+    bool m_isStarted;
 
-    sf::RenderWindow _window;
-    sf::Clock _deltaClock;
+    sf::RenderWindow m_window;
+    sf::Clock m_deltaClock;
 
-    GUIGame _guiGame;
+    GUIGame m_guiGame;
 
-    std::unordered_map<int, sf::Texture> _unitTextures;
+    std::unordered_map<int, sf::Texture> m_unitTextures;
 
     void handleEvents();
     void render();
@@ -62,3 +62,4 @@ public:
 };
 
 }
+

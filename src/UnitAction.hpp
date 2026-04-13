@@ -16,71 +16,71 @@ class UnitAction
 
 public:
 
-	IDType			_unit,
-					_player,
-					_moveType,
-					_moveIndex;
+	IDType			m_unit,
+					m_player,
+					m_moveType,
+					m_moveIndex;
 
-    Position        _p;
+    Position        m_p;
 
 	UnitAction()
-		: _unit(255)
-		, _player(255)
-		, _moveType(UnitActionTypes::NONE)
-		, _moveIndex(255)
+		: m_unit(255)
+		, m_player(255)
+		, m_moveType(UnitActionTypes::NONE)
+		, m_moveIndex(255)
 	{
 
 	}
 
     UnitAction( const IDType & unitIndex, const IDType & player, const IDType & type, const IDType & moveIndex, const Position & dest)
-        : _unit(unitIndex)
-        , _player(player)
-        , _moveType(type)
-        , _moveIndex(moveIndex)
-        , _p(dest)
+        : m_unit(unitIndex)
+        , m_player(player)
+        , m_moveType(type)
+        , m_moveIndex(moveIndex)
+        , m_p(dest)
     {
         
     }
 
 	UnitAction( const IDType & unitIndex, const IDType & player, const IDType & type, const IDType & moveIndex)
-		: _unit(unitIndex)
-		, _player(player)
-		, _moveType(type)
-		, _moveIndex(moveIndex)
+		: m_unit(unitIndex)
+		, m_player(player)
+		, m_moveType(type)
+		, m_moveIndex(moveIndex)
 	{
 		
 	}
 
 	const bool operator == (const UnitAction & rhs)
 	{
-		return _unit == rhs._unit && _player == rhs._player && _moveType == rhs._moveType && _moveIndex == rhs._moveIndex && _p == rhs._p;
+		return m_unit == rhs.m_unit && m_player == rhs.m_player && m_moveType == rhs.m_moveType && m_moveIndex == rhs.m_moveIndex && m_p == rhs.m_p;
 	}
 
-	const IDType & unit()	const	{ return _unit; }
-	const IDType & player() const	{ return _player; }
-	const IDType & type()	const	{ return _moveType; }
-	const IDType & index()	const	{ return _moveIndex; }
-    const Position & pos()  const   { return _p; }
+	const IDType & unit()	const	{ return m_unit; }
+	const IDType & player() const	{ return m_player; }
+	const IDType & type()	const	{ return m_moveType; }
+	const IDType & index()	const	{ return m_moveIndex; }
+    const Position & pos()  const   { return m_p; }
 
 	const std::string moveString() const
 	{
-		if (_moveType == UnitActionTypes::ATTACK) 
+		if (m_moveType == UnitActionTypes::ATTACK) 
 		{
 			return "ATTACK";
 		}
-		else if (_moveType == UnitActionTypes::MOVE)
+		else if (m_moveType == UnitActionTypes::MOVE)
 		{
 			return "MOVE";
 		}
-		else if (_moveType == UnitActionTypes::RELOAD)
+		else if (m_moveType == UnitActionTypes::RELOAD)
 		{
 			return "RELOAD";
 		}
-		else if (_moveType == UnitActionTypes::PASS)
+		else if (m_moveType == UnitActionTypes::PASS)
 		{
 			return "PASS";
 		}
-		else if (_moveType == UnitActionTypes::HEAL)
+		else if (m_moveType == UnitActionTypes::HEAL)
 		{
 			return "HEAL";
 		}
@@ -90,7 +90,7 @@ public:
 
 	const Position getDir() const
 	{
-		return Position(Constants::Move_Dir[_moveIndex][0], Constants::Move_Dir[_moveIndex][1]);
+		return Position(Constants::Move_Dir[m_moveIndex][0], Constants::Move_Dir[m_moveIndex][1]);
 	}
 
     const std::string debugString() const
@@ -104,30 +104,30 @@ public:
 
 class AlphaBetaMove
 {
-	std::vector<UnitAction> _move;
-	bool _isValid;
+	std::vector<UnitAction> m_move;
+	bool m_isValid;
 
 public:
 
 	AlphaBetaMove()
-        : _isValid(false)
+        : m_isValid(false)
 	{
 	}
 
 	AlphaBetaMove(const std::vector<UnitAction> & move, const bool & isValid)
-		: _move(move)
-		, _isValid(isValid)
+		: m_move(move)
+		, m_isValid(isValid)
 	{
 	}
 
-	const bool isValid() const { return _isValid; }
-	const std::vector<UnitAction> & moveVec() const { return _move; }
+	const bool isValid() const { return m_isValid; }
+	const std::vector<UnitAction> & moveVec() const { return m_move; }
 };
 
 class TTBestMove
 {
-	AlphaBetaMove _firstMove;
-	AlphaBetaMove _secondMove;
+	AlphaBetaMove m_firstMove;
+	AlphaBetaMove m_secondMove;
 
 public:
 
@@ -136,20 +136,20 @@ public:
 	}
 
 	TTBestMove(const AlphaBetaMove & first, const AlphaBetaMove & second)
-		: _firstMove(first)
-		, _secondMove(second)
+		: m_firstMove(first)
+		, m_secondMove(second)
 	{
 	}
 
-	const AlphaBetaMove & firstMove() const		{ return _firstMove; }
-	const AlphaBetaMove & secondMove() const	{ return _secondMove; }
+	const AlphaBetaMove & firstMove() const		{ return m_firstMove; }
+	const AlphaBetaMove & secondMove() const	{ return m_secondMove; }
 };
 
 
 class AlphaBetaValue
 {	
-	StateEvalScore	_score;
-	AlphaBetaMove	_move;
+	StateEvalScore	m_score;
+	AlphaBetaMove	m_move;
 
 public:
 
@@ -158,12 +158,13 @@ public:
 	}
 
 	AlphaBetaValue(const StateEvalScore & score, const AlphaBetaMove & abMove)
-		: _score(score)
-		, _move(abMove)
+		: m_score(score)
+		, m_move(abMove)
 	{
 	}
 
-	const StateEvalScore & score() const { return _score; }
-	const AlphaBetaMove & abMove() const { return _move; }
+	const StateEvalScore & score() const { return m_score; }
+	const AlphaBetaMove & abMove() const { return m_move; }
 };
 }
+

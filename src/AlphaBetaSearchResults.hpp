@@ -30,7 +30,7 @@ public:
 	size_t				ttFoundLessDepth;
 	size_t				ttSaveAttempts;
 
-    std::vector<std::vector<std::string> > _desc;    // 2-column description vector
+    std::vector<std::vector<std::string> > m_desc;    // 2-column description vector
 	
 	AlphaBetaSearchResults() 
 		: solved(false)
@@ -52,21 +52,22 @@ public:
 
     std::vector<std::vector<std::string> > & getDescription()
     {
-        _desc.clear();
-        _desc.push_back(std::vector<std::string>());
-        _desc.push_back(std::vector<std::string>());
+        m_desc.clear();
+        m_desc.push_back(std::vector<std::string>());
+        m_desc.push_back(std::vector<std::string>());
 
         std::stringstream ss;
 
-        _desc[0].push_back("Nodes Searched: ");
-        _desc[0].push_back("AB Value: ");
-        _desc[0].push_back("Max Depth: ");
+        m_desc[0].push_back("Nodes Searched: ");
+        m_desc[0].push_back("AB Value: ");
+        m_desc[0].push_back("Max Depth: ");
 
-        ss << nodesExpanded;       _desc[1].push_back(ss.str()); ss.str(std::string());
-        ss << abValue;              _desc[1].push_back(ss.str()); ss.str(std::string());
-        ss << maxDepthReached;     _desc[1].push_back(ss.str()); ss.str(std::string());
+        ss << nodesExpanded;       m_desc[1].push_back(ss.str()); ss.str(std::string());
+        ss << abValue;              m_desc[1].push_back(ss.str()); ss.str(std::string());
+        ss << maxDepthReached;     m_desc[1].push_back(ss.str()); ss.str(std::string());
         
-        return _desc;
+        return m_desc;
     }
 };
 }
+

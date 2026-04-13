@@ -16,27 +16,27 @@ namespace SparCraft
 {
 class GameState 
 {
-    Map *                                                           _map;               
+    Map *                                                           m_map;               
 
-    std::vector<Unit> _units[Constants::Num_Players];
-    std::vector<int>  _unitIndex[Constants::Num_Players];
+    std::vector<Unit> m_units[Constants::Num_Players];
+    std::vector<int>  m_unitIndex[Constants::Num_Players];
 
-    Array2D<Unit, Constants::Num_Players, Constants::Max_Units>     _units2;             
-    Array2D<int, Constants::Num_Players, Constants::Max_Units>      _unitIndex2;        
-    Array<Unit, 1>                                                  _neutralUnits;
+    Array2D<Unit, Constants::Num_Players, Constants::Max_Units>     m_units2;             
+    Array2D<int, Constants::Num_Players, Constants::Max_Units>      m_unitIndex2;        
+    Array<Unit, 1>                                                  m_neutralUnits;
 
-    Array<size_t, Constants::Num_Players>                    _numUnits;
-    Array<size_t, Constants::Num_Players>                    _prevNumUnits;
+    Array<size_t, Constants::Num_Players>                    m_numUnits;
+    Array<size_t, Constants::Num_Players>                    m_prevNumUnits;
 
-    Array<float, Constants::Num_Players>                            _totalLTD;
-    Array<float, Constants::Num_Players>                            _totalSumSQRT;
+    Array<float, Constants::Num_Players>                            m_totalLTD;
+    Array<float, Constants::Num_Players>                            m_totalSumSQRT;
 
-    Array<int, Constants::Num_Players>                              _numMovements;
-    Array<int, Constants::Num_Players>                              _prevHPSum;
+    Array<int, Constants::Num_Players>                              m_numMovements;
+    Array<int, Constants::Num_Players>                              m_prevHPSum;
 	
-    TimeType                                                        _currentTime;
-    size_t                                                          _maxUnits;
-    TimeType                                                        _sameHPFrames;
+    TimeType                                                        m_currentTime;
+    size_t                                                          m_maxUnits;
+    TimeType                                                        m_sameHPFrames;
 
     // checks to see if the unit array is full before adding a unit to the state
     void                    checkFull(const size_t & player)                                        const;

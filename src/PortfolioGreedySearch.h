@@ -17,13 +17,13 @@ class PortfolioGreedySearch
 {
 protected:
 	
-    const size_t				_player;
-    const size_t				_enemyScript;
-    const size_t				_iterations;
-    const size_t                _responses;
-    std::vector<size_t>			_playerScriptPortfolio;
-    size_t                      _totalEvals;
-    size_t                      _timeLimit;
+    const size_t				m_player;
+    const size_t				m_enemyScript;
+    const size_t				m_iterations;
+    const size_t                m_responses;
+    std::vector<size_t>			m_playerScriptPortfolio;
+    size_t                      m_totalEvals;
+    size_t                      m_timeLimit;
 
     void                        doPortfolioSearch(const size_t & player,const GameState & state,UnitScriptData & currentData);
     std::vector<Action>     getMoveVec(const size_t & player,const GameState & state,const std::vector<size_t> & playerScripts);
@@ -38,3 +38,4 @@ public:
 };
 
 }
+

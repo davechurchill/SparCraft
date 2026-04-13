@@ -11,17 +11,17 @@ namespace
 }
 
 GUI::GUI(int width, int height)
-    : _initialWidth(width)
-    , _initialHeight(height)
-    , _isStarted(false)
-    , _guiGame(*this)
+    : m_initialWidth(width)
+    , m_initialHeight(height)
+    , m_isStarted(false)
+    , m_guiGame(*this)
 {
     onStart();
 }
 
 GUI::~GUI()
 {
-    if (_isStarted)
+    if (m_isStarted)
     {
         ImGui::SFML::Shutdown();
     }
@@ -29,21 +29,21 @@ GUI::~GUI()
 
 bool GUI::isStarted() const
 {
-    return _isStarted;
+    return m_isStarted;
 }
 
 void GUI::onStart()
 {
-    if (_isStarted)
+    if (m_isStarted)
     {
         return;
     }
 
-    _window.create(sf::VideoMode({ static_cast<unsigned>(_initialWidth), static_cast<unsigned>(_initialHeight) }), "SparCraft - SFML3 / ImGui");
-    _window.setFramerateLimit(60);
-    _window.setKeyRepeatEnabled(false);
+    m_window.create(sf::VideoMode({ static_cast<unsigned>(m_initialWidth), static_cast<unsigned>(m_initialHeight) }), "SparCraft - SFML3 / ImGui");
+    m_window.setFramerateLimit(60);
+    m_window.setKeyRepeatEnabled(false);
 
-    if (!ImGui::SFML::Init(_window))
+    if (!ImGui::SFML::Init(m_window))
     {
         System::FatalError("Failed to initialize ImGui-SFML");
     }
@@ -53,14 +53,14 @@ void GUI::onStart()
 
     loadTextures();
 
-    _isStarted = true;
+    m_isStarted = true;
 }
 
 void GUI::handleEvents()
 {
-    while (auto event = _window.pollEvent())
+    while (auto event = m_window.pollEvent())
     {
-        ImGui::SFML::ProcessEvent(_window, *event);
+        ImGui::SFML::ProcessEvent(m_window, *event);
 
         if (event->is<sf::Event::Closed>())
         {
@@ -79,10 +79,10 @@ void GUI::handleEvents()
 
 void GUI::render()
 {
-    _window.clear(BackgroundColor);
-    _guiGame.onFrame(_window);
-    ImGui::SFML::Render(_window);
-    _window.display();
+    m_window.clear(BackgroundColor);
+    m_guiGame.onFrame(m_window);
+    ImGui::SFML::Render(m_window);
+    m_window.display();
 }
 
 void GUI::onFrame()
@@ -90,7 +90,7 @@ void GUI::onFrame()
     SPARCRAFT_ASSERT(isStarted(), "Must initialize GUI before calling onFrame()");
 
     handleEvents();
-    ImGui::SFML::Update(_window, _deltaClock.restart());
+    ImGui::SFML::Update(m_window, m_deltaClock.restart());
     render();
 }
 
@@ -110,7 +110,7 @@ void GUI::loadTextures()
         sf::Texture texture;
         if (texture.loadFromFile(fileName))
         {
-            _unitTextures.emplace(type.getID(), std::move(texture));
+            m_unitTextures.emplace(type.getID(), std::move(texture));
         }
     }
 }
@@ -132,8 +132,8 @@ std::string GUI::GetTextureFileName(const BWAPI::UnitType & type)
 
 void GUI::drawUnitType(const BWAPI::UnitType & type, const Position & p, sf::RenderTarget & target) const
 {
-    const auto texture = _unitTextures.find(type.getID());
-    if (texture != _unitTextures.end())
+    const auto texture = m_unitTextures.find(type.getID());
+    if (texture != m_unitTextures.end())
     {
         sf::Sprite sprite(texture->second);
         const auto size = texture->second.getSize();
@@ -166,29 +166,29 @@ void GUI::drawLine(const Position & p1, const Position & p2, float thickness, co
 
 int GUI::width() const
 {
-    return static_cast<int>(_window.getSize().x);
+    return static_cast<int>(m_window.getSize().x);
 }
 
 int GUI::height() const
 {
-    return static_cast<int>(_window.getSize().y);
+    return static_cast<int>(m_window.getSize().y);
 }
 
 void GUI::setCenter(int x, int y)
 {
-    sf::View view = _window.getView();
+    sf::View view = m_window.getView();
     view.setCenter({ static_cast<float>(x), static_cast<float>(y) });
-    _window.setView(view);
+    m_window.setView(view);
 }
 
 void GUI::setGame(const Game & game)
 {
-    _guiGame.setGame(game);
+    m_guiGame.setGame(game);
 }
 
 const Game & GUI::getGame() const
 {
-    return _guiGame.getGame();
+    return m_guiGame.getGame();
 }
 
 bool GUI::saveScreenshotBMP(const std::string & filename)
@@ -199,5 +199,6 @@ bool GUI::saveScreenshotBMP(const std::string & filename)
 
 sf::RenderWindow & GUI::window()
 {
-    return _window;
+    return m_window;
 }
+

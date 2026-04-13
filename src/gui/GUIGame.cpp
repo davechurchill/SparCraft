@@ -54,33 +54,33 @@ namespace
 }
 
 GUIGame::GUIGame(GUI & gui)
-    : _gui(gui)
-    , _game(GameState(), 0)
-    , _previousDrawGameTimer(0.0)
-    , _previousTurnTimer(0.0)
-    , _paused(false)
-    , _stepOneTurn(false)
-    , _renderWorld(true)
-    , _renderHPBars(true)
+    : m_gui(gui)
+    , m_game(GameState(), 0)
+    , m_previousDrawGameTimer(0.0)
+    , m_previousTurnTimer(0.0)
+    , m_paused(false)
+    , m_stepOneTurn(false)
+    , m_renderWorld(true)
+    , m_renderHPBars(true)
 {
 }
 
 void GUIGame::onFrame(sf::RenderTarget & target)
 {
-    if ((!_paused || _stepOneTurn) && !_game.gameOver())
+    if ((!m_paused || m_stepOneTurn) && !m_game.gameOver())
     {
         Timer turnTimer;
         turnTimer.start();
 
-        _game.playNextTurn();
+        m_game.playNextTurn();
 
-        _previousTurnTimer = turnTimer.elapsedMS();
-        _stepOneTurn = false;
+        m_previousTurnTimer = turnTimer.elapsedMS();
+        m_stepOneTurn = false;
 
         for (size_t p = 0; p < 2; ++p)
         {
-            Player_UCT * uct = dynamic_cast<Player_UCT *>(_game.getPlayer(p).get());
-            Player_AlphaBeta * ab = dynamic_cast<Player_AlphaBeta *>(_game.getPlayer(p).get());
+            Player_UCT * uct = dynamic_cast<Player_UCT *>(m_game.getPlayer(p).get());
+            Player_AlphaBeta * ab = dynamic_cast<Player_AlphaBeta *>(m_game.getPlayer(p).get());
 
             if (uct)
             {
@@ -99,17 +99,17 @@ void GUIGame::onFrame(sf::RenderTarget & target)
     Timer drawTimer;
     drawTimer.start();
 
-    if (_renderWorld)
+    if (m_renderWorld)
     {
         drawGame(target);
     }
 
-    if (_renderHPBars)
+    if (m_renderHPBars)
     {
         drawHPBars(target);
     }
 
-    _previousDrawGameTimer = drawTimer.elapsedMS();
+    m_previousDrawGameTimer = drawTimer.elapsedMS();
 
     drawControlsWindow();
     drawUnitsWindow();
@@ -117,7 +117,7 @@ void GUIGame::onFrame(sf::RenderTarget & target)
 
 void GUIGame::drawGame(sf::RenderTarget & target)
 {
-    const GameState & state = _game.getState();
+    const GameState & state = m_game.getState();
 
     for (size_t p = 0; p < 2; ++p)
     {
@@ -135,11 +135,11 @@ void GUIGame::drawUnit(const Unit & unit, sf::RenderTarget & target)
         return;
     }
 
-    const GameState & state = _game.getState();
+    const GameState & state = m_game.getState();
     const BWAPI::UnitType & type = unit.type();
     const Position pos(unit.currentPosition(state.getTime()));
 
-    _gui.drawUnitType(type, pos, target);
+    m_gui.drawUnitType(type, pos, target);
 
     const int x0 = pos.x() - type.dimensionUp();
     const int x1 = pos.x() + type.dimensionDown();
@@ -165,7 +165,7 @@ void GUIGame::drawUnit(const Unit & unit, sf::RenderTarget & target)
 
     if (action.type() == ActionTypes::MOVE)
     {
-        _gui.drawLine(pos, unit.pos(), 1.0f, PlayerColors[unit.player()], target);
+        m_gui.drawLine(pos, unit.pos(), 1.0f, PlayerColors[unit.player()], target);
     }
     else if (action.type() == ActionTypes::ATTACK)
     {
@@ -174,18 +174,18 @@ void GUIGame::drawUnit(const Unit & unit, sf::RenderTarget & target)
         {
             const Unit & targetUnit = state.getUnit(enemyPlayer, action.index());
             const Position targetPos(targetUnit.currentPosition(state.getTime()));
-            _gui.drawLine(pos, targetPos, 1.0f, PlayerColors[unit.player()], target);
+            m_gui.drawLine(pos, targetPos, 1.0f, PlayerColors[unit.player()], target);
         }
     }
 }
 
 void GUIGame::drawHPBars(sf::RenderTarget & target)
 {
-    const GameState & state = _game.getState();
+    const GameState & state = m_game.getState();
 
     for (size_t p = 0; p < Constants::Num_Players; ++p)
     {
-        for (size_t u = 0; u < _initialState.numUnits(p); ++u)
+        for (size_t u = 0; u < m_initialState.numUnits(p); ++u)
         {
             const Unit & unit = state.getUnitDirect(p, u);
 
@@ -220,22 +220,22 @@ void GUIGame::drawControlsWindow()
     {
         if (ImGui::BeginTabItem("Controls"))
         {
-            ImGui::Checkbox("Pause Simulation", &_paused);
-            ImGui::Checkbox("Render World", &_renderWorld);
-            ImGui::Checkbox("Render HP Bars", &_renderHPBars);
+            ImGui::Checkbox("Pause Simulation", &m_paused);
+            ImGui::Checkbox("Render World", &m_renderWorld);
+            ImGui::Checkbox("Render HP Bars", &m_renderHPBars);
 
             if (ImGui::Button("Step One Turn"))
             {
-                _stepOneTurn = true;
+                m_stepOneTurn = true;
             }
 
             ImGui::Separator();
-            ImGui::Text("Rounds: %zu", _game.getRounds());
-            ImGui::Text("Turn Time: %.2f ms", _previousTurnTimer);
-            ImGui::Text("Draw Time: %.2f ms", _previousDrawGameTimer);
-            ImGui::Text("State Eval (P1, LTD2): %d", _game.getState().eval(Players::Player_One, EvaluationMethods::LTD2).val());
+            ImGui::Text("Rounds: %zu", m_game.getRounds());
+            ImGui::Text("Turn Time: %.2f ms", m_previousTurnTimer);
+            ImGui::Text("Draw Time: %.2f ms", m_previousDrawGameTimer);
+            ImGui::Text("State Eval (P1, LTD2): %d", m_game.getState().eval(Players::Player_One, EvaluationMethods::LTD2).val());
 
-            if (_game.gameOver())
+            if (m_game.gameOver())
             {
                 ImGui::Separator();
                 ImGui::TextColored(ImVec4(1.0f, 0.8f, 0.2f, 1.0f), "Game Over");
@@ -254,11 +254,11 @@ void GUIGame::drawControlsWindow()
                     if (ImGui::BeginTabItem(label.c_str()))
                     {
                         ImGui::TextColored(ToImVec4(PlayerColors[p]), "Settings");
-                        DrawNameValueTable((std::string("settings") + std::to_string(p)).c_str(), _params[p]);
+                        DrawNameValueTable((std::string("settings") + std::to_string(p)).c_str(), m_params[p]);
 
                         ImGui::Separator();
                         ImGui::TextColored(ToImVec4(PlayerColorsDark[p]), "Search Results");
-                        DrawNameValueTable((std::string("results") + std::to_string(p)).c_str(), _results[p]);
+                        DrawNameValueTable((std::string("results") + std::to_string(p)).c_str(), m_results[p]);
 
                         ImGui::EndTabItem();
                     }
@@ -280,7 +280,7 @@ void GUIGame::drawUnitsWindow()
 {
     ImGui::Begin("Units");
 
-    const GameState & state = _game.getState();
+    const GameState & state = m_game.getState();
 
     for (size_t p = 0; p < 2; ++p)
     {
@@ -334,31 +334,31 @@ void GUIGame::drawUnitsWindow()
 
 void GUIGame::setGame(const Game & g)
 {
-    _game = g;
-    _initialState = g.getState();
+    m_game = g;
+    m_initialState = g.getState();
 
-    _paused = false;
-    _stepOneTurn = false;
+    m_paused = false;
+    m_stepOneTurn = false;
 
     for (size_t p = 0; p < 2; ++p)
     {
-        _params[p].clear();
-        _results[p].clear();
+        m_params[p].clear();
+        m_results[p].clear();
     }
 }
 
 const Game & GUIGame::getGame() const
 {
-    return _game;
+    return m_game;
 }
 
 void GUIGame::setResults(const size_t & player, const std::vector<std::vector<std::string> > & r)
 {
-    _results[player] = r;
+    m_results[player] = r;
 }
 
 void GUIGame::setParams(const size_t & player, const std::vector<std::vector<std::string> > & p)
 {
-    _params[player] = p;
+    m_params[player] = p;
 }
 

@@ -3,9 +3,9 @@
 using namespace SparCraft;
 
 Game::Game(const GameState & initialState, const size_t & limit)
-    : _numPlayers(0)
+    : m_numPlayers(0)
     , state(initialState)
-    , _playerToMoveMethod(SparCraft::PlayerToMove::Alternate)
+    , m_playerToMoveMethod(SparCraft::PlayerToMove::Alternate)
     , rounds(0)
     , gameTimeMS(0)
     , moveLimit(limit)
@@ -14,16 +14,16 @@ Game::Game(const GameState & initialState, const size_t & limit)
 }
 
 Game::Game(const GameState & initialState, PlayerPtr & p1, PlayerPtr & p2, const size_t & limit)
-    : _numPlayers(0)
+    : m_numPlayers(0)
     , state(initialState)
-    , _playerToMoveMethod(SparCraft::PlayerToMove::Alternate)
+    , m_playerToMoveMethod(SparCraft::PlayerToMove::Alternate)
     , rounds(0)
     , gameTimeMS(0)
     , moveLimit(limit)
 {
     // add the players
-    _players[Players::Player_One] = p1;
-    _players[Players::Player_Two] = p2;
+    m_players[Players::Player_One] = p1;
+    m_players[Players::Player_Two] = p2;
 }
 
 // play the game until there is a winner
@@ -58,8 +58,8 @@ void Game::playNextTurn()
 
     // the player that will move next
     const size_t playerToMove(getPlayerToMove());
-    PlayerPtr & toMove = _players[playerToMove];
-    PlayerPtr & enemy = _players[state.getEnemy(playerToMove)];
+    PlayerPtr & toMove = m_players[playerToMove];
+    PlayerPtr & enemy = m_players[state.getEnemy(playerToMove)];
 
     // generate the moves possible from this state
     state.generateMoves(moves[toMove->ID()], toMove->ID());
@@ -157,7 +157,7 @@ void Game::playIndividualScripts(UnitScriptData & scriptData)
 
 PlayerPtr Game::getPlayer(const size_t & player)
 {
-    return _players[player];
+    return m_players[player];
 }
 
 size_t Game::getRounds() const

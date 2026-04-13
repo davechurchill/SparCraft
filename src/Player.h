@@ -14,7 +14,7 @@ class GameState;
 class Player 
 {
 protected:
-    size_t _playerID;
+    size_t m_playerID;
 public:
     virtual void		getMoves(GameState & state, const MoveArray & moves, std::vector<Action> & moveVec);
     const size_t        ID();
@@ -36,3 +36,4 @@ class CompareUnitDPSThreat
 typedef	std::shared_ptr<Player> PlayerPtr; 
 
 }
+

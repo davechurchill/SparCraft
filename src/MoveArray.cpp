@@ -5,25 +5,25 @@
 using namespace SparCraft;
 
 MoveArray::MoveArray(const size_t maxUnits) 
-	: _numUnits(0)
-	, _maxUnits(Constants::Max_Units)
-    , _hasMoreMoves(true)
+	: m_numUnits(0)
+	, m_maxUnits(Constants::Max_Units)
+    , m_hasMoreMoves(true)
 {
-    //_currentMovesVec.reserve(Constants::Max_Units);
-	_numMoves.fill(0);
-    _currentMovesIndex.fill(0);
+    //m_currentMovesVec.reserve(Constants::Max_Units);
+	m_numMoves.fill(0);
+    m_currentMovesIndex.fill(0);
 }
     
 void MoveArray::clear() 
 {
     // only clear things if they need to be cleared
-    if (_numUnits == 0)
+    if (m_numUnits == 0)
     {
         return;
     }
 
-	_numUnits = 0;
-	_numMoves.fill(0);
+	m_numUnits = 0;
+	m_numMoves.fill(0);
     resetMoveIterator();
 }
 
@@ -71,7 +71,7 @@ void MoveArray::shuffleMoveActions()
         // shuffle the movement actions for this unit
         if (moveEnd != -1 && moveBegin != -1 && moveEnd != moveBegin)
         {
-            std::shuffle(&_moves[u][moveBegin], &_moves[u][moveEnd + 1], rng);
+            std::shuffle(&m_moves[u][moveBegin], &m_moves[u][moveEnd + 1], rng);
             resetMoveIterator();
         }
     }
@@ -80,16 +80,16 @@ void MoveArray::shuffleMoveActions()
 // returns a given move from a unit
 const Action & MoveArray::getMove(const size_t & unit, const size_t & move) const
 {
-    assert(_moves[unit][(size_t)move].unit() != 255);
+    assert(m_moves[unit][(size_t)move].unit() != 255);
 
-    return _moves[unit][(size_t)move];
+    return m_moves[unit][(size_t)move];
 }
 
 void MoveArray::printCurrentMoveIndex()
 {
-    for (size_t u(0); u<_numUnits; ++u)
+    for (size_t u(0); u<m_numUnits; ++u)
     {
-        std::cout << _currentMovesIndex[u] << " ";
+        std::cout << m_currentMovesIndex[u] << " ";
     }
 
     std::cout << std::endl;
@@ -98,16 +98,16 @@ void MoveArray::printCurrentMoveIndex()
 void MoveArray::incrementMove(const size_t & unit)
 {
     // increment the index for this unit
-    _currentMovesIndex[unit] = (_currentMovesIndex[unit] + 1) % _numMoves[unit];
+    m_currentMovesIndex[unit] = (m_currentMovesIndex[unit] + 1) % m_numMoves[unit];
 
     // if the value rolled over, we need to do the carry calculation
-    if (_currentMovesIndex[unit] == 0)
+    if (m_currentMovesIndex[unit] == 0)
     {
         // the next unit index
         size_t nextUnit = unit + 1;
 
         // if we have space left to increment, do it
-        if (nextUnit < _numUnits)
+        if (nextUnit < m_numUnits)
         {
             incrementMove(nextUnit);
         }
@@ -115,52 +115,52 @@ void MoveArray::incrementMove(const size_t & unit)
         else
         {
             // stop
-            _hasMoreMoves = false;
+            m_hasMoreMoves = false;
         }
     }
 
-    _currentMoves[unit] = _moves[unit][_currentMovesIndex[unit]];
-    //_currentMovesVec[unit] = _moves[unit][_currentMovesIndex[unit]];
+    m_currentMoves[unit] = m_moves[unit][m_currentMovesIndex[unit]];
+    //m_currentMovesVec[unit] = m_moves[unit][m_currentMovesIndex[unit]];
 }
 
 const bool MoveArray::hasMoreMoves() const
 {
-    return _hasMoreMoves;
+    return m_hasMoreMoves;
 }
 
 void MoveArray::resetMoveIterator()
 {
-    _hasMoreMoves = true;
-    _currentMovesIndex.fill(0);
+    m_hasMoreMoves = true;
+    m_currentMovesIndex.fill(0);
 
     for (size_t u(0); u<numUnits(); ++u)
     {
-        _currentMoves[u] = _moves[u][_currentMovesIndex[u]];
-        //_currentMovesVec[u] = _moves[u][_currentMovesIndex[u]];
+        m_currentMoves[u] = m_moves[u][m_currentMovesIndex[u]];
+        //m_currentMovesVec[u] = m_moves[u][m_currentMovesIndex[u]];
     }
 }
 
 void MoveArray::getNextMoveVec(std::vector<Action> & moves)
 {
-    moves.assign(&_currentMoves[0], &_currentMoves[_numUnits]);
-    //moves = _currentMovesVec;
+    moves.assign(&m_currentMoves[0], &m_currentMoves[m_numUnits]);
+    //moves = m_currentMovesVec;
     incrementMove(0);
 }
 
 const size_t MoveArray::maxUnits() const
 {
-	return _moves.getRows();
+	return m_moves.getRows();
 }
 
 // adds a Move to the unit specified
 void MoveArray::add(const Action & move)
 {
-	_moves[move.unit()][_numMoves[move.unit()]] = move;
-	_numMoves[move.unit()]++;
+	m_moves[move.unit()][m_numMoves[move.unit()]] = move;
+	m_numMoves[move.unit()]++;
 
-    _currentMovesIndex[_numUnits-1] = 0;
-    _currentMoves[_numUnits-1] = _moves[move.unit()][0];
-    //_currentMovesVec.push_back(_moves[move.unit()][0]);
+    m_currentMovesIndex[m_numUnits-1] = 0;
+    m_currentMoves[m_numUnits-1] = m_moves[move.unit()][0];
+    //m_currentMovesVec.push_back(m_moves[move.unit()][0]);
     //resetMoveIterator();
 }
 	
@@ -193,8 +193,9 @@ const size_t MoveArray::getPlayerID(const size_t & unit) const
 	return getMove(unit, 0).player();
 }
 
-void MoveArray::addUnit() 											{ _numUnits++; }
+void MoveArray::addUnit() 											{ m_numUnits++; }
 
-const size_t & MoveArray::numUnits()						const	{ return _numUnits; }
+const size_t & MoveArray::numUnits()						const	{ return m_numUnits; }
 const size_t & MoveArray::numUnitsInTuple()				const	{ return numUnits(); }
-const size_t & MoveArray::numMoves(const size_t & unit)	const	{ return _numMoves[unit]; }
+const size_t & MoveArray::numMoves(const size_t & unit)	const	{ return m_numMoves[unit]; }
+

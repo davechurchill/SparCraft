@@ -9,26 +9,26 @@ namespace SparCraft
 class Position
 {
 	// x,y location will be used for Units in a 'grid'
-	PositionType		_x, 
-						_y;
+	PositionType		m_x, 
+						m_y;
 
 public:
 	
 	Position()
-		: _x(0)
-		, _y(0)
+		: m_x(0)
+		, m_y(0)
 	{
 	}
 
 	Position(const PositionType & x, const PositionType & y)
-		: _x(x)
-		, _y(y)
+		: m_x(x)
+		, m_y(y)
 	{
 	}
 
     Position(const BWAPI::Position & p)
-        : _x(p.x())
-        , _y(p.y())
+        : m_x(p.x())
+        , m_y(p.y())
     {
 
     }
@@ -60,58 +60,58 @@ public:
 
     void scalePosition(const float & f)
     {
-        _x = (PositionType)(f * _x);
-        _y = (PositionType)(f * _y);
+        m_x = (PositionType)(f * m_x);
+        m_y = (PositionType)(f * m_y);
     }
 
     void addPosition(const Position & rhs)
     {
-        _x += rhs.x();
-        _y += rhs.y();
+        m_x += rhs.x();
+        m_y += rhs.y();
     }
 
     void subtractPosition(const Position & rhs)
     {
-        _x -= rhs.x();
-        _y -= rhs.y();
+        m_x -= rhs.x();
+        m_y -= rhs.y();
     }
 	
 	void moveTo(const Position & pos)
 	{
-		_x = pos.x();
-		_y = pos.y();
+		m_x = pos.x();
+		m_y = pos.y();
 	}
 
 	void addPosition(const PositionType & x, const PositionType & y)
 	{
-		_x += x;
-		_y += y;
+		m_x += x;
+		m_y += y;
 	}
 
 	void moveTo(const PositionType & x, const PositionType & y)
 	{
-		_x = x;
-		_y = y;
+		m_x = x;
+		m_y = y;
 	}
 
 	const PositionType x() const
 	{
-		return _x;
+		return m_x;
 	}
 
 	const PositionType y() const
 	{
-		return _y;
+		return m_y;
 	}
 
 	const Position flipX() const
 	{
-		return Position(-_x,_y);
+		return Position(-m_x,m_y);
 	}
 
 	const Position flipY() const
 	{
-		return Position(_y,_x);
+		return Position(m_y,m_x);
 	}
 
     const float Q_rsqrt( float number ) const
@@ -133,7 +133,7 @@ public:
 
 	const Position flip() const
 	{
-		return Position(-_x, -_y);
+		return Position(-m_x, -m_y);
 	}
 
     inline const PositionType getDistance(const Position & p) const	
@@ -162,7 +162,7 @@ public:
 
 	void print() const
 	{
-		printf("Position = (%d, %d)\n", _x, _y);
+		printf("Position = (%d, %d)\n", m_x, m_y);
 	}
 
     const std::string getString() const
@@ -174,3 +174,4 @@ public:
 
 };
 }
+

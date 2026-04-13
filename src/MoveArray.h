@@ -10,21 +10,21 @@ namespace SparCraft
 class MoveArray
 {
 	// the array which contains all the moves
-	Array2D<Action, Constants::Max_Units, Constants::Max_Moves> _moves;
+	Array2D<Action, Constants::Max_Units, Constants::Max_Moves> m_moves;
 
 	// how many moves each unit has
-	Array<size_t, Constants::Max_Units>                         _numMoves;
+	Array<size_t, Constants::Max_Units>                         m_numMoves;
 
     // the current move array, used for the 'iterator'
-    //std::vector<Action> _currentMoves;
-    //std::vector<Action>                                             _currentMovesVec;
-    Array<Action, Constants::Max_Units>                         _currentMoves;
-    Array<size_t, Constants::Max_Units>                         _currentMovesIndex;
+    //std::vector<Action> m_currentMoves;
+    //std::vector<Action>                                             m_currentMovesVec;
+    Array<Action, Constants::Max_Units>                         m_currentMoves;
+    Array<size_t, Constants::Max_Units>                         m_currentMovesIndex;
 
 	// the number of units that have moves;
-	size_t                                                      _numUnits;
-	size_t                                                              _maxUnits;
-    bool                                                                _hasMoreMoves;
+	size_t                                                      m_numUnits;
+	size_t                                                              m_maxUnits;
+    bool                                                                m_hasMoreMoves;
 
 public:
 
@@ -65,3 +65,4 @@ public:
 	const size_t & numMoves(const size_t & unit)	const;
 };
 }
+

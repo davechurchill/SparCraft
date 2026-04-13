@@ -9,8 +9,8 @@ namespace SparCraft
 
 class AlphaBetaMove
 {
-	std::vector<Action> _move;
-	bool _isValid;
+	std::vector<Action> m_move;
+	bool m_isValid;
 
 public:
 
@@ -24,8 +24,8 @@ public:
 
 class TTBestMove
 {
-	AlphaBetaMove _firstMove;
-	AlphaBetaMove _secondMove;
+	AlphaBetaMove m_firstMove;
+	AlphaBetaMove m_secondMove;
 
 public:
 
@@ -40,8 +40,8 @@ public:
 
 class AlphaBetaValue
 {	
-	StateEvalScore	_score;
-	AlphaBetaMove	_move;
+	StateEvalScore	m_score;
+	AlphaBetaMove	m_move;
 
 public:
 
@@ -53,3 +53,4 @@ public:
 	const AlphaBetaMove & abMove() const;
 };
 }
+

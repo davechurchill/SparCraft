@@ -13,12 +13,12 @@ namespace ActionTypes
 
 class Action 
 {
-	size_t  _unit;
-	size_t	_player;
-	size_t	_moveType;
-	size_t	_moveIndex;
+	size_t  m_unit;
+	size_t	m_player;
+	size_t	m_moveType;
+	size_t	m_moveIndex;
 
-    Position _p;
+    Position m_p;
 
 public:
 
@@ -46,3 +46,4 @@ public:
 };
 
 }
+

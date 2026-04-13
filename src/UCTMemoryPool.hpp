@@ -10,46 +10,47 @@ namespace SparCraft
 
 class SparCraft::UCTMemoryPool
 {	
-    std::vector< std::vector<UCTNode> > _pool;
+    std::vector< std::vector<UCTNode> > m_pool;
 
-    const size_t    _poolSize;
-    const size_t    _maxChildren;
+    const size_t    m_poolSize;
+    const size_t    m_maxChildren;
     
-    size_t    _currentIndex;
+    size_t    m_currentIndex;
 
 public:
 
 	UCTMemoryPool(const size_t & poolSize, const size_t & maxChildren)
-        : _pool             (poolSize, std::vector<UCTNode>())
-        , _poolSize         (poolSize)
-        , _maxChildren      (maxChildren)
-        , _currentIndex     (0)
+        : m_pool             (poolSize, std::vector<UCTNode>())
+        , m_poolSize         (poolSize)
+        , m_maxChildren      (maxChildren)
+        , m_currentIndex     (0)
     {
         for (size_t s(0); s<poolSize; ++s)
         {
-            _pool[s].reserve(maxChildren);
+            m_pool[s].reserve(maxChildren);
         }
     }
 
     std::vector<UCTNode> * alloc()
     {
-        std::vector<UCTNode> & ret(_pool[_currentIndex]);
+        std::vector<UCTNode> & ret(m_pool[m_currentIndex]);
         if (ret.size() > 0)
         {
             ret.clear();
         }
 
-        _currentIndex = (_currentIndex + 1) % _poolSize;
+        m_currentIndex = (m_currentIndex + 1) % m_poolSize;
         return &ret;
     }
 
     void clearPool()
     {
-        for (size_t i(0); i<_poolSize; ++i)
+        for (size_t i(0); i<m_poolSize; ++i)
         {
-            _pool[i].clear();
+            m_pool[i].clear();
         }
 
-        _currentIndex = 0;
+        m_currentIndex = 0;
     }
 };
+

@@ -4,22 +4,22 @@ using namespace SparCraft;
 
 Player_Cluster::Player_Cluster (const size_t & playerID) 
 {
-	_playerID = playerID;
+	m_playerID = playerID;
 }
 
 void Player_Cluster::getMoves(GameState & state, const MoveArray & moves, std::vector<Action> & moveVec)
 {
     moveVec.clear();
-	size_t enemy(state.getEnemy(_playerID));
+	size_t enemy(state.getEnemy(m_playerID));
 
     // compute the centroid of our unit cluster
     Position avgPos(0,0);
-    for (size_t u(0); u<state.numUnits(_playerID); ++u)
+    for (size_t u(0); u<state.numUnits(m_playerID); ++u)
     {
-        avgPos.addPosition(state.getUnit(_playerID, u).pos());
+        avgPos.addPosition(state.getUnit(m_playerID, u).pos());
     }
 
-    avgPos.scalePosition(1.0f / state.numUnits(_playerID));
+    avgPos.scalePosition(1.0f / state.numUnits(m_playerID));
 
 	for (size_t u(0); u<moves.numUnits(); ++u)
 	{
@@ -28,7 +28,7 @@ void Player_Cluster::getMoves(GameState & state, const MoveArray & moves, std::v
 		size_t closestMoveIndex					(0);
 		unsigned long long closestMoveDist		(std::numeric_limits<unsigned long long>::max());
 		
-		const Unit & ourUnit				(state.getUnit(_playerID, u));
+		const Unit & ourUnit				(state.getUnit(m_playerID, u));
 		
 		for (size_t m(0); m<moves.numMoves(u); ++m)
 		{
@@ -54,3 +54,4 @@ void Player_Cluster::getMoves(GameState & state, const MoveArray & moves, std::v
 		moveVec.push_back(moves.getMove(u, bestMoveIndex));
 	}
 }
+

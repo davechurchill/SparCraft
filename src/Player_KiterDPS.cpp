@@ -4,7 +4,7 @@ using namespace SparCraft;
 
 Player_KiterDPS::Player_KiterDPS (const size_t & playerID) 
 {
-	_playerID = playerID;
+	m_playerID = playerID;
 }
 
 void Player_KiterDPS::getMoves(GameState & state, const MoveArray & moves, std::vector<Action> & moveVec)
@@ -20,9 +20,9 @@ void Player_KiterDPS::getMoves(GameState & state, const MoveArray & moves, std::
 		double actionHighestDPS					(0);
 		unsigned long long closestMoveDist		(std::numeric_limits<unsigned long long>::max());
 
-		const Unit & ourUnit					(state.getUnit(_playerID, u));
+		const Unit & ourUnit					(state.getUnit(m_playerID, u));
 		const Unit & closestUnit				(ourUnit.canHeal() ? 
-                                                state.getClosestOurUnit(_playerID, u) : state.getClosestEnemyUnit(_playerID, u));
+                                                state.getClosestOurUnit(m_playerID, u) : state.getClosestEnemyUnit(m_playerID, u));
 
 		for (size_t m(0); m<moves.numMoves(u); ++m)
 		{
@@ -98,3 +98,4 @@ void Player_KiterDPS::getMoves(GameState & state, const MoveArray & moves, std::
 		moveVec.push_back(moves.getMove(u, bestMoveIndex));
 	}
 }
+

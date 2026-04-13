@@ -25,22 +25,22 @@ class Player;
 
 class UCTSearch
 {
-	UCTSearchParameters 	_params;
-    UCTSearchResults        _results;
-	Timer		            _searchTimer;
-    UCTNode                 _rootNode;
-    UCTMemoryPool *         _memoryPool;
+	UCTSearchParameters 	m_params;
+    UCTSearchResults        m_results;
+	Timer		            m_searchTimer;
+    UCTNode                 m_rootNode;
+    UCTMemoryPool *         m_memoryPool;
 
-    GameState               _currentState;
+    GameState               m_currentState;
 
 	// we will use these as variables to save stack allocation every time
-    std::vector<Action>                 _actionVec;
-	MoveArray                               _moveArray;
+    std::vector<Action>                 m_actionVec;
+	MoveArray                               m_moveArray;
 	Array<std::vector<Action>,
-		 Constants::Max_Ordered_Moves>      _orderedMoves;
+		 Constants::Max_Ordered_Moves>      m_orderedMoves;
 
-    std::vector<PlayerPtr>					_allScripts[Constants::Num_Players];
-    PlayerPtr                               _playerModels[Constants::Num_Players];
+    std::vector<PlayerPtr>					m_allScripts[Constants::Num_Players];
+    PlayerPtr                               m_playerModels[Constants::Num_Players];
 
 public:
 
@@ -79,3 +79,4 @@ public:
     std::string     getNodeIDString(UCTNode & node);
 };
 }
+

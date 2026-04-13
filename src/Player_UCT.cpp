@@ -4,26 +4,27 @@ using namespace SparCraft;
 
 Player_UCT::Player_UCT (const size_t & playerID, const UCTSearchParameters & params) 
 {
-	_playerID = playerID;
-    _params = params;
+	m_playerID = playerID;
+    m_params = params;
 }
 
 void Player_UCT::getMoves(GameState & state, const MoveArray & moves, std::vector<Action> & moveVec)
 {
     moveVec.clear();
     
-    UCTSearch uct(_params);
+    UCTSearch uct(m_params);
 
     uct.doSearch(state, moveVec);
-    _prevResults = uct.getResults();
+    m_prevResults = uct.getResults();
 }
 
 UCTSearchParameters & Player_UCT::getParams()
 {
-    return _params;
+    return m_params;
 }
 
 UCTSearchResults & Player_UCT::getResults()
 {
-    return _prevResults;
+    return m_prevResults;
 }
+

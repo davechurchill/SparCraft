@@ -5,17 +5,17 @@ using namespace SparCraft;
 Player_AlphaBeta::Player_AlphaBeta (const size_t & playerID)
     : alphaBeta(nullptr)
 {
-	_playerID = playerID;
+	m_playerID = playerID;
 }
 
 Player_AlphaBeta::Player_AlphaBeta (const size_t & playerID, const AlphaBetaSearchParameters & params, TTPtr table)
     : alphaBeta(nullptr)
 {
-	_playerID = playerID;
-	_params = params;
+	m_playerID = playerID;
+	m_params = params;
 	TT = table;
 
-    alphaBeta = new AlphaBetaSearch(_params, TT);
+    alphaBeta = new AlphaBetaSearch(m_params, TT);
 }
 
 Player_AlphaBeta::~Player_AlphaBeta()
@@ -30,19 +30,19 @@ AlphaBetaSearchResults & Player_AlphaBeta::results()
 
 AlphaBetaSearchParameters & Player_AlphaBeta::getParams()
 {
-	return _params;
+	return m_params;
 }
 
 void Player_AlphaBeta::setParameters(AlphaBetaSearchParameters & p)
 {
-	_params = p;
+	m_params = p;
 }
 
 void Player_AlphaBeta::setTranspositionTable(TTPtr table)
 {
 	TT = table ? table : TTPtr(new TranspositionTable());
     delete alphaBeta;
-    alphaBeta = new AlphaBetaSearch(_params, TT);
+    alphaBeta = new AlphaBetaSearch(m_params, TT);
 }
 
 void Player_AlphaBeta::getMoves(GameState & state, const MoveArray & moves, std::vector<Action> & moveVec)
@@ -51,3 +51,4 @@ void Player_AlphaBeta::getMoves(GameState & state, const MoveArray & moves, std:
 	alphaBeta->doSearch(state);
     moveVec.assign(alphaBeta->getResults().bestMoves.begin(), alphaBeta->getResults().bestMoves.end());
 }
+

@@ -11,21 +11,21 @@ class GUI;
 
 class GUIGame
 {
-    GUI & _gui;
-    Game _game;
+    GUI & m_gui;
+    Game m_game;
 
-    double _previousDrawGameTimer;
-    double _previousTurnTimer;
+    double m_previousDrawGameTimer;
+    double m_previousTurnTimer;
 
-    GameState _initialState;
+    GameState m_initialState;
 
-    std::vector<std::vector<std::string> > _params[2];
-    std::vector<std::vector<std::string> > _results[2];
+    std::vector<std::vector<std::string> > m_params[2];
+    std::vector<std::vector<std::string> > m_results[2];
 
-    bool _paused;
-    bool _stepOneTurn;
-    bool _renderWorld;
-    bool _renderHPBars;
+    bool m_paused;
+    bool m_stepOneTurn;
+    bool m_renderWorld;
+    bool m_renderHPBars;
 
     void drawGame(sf::RenderTarget & target);
     void drawHPBars(sf::RenderTarget & target);
@@ -48,3 +48,4 @@ public:
 };
 
 }
+

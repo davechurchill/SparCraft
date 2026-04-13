@@ -10,22 +10,23 @@ namespace SparCraft
 	
 class SparCraft::RandomInt
 {
-	int _seed;
-    int _min;
-    int _max;
+	int m_seed;
+    int m_min;
+    int m_max;
 
 public:
 
 	RandomInt(int min, int max, int seed)
-        : _seed(seed)
-        , _min(min)
-        , _max(max)
+        : m_seed(seed)
+        , m_min(min)
+        , m_max(max)
 	{
 		srand(seed);
 	}
 
 	int nextInt()
 	{
-		return ( rand() % (_max-_min) ) + _min;
+		return ( rand() % (m_max-m_min) ) + m_min;
 	}
 };
+

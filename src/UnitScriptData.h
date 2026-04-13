@@ -17,13 +17,13 @@ typedef	std::shared_ptr<Player> PlayerPtr;
 class UnitScriptData
 {
     // map from UnitID to PlayerModel
-    std::map<int, size_t>   _unitScriptMap[2];
-    std::set<size_t>        _scriptSet[2];
-    std::vector<size_t>     _scriptVec[2];
-    std::vector<PlayerPtr>  _playerPtrVec[2];
+    std::map<int, size_t>   m_unitScriptMap[2];
+    std::set<size_t>        m_scriptSet[2];
+    std::vector<size_t>     m_scriptVec[2];
+    std::vector<PlayerPtr>  m_playerPtrVec[2];
     
    
-    std::vector<Action>       _allScriptMoves[2][PlayerModels::Size];
+    std::vector<Action>       m_allScriptMoves[2][PlayerModels::Size];
 
     std::vector<Action> & getMoves(const size_t & player, const size_t & actualScript);
 
@@ -44,3 +44,4 @@ public:
     const size_t        getNumScripts(const size_t & player) const;
 };
 }
+
