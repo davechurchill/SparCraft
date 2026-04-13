@@ -19,30 +19,30 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{82E61B13-7AC5-447E-AD88-96D04D881F58}</ProjectGuid>
+    <ProjectGuid>{66236439-5968-4756-B2E7-8A29BEA99078}</ProjectGuid>
     <RootNamespace>StarcraftBuildOrderSearch</RootNamespace>
     <Keyword>Win32Proj</Keyword>
     <VCTargetsPath Condition="'$(VCTargetsPath11)' != '' and '$(VSVersion)' == '' and $(VisualStudioVersion) == ''">$(VCTargetsPath11)</VCTargetsPath>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
     <CharacterSet>Unicode</CharacterSet>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <PlatformToolset>v143</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
     <CharacterSet>Unicode</CharacterSet>
     <PlatformToolset>v143</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
     <CharacterSet>Unicode</CharacterSet>
     <PlatformToolset>v143</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
     <CharacterSet>Unicode</CharacterSet>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <PlatformToolset>v143</PlatformToolset>
@@ -59,12 +59,16 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup>
     <_ProjectFileVersion>10.0.30319.1</_ProjectFileVersion>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(SolutionDir)$(Configuration)\</OutDir>
-    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(Configuration)\</IntDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(Platform)\$(Configuration)\$(ProjectName)\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
     <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</LinkIncremental>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">../bin/</OutDir>
-    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(Configuration)\</IntDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(Platform)\$(Configuration)\$(ProjectName)\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
     <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</LinkIncremental>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(Platform)\$(Configuration)\$(ProjectName)\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(Platform)\$(Configuration)\$(ProjectName)\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
     <CodeAnalysisRuleSet Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">AllRules.ruleset</CodeAnalysisRuleSet>
     <CodeAnalysisRules Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" />
     <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" />
@@ -72,20 +76,13 @@
     <CodeAnalysisRules Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" />
     <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" />
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <TargetName>SparCraft</TargetName>
-    <LibraryPath>$(SFML_DIR)\lib;$(LibraryPath)</LibraryPath>
-    <IncludePath>$(SFML_DIR)\include;$(IncludePath)</IncludePath>
-  </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <TargetName>SparCraft</TargetName>
-    <LibraryPath>$(SFML_DIR)\lib;$(LibraryPath)</LibraryPath>
-    <IncludePath>$(SFML_DIR)\include;$(IncludePath)</IncludePath>
+    <TargetName>$(ProjectName)_d</TargetName>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>../src/imgui;../src/bwapidata/include;$(SFML_DIR)\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../src/bwapidata/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;NOMINMAX;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>false</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -96,11 +93,9 @@
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <LanguageStandard>stdcpp23</LanguageStandard>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
-      <DisableSpecificWarnings>4275</DisableSpecificWarnings>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>$(Platform)\$(Configuration)\SparCraft.lib;$(Platform)\$(Configuration)\BWAPId.lib;sfml-audio-d.lib;sfml-graphics-d.lib;sfml-system-d.lib;sfml-window-d.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(SFML_DIR)\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>$(Platform)\$(Configuration)\BWAPIData\BWAPId.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Console</SubSystem>
       <AdditionalOptions>/NODEFAULTLIB:msvcrt.lib %(AdditionalOptions)</AdditionalOptions>
@@ -110,7 +105,7 @@
     <ClCompile>
       <Optimization>Full</Optimization>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <AdditionalIncludeDirectories>../src/imgui;../src/bwapidata/include;$(SFML_DIR)\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../src/bwapidata/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;NOMINMAX;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <FunctionLevelLinking>true</FunctionLevelLinking>
@@ -124,11 +119,9 @@
       <ExceptionHandling>Sync</ExceptionHandling>
       <LanguageStandard>stdcpp23</LanguageStandard>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
-      <DisableSpecificWarnings>4275</DisableSpecificWarnings>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>$(Platform)\$(Configuration)\SparCraft.lib;$(Platform)\$(Configuration)\BWAPI.lib;sfml-audio.lib;sfml-graphics.lib;sfml-system.lib;sfml-window.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(SFML_DIR)\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>$(Platform)\$(Configuration)\BWAPIData\BWAPI.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Console</SubSystem>
       <OptimizeReferences>true</OptimizeReferences>
@@ -140,7 +133,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>../src/imgui;../src/bwapidata/include;$(BWAPI_DIR)/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../src/bwapidata/include;$(BWAPI_DIR)/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;NOMINMAX;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>false</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -151,11 +144,9 @@
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <LanguageStandard>stdcpp23</LanguageStandard>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
-      <DisableSpecificWarnings>4275</DisableSpecificWarnings>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>$(Configuration)/SparCraft/SparCraft_d.lib;$(Platform)\$(Configuration)\BWAPId.lib;sfml-audio-d.lib;sfml-graphics-d.lib;sfml-system-d.lib;sfml-window-d.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(SFML_DIR)\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>$(Platform)\$(Configuration)\BWAPIData\BWAPId.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Console</SubSystem>
       <TargetMachine>MachineX86</TargetMachine>
@@ -166,7 +157,7 @@
     <ClCompile>
       <Optimization>Full</Optimization>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <AdditionalIncludeDirectories>../src/imgui;../src/bwapidata/include;$(BWAPI_DIR)\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../src/bwapidata/include;$(BWAPI_DIR)\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;NOMINMAX;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <FunctionLevelLinking>true</FunctionLevelLinking>
@@ -180,11 +171,9 @@
       <ExceptionHandling>Sync</ExceptionHandling>
       <LanguageStandard>stdcpp23</LanguageStandard>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
-      <DisableSpecificWarnings>4275</DisableSpecificWarnings>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>$(Configuration)/SparCraft/SparCraft.lib;$(Platform)\$(Configuration)\BWAPI.lib;sfml-audio.lib;sfml-graphics.lib;sfml-system.lib;sfml-window.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(SFML_DIR)\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>$(Platform)\$(Configuration)\BWAPIData\BWAPI.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Console</SubSystem>
       <OptimizeReferences>true</OptimizeReferences>
@@ -195,38 +184,104 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="..\src\gui\GUI.h" />
-    <ClInclude Include="..\src\gui\GUIGame.h" />
-    <ClInclude Include="..\src\imgui\imconfig-SFML.h" />
-    <ClInclude Include="..\src\imgui\imconfig.h" />
-    <ClInclude Include="..\src\imgui\imgui-SFML.h" />
-    <ClInclude Include="..\src\imgui\imgui-SFML_export.h" />
-    <ClInclude Include="..\src\imgui\imgui.h" />
-    <ClInclude Include="..\src\imgui\imgui_internal.h" />
-    <ClInclude Include="..\src\imgui\imgui_stdlib.h" />
-    <ClInclude Include="..\src\imgui\imstb_rectpack.h" />
-    <ClInclude Include="..\src\imgui\imstb_textedit.h" />
-    <ClInclude Include="..\src\imgui\imstb_truetype.h" />
-    <ClInclude Include="..\src\main\SearchExperiment.h" />
+    <ClInclude Include="..\src\Action.h" />
+    <ClInclude Include="..\src\AllPlayers.h" />
+    <ClInclude Include="..\src\AlphaBetaMove.h" />
+    <ClInclude Include="..\src\AlphaBetaSearch.h" />
+    <ClInclude Include="..\src\AlphaBetaSearchParameters.hpp" />
+    <ClInclude Include="..\src\AlphaBetaSearchResults.hpp" />
+    <ClInclude Include="..\src\AnimationFrameData.h" />
+    <ClInclude Include="..\src\BaseTypes.hpp" />
+    <ClInclude Include="..\src\EnumData.h" />
+    <ClInclude Include="..\src\Game.h" />
+    <ClInclude Include="..\src\GameState.h" />
+    <ClInclude Include="..\src\GraphViz.hpp" />
+    <ClInclude Include="..\src\Hash.h" />
+    <ClInclude Include="..\src\Logger.h" />
+    <ClInclude Include="..\src\Map.hpp" />
+    <ClInclude Include="..\src\MoveArray.h" />
+    <ClInclude Include="..\src\Player.h" />
+    <ClInclude Include="..\src\PlayerProperties.h" />
+    <ClInclude Include="..\src\Player_AlphaBeta.h" />
+    <ClInclude Include="..\src\Player_AttackClosest.h" />
+    <ClInclude Include="..\src\Player_AttackDPS.h" />
+    <ClInclude Include="..\src\Player_AttackWeakest.h" />
+    <ClInclude Include="..\src\Player_Cluster.h" />
+    <ClInclude Include="..\src\Player_Kiter.h" />
+    <ClInclude Include="..\src\Player_KiterDPS.h" />
+    <ClInclude Include="..\src\Player_Kiter_NOKDPS.h" />
+    <ClInclude Include="..\src\Player_NOKDPS.h" />
+    <ClInclude Include="..\src\Player_PortfolioGreedySearch.h" />
+    <ClInclude Include="..\src\Player_Random.h" />
+    <ClInclude Include="..\src\Player_UCT.h" />
+    <ClInclude Include="..\src\PortfolioGreedySearch.h" />
+    <ClInclude Include="..\src\Random.hpp" />
+    <ClInclude Include="..\src\Common.h" />
+    <ClInclude Include="..\src\Position.hpp" />
+    <ClInclude Include="..\src\SparCraft.h" />
+    <ClInclude Include="..\src\SparCraftAssert.h" />
+    <ClInclude Include="..\src\SparCraftException.h" />
+    <ClInclude Include="..\src\Timer.h" />
+    <ClInclude Include="..\src\TranspositionTable.h" />
+    <ClInclude Include="..\src\UCTMemoryPool.hpp" />
+    <ClInclude Include="..\src\UCTNode.h" />
+    <ClInclude Include="..\src\UCTSearch.h" />
+    <ClInclude Include="..\src\UCTSearchParameters.hpp" />
+    <ClInclude Include="..\src\UCTSearchResults.hpp" />
+    <ClInclude Include="..\src\Unit.h" />
+    <ClInclude Include="..\src\Array.hpp" />
+    <ClInclude Include="..\src\UnitProperties.h" />
+    <ClInclude Include="..\src\UnitScriptData.h" />
+    <ClInclude Include="..\src\WeaponProperties.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\src\gui\GUI.cpp" />
-    <ClCompile Include="..\src\gui\GUIGame.cpp" />
-    <ClCompile Include="..\src\imgui\imgui-SFML.cpp" />
-    <ClCompile Include="..\src\imgui\imgui.cpp" />
-    <ClCompile Include="..\src\imgui\imgui_demo.cpp" />
-    <ClCompile Include="..\src\imgui\imgui_draw.cpp" />
-    <ClCompile Include="..\src\imgui\imgui_stdlib.cpp" />
-    <ClCompile Include="..\src\imgui\imgui_tables.cpp" />
-    <ClCompile Include="..\src\imgui\imgui_widgets.cpp" />
-    <ClCompile Include="..\src\main\main.cpp" />
-    <ClCompile Include="..\src\main\SearchExperiment.cpp" />
-    <ClCompile Include="..\src\TutorialCode.cpp" />
+    <ClCompile Include="..\src\Action.cpp" />
+    <ClCompile Include="..\src\AllPlayers.cpp" />
+    <ClCompile Include="..\src\AlphaBetaMove.cpp" />
+    <ClCompile Include="..\src\AlphaBetaSearch.cpp" />
+    <ClCompile Include="..\src\AnimationFrameData.cpp" />
+    <ClCompile Include="..\src\Common.cpp" />
+    <ClCompile Include="..\src\EnumData.cpp" />
+    <ClCompile Include="..\src\Game.cpp" />
+    <ClCompile Include="..\src\GameState.cpp" />
+    <ClCompile Include="..\src\Hash.cpp" />
+    <ClCompile Include="..\src\Logger.cpp" />
+    <ClCompile Include="..\src\MoveArray.cpp" />
+    <ClCompile Include="..\src\Player.cpp" />
+    <ClCompile Include="..\src\PlayerProperties.cpp" />
+    <ClCompile Include="..\src\Player_AlphaBeta.cpp" />
+    <ClCompile Include="..\src\Player_AttackClosest.cpp" />
+    <ClCompile Include="..\src\Player_AttackDPS.cpp" />
+    <ClCompile Include="..\src\Player_AttackWeakest.cpp" />
+    <ClCompile Include="..\src\Player_Cluster.cpp" />
+    <ClCompile Include="..\src\Player_Kiter.cpp" />
+    <ClCompile Include="..\src\Player_KiterDPS.cpp" />
+    <ClCompile Include="..\src\Player_Kiter_NOKDPS.cpp" />
+    <ClCompile Include="..\src\Player_NOKDPS.cpp" />
+    <ClCompile Include="..\src\Player_PortfolioGreedySearch.cpp" />
+    <ClCompile Include="..\src\Player_Random.cpp" />
+    <ClCompile Include="..\src\Player_UCT.cpp" />
+    <ClCompile Include="..\src\PortfolioGreedySearch.cpp" />
+    <ClCompile Include="..\src\SparCraft.cpp" />
+    <ClCompile Include="..\src\SparCraftAssert.cpp" />
+    <ClCompile Include="..\src\SparCraftException.cpp" />
+    <ClCompile Include="..\src\Timer.cpp" />
+    <ClCompile Include="..\src\TranspositionTable.cpp" />
+    <ClCompile Include="..\src\UCTSearch.cpp" />
+    <ClCompile Include="..\src\Unit.cpp" />
+    <ClCompile Include="..\src\UnitProperties.cpp" />
+    <ClCompile Include="..\src\UnitScriptData.cpp" />
+    <ClCompile Include="..\src\WeaponProperties.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
 </Project>
+
+
+
+
+
 
 
 

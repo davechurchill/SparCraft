@@ -1,0 +1,7 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(powershell -Command \"Rename-Item 'c:\\\\dev\\\\code\\\\SparCraft\\\\VisualStudio' 'vs'\")"
+    ]
+  }
+}
