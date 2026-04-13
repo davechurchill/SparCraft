@@ -192,9 +192,13 @@ void GUIGame::drawHPBars(sf::RenderTarget & target)
             const float hpPercent = unit.maxHP() > 0 ? static_cast<float>(unit.currentHP()) / static_cast<float>(unit.maxHP()) : 0.0f;
             const float w = 150.0f;
             const float h = 10.0f;
+            const float iconSize = h;
+            const float iconGap = 4.0f;
             const float cw = w * hpPercent;
             const float xx = 1000.0f + (170.0f * p) - w / 2.0f;
             const float yy = 40.0f + (h + 2.0f) * u;
+
+            m_gui.drawUnitTypeIcon(unit.type(), sf::Vector2f(xx - iconGap - iconSize, yy), iconSize, target);
 
             sf::RectangleShape back(sf::Vector2f(w, h));
             back.setPosition(sf::Vector2f(xx, yy));

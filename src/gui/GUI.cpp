@@ -1,5 +1,6 @@
 #include "GUI.h"
 
+#include <algorithm>
 #include <filesystem>
 #include <cstdlib>
 
@@ -146,6 +147,52 @@ void GUI::drawUnitType(const BWAPI::UnitType & type, const Position & p, sf::Ren
     sf::CircleShape marker(8.0f, 12);
     marker.setOrigin({ 8.0f, 8.0f });
     marker.setPosition({ static_cast<float>(p.x()), static_cast<float>(p.y()) });
+    marker.setFillColor(sf::Color(60, 60, 60));
+    marker.setOutlineColor(sf::Color::White);
+    marker.setOutlineThickness(1.0f);
+    target.draw(marker);
+}
+
+void GUI::drawUnitTypeIcon(const BWAPI::UnitType & type, const sf::Vector2f & topLeft, float iconSize, sf::RenderTarget & target) const
+{
+    if (iconSize <= 0.0f)
+    {
+        return;
+    }
+
+    sf::RectangleShape back(sf::Vector2f(iconSize, iconSize));
+    back.setPosition(topLeft);
+    back.setFillColor(sf::Color(22, 22, 22, 240));
+    target.draw(back);
+
+    const auto texture = m_unitTextures.find(type.getID());
+    if (texture != m_unitTextures.end())
+    {
+        const auto textureSize = texture->second.getSize();
+        if (textureSize.x > 0 && textureSize.y > 0)
+        {
+            sf::Sprite sprite(texture->second);
+
+            const float sx = iconSize / static_cast<float>(textureSize.x);
+            const float sy = iconSize / static_cast<float>(textureSize.y);
+            const float scale = std::min(sx, sy);
+
+            sprite.setScale({ scale, scale });
+
+            const float drawnW = static_cast<float>(textureSize.x) * scale;
+            const float drawnH = static_cast<float>(textureSize.y) * scale;
+            sprite.setPosition({
+                topLeft.x + (iconSize - drawnW) * 0.5f,
+                topLeft.y + (iconSize - drawnH) * 0.5f
+            });
+            target.draw(sprite);
+            return;
+        }
+    }
+
+    sf::CircleShape marker(iconSize * 0.35f, 12);
+    marker.setOrigin({ iconSize * 0.35f, iconSize * 0.35f });
+    marker.setPosition({ topLeft.x + iconSize * 0.5f, topLeft.y + iconSize * 0.5f });
     marker.setFillColor(sf::Color(60, 60, 60));
     marker.setOutlineColor(sf::Color::White);
     marker.setOutlineThickness(1.0f);

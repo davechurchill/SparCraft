@@ -54,6 +54,7 @@ public:
     const Game & getGame() const;
 
     void drawUnitType(const BWAPI::UnitType & type, const Position & p, sf::RenderTarget & target) const;
+    void drawUnitTypeIcon(const BWAPI::UnitType & type, const sf::Vector2f & topLeft, float iconSize, sf::RenderTarget & target) const;
     void drawLine(const Position & p1, const Position & p2, float thickness, const sf::Color & color, sf::RenderTarget & target) const;
 
     bool saveScreenshotBMP(const std::string & filename);
