@@ -50,7 +50,7 @@ AlphaBetaValue AlphaBetaSearch::IDAlphaBeta(GameState & initialState, const size
 	m_results.nodesExpanded = 0;
 	m_results.maxDepthReached = 0;
 
-	for (size_t d(1); d < maxDepth; ++d)
+	for (size_t d(1); d <= maxDepth; ++d)
 	{
 		
 		StateEvalScore alpha(-10000000, 999999);
@@ -68,10 +68,8 @@ AlphaBetaValue AlphaBetaSearch::IDAlphaBeta(GameState & initialState, const size
 			m_results.abValue = val.score().val();
 		}
 		// if we do time-out
-		catch (int e)
+		catch (int)
 		{
-			e += 1;
-
 			// if we didn't finish the first depth, set the move to the best script move
 			if (d == 1)
 			{
@@ -84,9 +82,6 @@ AlphaBetaValue AlphaBetaSearch::IDAlphaBeta(GameState & initialState, const size
 
 			break;
 		}
-
-		long long unsigned nodes = m_results.nodesExpanded;
-		double ms = m_searchTimer.elapsedMS();
 
 	}
 
@@ -145,9 +140,9 @@ TTLookupValue AlphaBetaSearch::TTlookup(const GameState & state, StateEvalScore 
 		} 
 		else
 		{
-			printf("LOL\n");
+			// exact value — narrow window to a point, which will trigger a cut below
 			alpha = TTvalue;
-			beta = TTvalue;
+			beta  = TTvalue;
 		}
 		
 		if (alpha >= beta) 
@@ -226,10 +221,6 @@ void AlphaBetaSearch::generateOrderedMoves(GameState & state, MoveArray & moves,
 		    orderedMoves.add(moveVec);
 	    }
 
-        if (orderedMoves.size() < 2)
-        {
-            int a = 6;
-        }
     }
 }
 
@@ -370,6 +361,10 @@ AlphaBetaValue AlphaBetaSearch::alphaBeta(GameState & state, size_t depth, const
 		}
 	}
 
+	// capture bounds before children modify them — needed for correct TT type classification
+	const StateEvalScore originalAlpha(alpha);
+	const StateEvalScore originalBeta(beta);
+
 	bool bestMoveSet(false);
 
 	// move generation
@@ -393,19 +388,14 @@ AlphaBetaValue AlphaBetaSearch::alphaBeta(GameState & state, size_t depth, const
 		// generate the child state
 		GameState child(state);
 
-		bool firstMove = true;
-
 		// if this is the first player in a simultaneous move state
 		if (state.bothCanMove() && !prevSimMove && (depth != 1))
 		{
-			firstMove = true;
 			// don't generate a child yet, just pass on the move we are investigating
 			val = alphaBeta(state, depth-1, playerToMove, &moveVec, alpha, beta);
 		}
 		else
 		{
-			firstMove = false;
-
 			// if this is the 2nd move of a simultaneous move state
 				if (prevSimMove)
 				{
@@ -463,7 +453,7 @@ AlphaBetaValue AlphaBetaSearch::alphaBeta(GameState & state, size_t depth, const
 	
 	if (isTranspositionLookupState(state, prevSimMove))
 	{
-		TTsave(state, maxPlayer ? alpha : beta, alpha, beta, depth, playerToMove, bestMove, bestSimResponse);
+		TTsave(state, maxPlayer ? alpha : beta, originalAlpha, originalBeta, depth, playerToMove, bestMove, bestSimResponse);
 	}
 
 	return maxPlayer ? AlphaBetaValue(alpha, bestMove) : AlphaBetaValue(beta, bestMove);
