@@ -1,38 +1,54 @@
 #pragma once
 
 #include "Common.h"
-#include "Array.hpp"
 #include "Unit.h"
 #include "Action.h"
 #include <algorithm>
 #include <random>
+#include <vector>
 
 namespace SparCraft
 {
 class MoveArray
 {
-	// the array which contains all the moves
-	Array2D<Action, Constants::Max_Units, Constants::Max_Moves> m_moves;
-
-	// how many moves each unit has
-	Array<size_t, Constants::Max_Units>                         m_numMoves;
-
-    // the current move array, used for the 'iterator'
-    Array<Action, Constants::Max_Units>                         m_currentMoves;
-    Array<size_t, Constants::Max_Units>                         m_currentMovesIndex;
+    // Move storage is heap-backed to avoid very large stack allocations.
+    std::vector<std::vector<Action>>    m_moves;
+    std::vector<Action>                 m_currentMoves;
+    std::vector<size_t>                 m_currentMovesIndex;
 
 	// the number of units that have moves;
-	size_t                                                      m_numUnits;
-    bool                                                        m_hasMoreMoves;
+	size_t                              m_numUnits;
+    bool                                m_hasMoreMoves;
+
+    void ensureUnitStorage(const size_t unit)
+    {
+        const size_t requiredSize = unit + 1;
+
+        if (m_moves.size() < requiredSize)
+        {
+            m_moves.resize(requiredSize);
+        }
+
+        if (m_currentMoves.size() < requiredSize)
+        {
+            m_currentMoves.resize(requiredSize);
+        }
+
+        if (m_currentMovesIndex.size() < requiredSize)
+        {
+            m_currentMovesIndex.resize(requiredSize, 0);
+        }
+    }
 
 public:
 
     MoveArray()
         : m_numUnits(0)
-        , m_hasMoreMoves(true)
+        , m_hasMoreMoves(false)
     {
-        m_numMoves.fill(0);
-        m_currentMovesIndex.fill(0);
+        m_moves.reserve(Constants::Max_Units);
+        m_currentMoves.reserve(Constants::Max_Units);
+        m_currentMovesIndex.reserve(Constants::Max_Units);
     }
 
     void clear()
@@ -44,7 +60,13 @@ public:
         }
 
         m_numUnits = 0;
-        m_numMoves.fill(0);
+        for (size_t u(0); u<m_moves.size(); ++u)
+        {
+            m_moves[u].clear();
+        }
+
+        m_currentMoves.clear();
+        m_currentMovesIndex.clear();
         resetMoveIterator();
     }
 
@@ -92,7 +114,7 @@ public:
             // shuffle the movement actions for this unit
             if (moveEnd != -1 && moveBegin != -1 && moveEnd != moveBegin)
             {
-                std::shuffle(&m_moves[u][moveBegin], &m_moves[u][moveEnd + 1], rng);
+                std::shuffle(m_moves[u].begin() + moveBegin, m_moves[u].begin() + moveEnd + 1, rng);
                 resetMoveIterator();
             }
         }
@@ -101,6 +123,8 @@ public:
     // returns a given move from a unit
     const Action & getMove(size_t unit, size_t move) const
     {
+        assert(unit < m_moves.size());
+        assert(move < m_moves[unit].size());
         assert(m_moves[unit][move].unit() != 255);
         return m_moves[unit][move];
     }
@@ -117,8 +141,14 @@ public:
 
     void incrementMove(size_t unit)
     {
+        if (unit >= m_numUnits || numMoves(unit) == 0)
+        {
+            m_hasMoreMoves = false;
+            return;
+        }
+
         // increment the index for this unit
-        m_currentMovesIndex[unit] = (m_currentMovesIndex[unit] + 1) % m_numMoves[unit];
+        m_currentMovesIndex[unit] = (m_currentMovesIndex[unit] + 1) % numMoves(unit);
 
         // if the value rolled over, we need to do the carry calculation
         if (m_currentMovesIndex[unit] == 0)
@@ -148,34 +178,52 @@ public:
 
     void resetMoveIterator()
     {
-        m_hasMoreMoves = true;
-        m_currentMovesIndex.fill(0);
+        m_hasMoreMoves = (m_numUnits > 0);
+        m_currentMovesIndex.assign(m_numUnits, 0);
+        m_currentMoves.resize(m_numUnits);
 
         for (size_t u(0); u<numUnits(); ++u)
         {
+            if (numMoves(u) == 0)
+            {
+                m_hasMoreMoves = false;
+                continue;
+            }
+
             m_currentMoves[u] = m_moves[u][m_currentMovesIndex[u]];
         }
     }
 
     void getNextMoveVec(std::vector<Action> & moves)
     {
-        moves.assign(&m_currentMoves[0], &m_currentMoves[m_numUnits]);
+        if (!m_hasMoreMoves || m_numUnits == 0)
+        {
+            moves.clear();
+            return;
+        }
+
+        moves.assign(m_currentMoves.begin(), m_currentMoves.begin() + m_numUnits);
         incrementMove(0);
     }
 
     size_t maxUnits() const
     {
-        return m_moves.getRows();
+        return std::max(static_cast<size_t>(Constants::Max_Units), m_moves.size());
     }
 
     // adds a Move to the unit specified
     void add(const Action & move)
     {
-        m_moves[move.unit()][m_numMoves[move.unit()]] = move;
-        m_numMoves[move.unit()]++;
+        ensureUnitStorage(move.unit());
+        m_moves[move.unit()].push_back(move);
 
-        m_currentMovesIndex[m_numUnits-1] = 0;
-        m_currentMoves[m_numUnits-1] = m_moves[move.unit()][0];
+        if (move.unit() + 1 > m_numUnits)
+        {
+            m_numUnits = move.unit() + 1;
+        }
+
+        m_currentMovesIndex[move.unit()] = 0;
+        m_currentMoves[move.unit()] = m_moves[move.unit()][0];
     }
 
     bool validateMoves()
@@ -200,10 +248,16 @@ public:
     size_t getUnitID(size_t unit)   const { return getMove(unit, 0).unit(); }
     size_t getPlayerID(size_t unit) const { return getMove(unit, 0).player(); }
 
-    void   addUnit()                      { m_numUnits++; }
+    void addUnit()
+    {
+        ensureUnitStorage(m_numUnits);
+        m_moves[m_numUnits].clear();
+        m_currentMovesIndex[m_numUnits] = 0;
+        m_numUnits++;
+    }
 
     size_t numUnits()              const  { return m_numUnits; }
     size_t numUnitsInTuple()       const  { return numUnits(); }
-    size_t numMoves(size_t unit)   const  { return m_numMoves[unit]; }
+    size_t numMoves(size_t unit)   const  { return m_moves[unit].size(); }
 };
 }
