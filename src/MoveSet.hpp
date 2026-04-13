@@ -57,7 +57,7 @@ public:
 		// set that bit to a zero
 		subtract(nextAction);
 
-		return (Action)nextAction;
+		return nextAction;
 	}
 	
 	// peeks at the next action
@@ -145,15 +145,15 @@ public:
             return s.popAction();
         }
         
-        int r = (rand() % (s.numActions() - 1));
+        int r = (rand() % s.numActions());
         
-        Action a = s.popAction();
-        
+        int a = s.popAction();
+
         for (int i=0; i<r; i++)
         {
             a = s.popAction();
         }
-        
+
 	    return a;
 	}
 

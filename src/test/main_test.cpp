@@ -5,9 +5,14 @@
 #include "Game.h"
 #include "AllPlayers.h"
 #include "MoveArray.h"
+#include "Array.hpp"
+#include "Position.hpp"
+#include "BaseTypes.hpp"
+#include "MoveSet.hpp"
 #include <memory>
 #include <array>
 #include <cmath>
+#include <set>
 #include <sstream>
 
 using namespace SparCraft;
@@ -713,4 +718,284 @@ TEST_CASE("unit IDs remain unique for symmetric marine states from 1 to 10")
 
         REQUIRE(ids.size() == static_cast<size_t>(2 * n));
     }
+}
+
+// -----------------------------------------------------------------------
+// Position
+// -----------------------------------------------------------------------
+TEST_CASE("Position::getDistance — axis-aligned horizontal")
+{
+    SparCraft::Position a(0, 0), b(7, 0);
+    REQUIRE(a.getDistance(b) == 7);
+    REQUIRE(b.getDistance(a) == 7);
+}
+
+TEST_CASE("Position::getDistance — axis-aligned vertical")
+{
+    SparCraft::Position a(0, 0), b(0, 9);
+    REQUIRE(a.getDistance(b) == 9);
+    REQUIRE(b.getDistance(a) == 9);
+}
+
+TEST_CASE("Position::getDistance — 3-4-5 right triangle")
+{
+    // Diagonal branch: both dX and dY non-zero
+    SparCraft::Position a(0, 0), b(3, 4);
+    REQUIRE(a.getDistance(b) == 5);
+    REQUIRE(b.getDistance(a) == 5);
+}
+
+TEST_CASE("Position::getDistance — 5-12-13 right triangle")
+{
+    SparCraft::Position a(0, 0), b(5, 12);
+    REQUIRE(a.getDistance(b) == 13);
+}
+
+TEST_CASE("Position::getDistance — same point is zero")
+{
+    SparCraft::Position a(42, 99);
+    REQUIRE(a.getDistance(a) == 0);
+}
+
+TEST_CASE("Position::getDistanceSq — 3-4-5 triangle gives 25")
+{
+    SparCraft::Position a(0, 0), b(3, 4);
+    REQUIRE(a.getDistanceSq(b) == 25);
+}
+
+TEST_CASE("Position::getDistanceSq — axis-aligned")
+{
+    SparCraft::Position a(0, 0), b(6, 0);
+    REQUIRE(a.getDistanceSq(b) == 36);
+}
+
+TEST_CASE("Position arithmetic operators")
+{
+    SparCraft::Position a(3, 4), b(1, 2);
+    REQUIRE((a + b) == SparCraft::Position(4, 6));
+    REQUIRE((a - b) == SparCraft::Position(2, 2));
+}
+
+// -----------------------------------------------------------------------
+// StateEvalScore comparison operators
+// -----------------------------------------------------------------------
+TEST_CASE("StateEvalScore — equality")
+{
+    SparCraft::StateEvalScore a(10, 5), b(10, 5), c(10, 6);
+    REQUIRE(a == b);
+    REQUIRE_FALSE(a == c);
+}
+
+TEST_CASE("StateEvalScore — less-than on val")
+{
+    SparCraft::StateEvalScore lo(5, 1), hi(10, 1);
+    REQUIRE(lo < hi);
+    REQUIRE_FALSE(hi < lo);
+}
+
+TEST_CASE("StateEvalScore — less-than tie-break: more moves means less")
+{
+    // Same val; more moves is considered worse (less)
+    SparCraft::StateEvalScore fewer(10, 2), more(10, 5);
+    REQUIRE(more < fewer);
+    REQUIRE_FALSE(fewer < more);
+}
+
+TEST_CASE("StateEvalScore — greater-than on val")
+{
+    SparCraft::StateEvalScore lo(5, 1), hi(10, 1);
+    REQUIRE(hi > lo);
+    REQUIRE_FALSE(lo > hi);
+}
+
+TEST_CASE("StateEvalScore — greater-than tie-break: fewer moves means greater")
+{
+    SparCraft::StateEvalScore fewer(10, 2), more(10, 5);
+    REQUIRE(fewer > more);
+    REQUIRE_FALSE(more > fewer);
+}
+
+TEST_CASE("StateEvalScore — less-than-or-equal on val")
+{
+    SparCraft::StateEvalScore lo(5, 1), hi(10, 1);
+    REQUIRE(lo <= hi);
+    REQUIRE_FALSE(hi <= lo);
+}
+
+TEST_CASE("StateEvalScore — less-than-or-equal when equal")
+{
+    SparCraft::StateEvalScore a(10, 3);
+    REQUIRE(a <= a);
+}
+
+TEST_CASE("StateEvalScore — less-than-or-equal tie-break")
+{
+    SparCraft::StateEvalScore fewer(10, 2), more(10, 5);
+    REQUIRE(more <= fewer);   // more moves <= fewer moves (worse-or-equal)
+    REQUIRE(fewer <= fewer);  // equal
+    REQUIRE_FALSE(fewer <= more);
+}
+
+TEST_CASE("StateEvalScore — greater-than-or-equal on val")
+{
+    SparCraft::StateEvalScore lo(5, 1), hi(10, 1);
+    REQUIRE(hi >= lo);
+    REQUIRE_FALSE(lo >= hi);
+}
+
+TEST_CASE("StateEvalScore — greater-than-or-equal when equal")
+{
+    SparCraft::StateEvalScore a(10, 3);
+    REQUIRE(a >= a);
+}
+
+TEST_CASE("StateEvalScore — operators are mutually consistent")
+{
+    SparCraft::StateEvalScore a(10, 2), b(10, 5), c(20, 1);
+
+    // a > b (same val, fewer moves)
+    REQUIRE(a > b);
+    REQUIRE(a >= b);
+    REQUIRE_FALSE(a < b);
+    REQUIRE_FALSE(a <= b);
+
+    // c > a (higher val)
+    REQUIRE(c > a);
+    REQUIRE(c >= a);
+    REQUIRE_FALSE(c < a);
+    REQUIRE_FALSE(c <= a);
+}
+
+// -----------------------------------------------------------------------
+// Array
+// -----------------------------------------------------------------------
+TEST_CASE("Array — default size is zero")
+{
+    SparCraft::Array<int, 16> arr;
+    REQUIRE(arr.size() == 0);
+    REQUIRE(arr.capacity() == 16);
+}
+
+TEST_CASE("Array — add increments size and stores value")
+{
+    SparCraft::Array<int, 16> arr;
+    arr.add(42);
+    REQUIRE(arr.size() == 1);
+    REQUIRE(arr[0] == 42);
+}
+
+TEST_CASE("Array — back returns last added element")
+{
+    SparCraft::Array<int, 16> arr;
+    arr.add(1);
+    arr.add(2);
+    arr.add(3);
+    REQUIRE(arr.back() == 3);
+}
+
+TEST_CASE("Array — clear resets size to zero")
+{
+    SparCraft::Array<int, 16> arr;
+    arr.add(1);
+    arr.add(2);
+    arr.clear();
+    REQUIRE(arr.size() == 0);
+}
+
+TEST_CASE("Array — contains only finds elements within size")
+{
+    SparCraft::Array<int, 16> arr;
+    arr.add(7);
+    REQUIRE(arr.contains(7));
+    REQUIRE_FALSE(arr.contains(99));
+}
+
+TEST_CASE("Array — addUnique does not add duplicates")
+{
+    SparCraft::Array<int, 16> arr;
+    arr.addUnique(5);
+    arr.addUnique(5);
+    arr.addUnique(5);
+    REQUIRE(arr.size() == 1);
+}
+
+TEST_CASE("Array — can fill to full capacity")
+{
+    SparCraft::Array<int, 8> arr;
+    for (int i = 0; i < 8; ++i)
+        arr.add(i);
+    REQUIRE(arr.size() == 8);
+    REQUIRE(arr[7] == 7);
+}
+
+// -----------------------------------------------------------------------
+// BitSet / MoveSet
+// -----------------------------------------------------------------------
+TEST_CASE("BitSet — empty set reports zero actions")
+{
+    BitSet b;
+    REQUIRE(b.numActions() == 0);
+    REQUIRE(b.isEmpty());
+}
+
+TEST_CASE("BitSet — add and contains")
+{
+    BitSet b;
+    b.add(3);
+    b.add(7);
+    REQUIRE(b.contains(3));
+    REQUIRE(b.contains(7));
+    REQUIRE_FALSE(b.contains(0));
+    REQUIRE(b.numActions() == 2);
+}
+
+TEST_CASE("BitSet — subtract removes a bit")
+{
+    BitSet b;
+    b.add(3);
+    b.add(7);
+    b.subtract(3);
+    REQUIRE_FALSE(b.contains(3));
+    REQUIRE(b.contains(7));
+    REQUIRE(b.numActions() == 1);
+}
+
+TEST_CASE("BitSet — popAction removes and returns the bit")
+{
+    BitSet b;
+    b.add(5);
+    int action = b.popAction();
+    REQUIRE(action == 5);
+    REQUIRE(b.isEmpty());
+}
+
+TEST_CASE("BitSet — randomAction returns a valid member")
+{
+    BitSet b;
+    b.add(2);
+    b.add(5);
+    b.add(9);
+
+    for (int i = 0; i < 50; ++i)
+    {
+        int a = b.randomAction();
+        REQUIRE((a == 2 || a == 5 || a == 9));
+    }
+}
+
+TEST_CASE("BitSet — randomAction can return all members")
+{
+    // With enough samples every bit in the set should be chosen at least once
+    BitSet b;
+    b.add(1);
+    b.add(2);
+    b.add(3);
+
+    std::set<int> seen;
+    for (int i = 0; i < 300; ++i)
+        seen.insert(b.randomAction());
+
+    REQUIRE(seen.count(1));
+    REQUIRE(seen.count(2));
+    REQUIRE(seen.count(3));
 }

@@ -151,7 +151,7 @@ public:
         }
         else
         {
-            return (PositionType)sqrt((float)(dX*dX - dY*dY));
+            return (PositionType)sqrt((float)(dX*dX + dY*dY));
         }
 	}
 

@@ -46,7 +46,7 @@ public:
 
 	const bool contains(const T & e) const
 	{
-		for (size_t i(0); i<capacity(); ++i)
+		for (size_t i(0); i<m_size; ++i)
 		{
 			if (get(i) == e)
 			{
@@ -82,7 +82,7 @@ public:
 
 	void add(const T & e)
 	{
-		assert(m_size < (capacity()-1));
+		assert(m_size < capacity());
 		get(m_size) = e;
 		m_size++;
 	}
@@ -98,7 +98,7 @@ public:
 	const T & back() const
 	{
 		assert(m_size > 0);
-		return get(m_size);
+		return get(m_size - 1);
 	}
 
 	void clear()

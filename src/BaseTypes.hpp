@@ -68,7 +68,7 @@ namespace SparCraft
 
         const bool operator <= (const StateEvalScore & rhs) const
         {
-            if (m_val > rhs.m_val)
+            if (m_val < rhs.m_val)
             {
                 return true;
             }
