@@ -40,7 +40,7 @@ class GameState
     TimeType                                                        _sameHPFrames;
 
     // checks to see if the unit array is full before adding a unit to the state
-    const bool              checkFull(const size_t & player)                                        const;
+    void                    checkFull(const size_t & player)                                        const;
     const bool              checkUniqueUnitIDs()                                                    const;
 
     void                    performAction(const Action & theMove);
@@ -48,7 +48,6 @@ class GameState
 public:
 
     GameState();
-    GameState(const std::string & filename);
 
 	// misc functions
     void                    finishedMoving();
@@ -120,8 +119,6 @@ public:
     void                    print(int indent = 0) const;
 	std::string             toString() const;
     std::string             toStringCompact() const;
-    void                    write(const std::string & filename)                                     const;
-    void                    read(const std::string & filename);
 };
 
 }

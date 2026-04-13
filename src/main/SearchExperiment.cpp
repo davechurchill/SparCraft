@@ -313,16 +313,6 @@ void SearchExperiment::addState(const std::string & line)
             states.push_back(getSymmetricState(unitVec, numUnitVec, xLimit, yLimit));
         }
     }
-    else if (strcmp(stateType.c_str(), "StateRawDataFile") == 0)
-    {
-        std::string filename;
-        iss >> filename;
-
-        for (int i(0); i<numStates; ++i)
-        {
-            states.push_back(GameState(filename));
-        }
-    }
     else if (strcmp(stateType.c_str(), "StateDescriptionFile") == 0)
     {
         std::string filename;

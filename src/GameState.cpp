@@ -50,12 +50,6 @@ GameState::GameState()
 	}
 }
 
-// construct state from a save file
-GameState::GameState(const std::string & filename)
-{
-    read(filename);
-}
-
 // call this whenever we are done with moves
 void GameState::finishedMoving()
 {
@@ -227,14 +221,9 @@ void GameState::generateMoves(MoveArray & moves, const size_t & playerIndex) con
 
             // we are only generating moves in the cardinal direction specified in common.h
 			for (size_t d(0); d<Constants::Num_Directions; ++d)
-			{			
+			{
                 // the direction of this movement
               	Position dir(Constants::Move_Dir[d][0], Constants::Move_Dir[d][1]);
-            
-                if (moveDistance == 0)
-                {
-                    printf("%lf %lf %lf\n", timeUntilAttack, defaultMoveDuration, chosenTime);
-                }
 
                 // the final destination position of the unit
                 Position dest = unit.pos() + Position(moveDistance*dir.x(), moveDistance*dir.y());
@@ -438,7 +427,7 @@ const Unit & GameState::getClosestEnemyUnit(const size_t & player, const size_t 
 
 	PositionType minDist(1000000);
 	size_t minUnitInd(0);
-    size_t minUnitID(255);
+    size_t minUnitID(std::numeric_limits<size_t>::max());
 
 	Position currentPos = myUnit.currentPosition(_currentTime);
 
@@ -482,17 +471,14 @@ const Unit & GameState::getClosestEnemyUnit(const size_t & player, const size_t 
 	return getUnit(enemyPlayer, minUnitInd);
 }
 
-const bool GameState::checkFull(const size_t & player) const
+void GameState::checkFull(const size_t & player) const
 {
     if (numUnits(player) >= Constants::Max_Units)
     {
         std::stringstream ss;
         ss << "GameState has too many units. Constants::Max_Units = " << Constants::Max_Units;
         System::FatalError(ss.str());
-        return false;
     }
-
-    return false;
 }
 
 // Add a given unit to the state
@@ -679,13 +665,13 @@ const size_t GameState::closestEnemyUnitDistance(const Unit & unit) const
 {
 	size_t enemyPlayer(getEnemy(unit.player()));
 
-	size_t closestDist(0);
+	size_t closestDist(std::numeric_limits<size_t>::max());
 
 	for (size_t u(0); u<numUnits(enemyPlayer); ++u)
 	{
         size_t dist(unit.getDistanceSqToUnit(getUnit(enemyPlayer, u), _currentTime));
 
-		if (dist > closestDist)
+		if (dist < closestDist)
 		{
 			closestDist = dist;
 		}
@@ -796,11 +782,6 @@ const StateEvalScore GameState::eval(const size_t & player, const size_t & evalM
 	else if (evalMethod == SparCraft::EvaluationMethods::Playout)
 	{
 		score = evalSim(player, p1Script, p2Script);
-	}
-
-	if (score.val() == 0)
-	{
-		return score;
 	}
 
 	ScoreType winBonus(0);
@@ -1144,16 +1125,3 @@ std::string GameState::toStringCompact() const
 	return ss.str();
 }
 
-void GameState::write(const std::string & filename) const
-{
-    std::ofstream fout (filename.c_str(), std::ios::out | std::ios::binary); 
-    fout.write((char *)this, sizeof(*this)); 
-    fout.close();
-}
-
-void GameState::read(const std::string & filename)
-{
-    std::ifstream fin (filename.c_str(), std::ios::in | std::ios::binary);
-    fin.read((char *)this, sizeof(*this));
-    fin.close();
-}
