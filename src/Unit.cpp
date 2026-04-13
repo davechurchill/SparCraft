@@ -83,21 +83,6 @@ const bool Unit::operator < (const Unit & rhs) const
         return firstTimeFree() < rhs.firstTimeFree();
     }
 
-    /*if (firstTimeFree() == rhs.firstTimeFree())
-    {
-        if (currentHP() == rhs.currentHP())
-        {
-            return pos() < rhs.pos();
-        }
-        else
-        {
-            return currentHP() < rhs.currentHP();
-        }
-    }
-    else
-    {
-        return firstTimeFree() < rhs.firstTimeFree();
-    }*/
 }
 
 // compares a unit based on unit id

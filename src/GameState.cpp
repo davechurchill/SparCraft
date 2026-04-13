@@ -586,30 +586,6 @@ void GameState::sortUnits()
 		}
 		else
 		{
-			/*for (int i=1; i<m_prevNumUnits[p]; ++i)
-			{
-				// A[ i ] is added in the sorted sequence A[0, .. i-1]
-				// save A[i] to make a hole at index iHole
-				//Unit * item = m_unitPtrs[p][i];
-                int itemIndex = m_unitIndex[p][i];
-                Unit & itemUnit = getUnit(p, i);
-                int iHole = i;
-				// keep moving the hole to next smaller index until A[iHole - 1] is <= item
-				//while ((iHole > 0) && (*item < *(m_unitPtrs[p][iHole - 1])))
-                while ((iHole > 0) && (itemUnit < getUnit(p, iHole-1)))
-				{
-					// move hole to next smaller index
-					//m_unitPtrs[p][iHole] = m_unitPtrs[p][iHole - 1];
-                    m_unitIndex[p][iHole] = m_unitIndex[p][iHole - 1];
-					iHole = iHole - 1;
-				}
-				// put item in the hole
-                m_unitIndex[p][iHole] = itemIndex;
-				//m_unitPtrs[p][iHole] = item;
-			}*/
-	
-			
-			//m_unitPtrs[p].sort(m_prevNumUnits[p], UnitPtrCompare());
             std::sort(&m_unitIndex[p][0], &m_unitIndex[p][0] + m_prevNumUnits[p], UnitIndexCompare(*this, (int)p));
 			m_prevNumUnits[p] = m_numUnits[p];
 		}

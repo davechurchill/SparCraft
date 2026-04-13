@@ -74,7 +74,6 @@ public:
 	const bool terminalState(GameState & state, const size_t & depth) const;
 	const bool isTranspositionLookupState(GameState & state, const std::vector<Action> * firstSimMove) const;
 
-	void printTTResults() const;
 };
 }
 

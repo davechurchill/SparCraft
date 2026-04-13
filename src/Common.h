@@ -76,7 +76,6 @@ namespace SparCraft
 
         void FatalError(const std::string & errorMessage);
         void checkSupportedUnitType(const BWAPI::UnitType & type);
-        bool isSupportedUnitType(const BWAPI::UnitType & type);
     }
 };
 

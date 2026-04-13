@@ -88,8 +88,6 @@ AlphaBetaValue AlphaBetaSearch::IDAlphaBeta(GameState & initialState, const size
 		long long unsigned nodes = m_results.nodesExpanded;
 		double ms = m_searchTimer.elapsedMS();
 
-		//printTTResults();
-		//fprintf(stdout, "%s %8d %9d %9d %13.4lf %14llu %12d %12llu %15.2lf\n", "IDA", d, val.score().val(), (int)val.abMove().moveTuple(), ms, nodes, (int)_TT->numFound(), getResults().ttcuts, 1000*nodes/ms);
 	}
 
 	return val;
@@ -217,35 +215,6 @@ void AlphaBetaSearch::generateOrderedMoves(GameState & state, MoveArray & moves,
 		
 		return;
 	}
-
-	// if there is a transposition table entry for this state
-	/*if (TTval.found())
-	{
-		// get the abMove we stored for this player
-		const AlphaBetaMove & abMove = getAlphaBetaMove(TTval, playerToMove);
-
-		m_results.ttFoundCheck++;
-
-		// Two checks:
-		// 1) Is the move 'valid' ie: was it actually set inside the TT
-		// TODO:: Possibly validate this move a second time somehow
-        //        Was previously done with move tuple numbers
-		if (abMove.isValid())
-		{
-			orderedMoves.add(abMove.moveVec());
-			m_results.ttMoveOrders++;
-			return;
-		}
-		else
-		{
-			m_results.ttFoundButNoMove++;
-		}
-	}*/
-
-    if (depth == 2)
-    {
-        int a = 6;
-    }
 
     // if we are using script move ordering, insert the script moves we want
     if (m_params.moveOrderingMethod() == MoveOrderMethod::ScriptFirst)
@@ -516,24 +485,4 @@ const bool AlphaBetaSearch::isRoot(const size_t & depth) const
 	return depth == m_currentRootDepth;
 }
 
-void AlphaBetaSearch::printTTResults() const
-{
-	printf("\n");
-	printf("Total Usage            %9d\n", (int)_TT->getUsage());
-	printf("Save Attempt           %9d\n", (int)m_results.ttSaveAttempts);
-	printf("   Save Succeed        %9d\n", (int)_TT->numSaves());
-	printf("      Save Empty       %9d\n", (int)_TT->saveEmpty);
-	printf("      Save Self        %9d\n", (int)_TT->saveOverwriteSelf);
-	printf("      Save Other       %9d\n", (int)_TT->saveOverwriteOther);
-	printf("Look-Up                %9d\n", (int)_TT->numLookups());
-	printf("   Not Found           %9d\n", (int)_TT->numNotFound());
-	printf("   Collisions          %9d\n", (int)_TT->numCollisions());
-	printf("   Found               %9d\n", (int)_TT->numFound());
-	printf("      Less Depth       %9d\n", (int)m_results.ttFoundLessDepth);
-	printf("      More Depth       %9d\n", ((int)m_results.ttFoundCheck + (int)m_results.ttcuts));
-	printf("         Cut           %9d\n", (int)m_results.ttcuts);
-	printf("         Move          %9d\n", (int)m_results.ttMoveOrders);
-	printf("         No Move       %9d\n", (int)m_results.ttFoundButNoMove);
-	printf("\n");
-}
 
