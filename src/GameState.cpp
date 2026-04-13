@@ -273,23 +273,24 @@ void GameState::performAction(const Action & move)
 	if (move.type() == ActionTypes::ATTACK)
 	{
 		Unit & enemyUnit(getUnit(enemyPlayer,move.index()));
-        //Unit & enemyUnit(getUnitByID(enemyPlayer ,move.index()));
-			
-		// attack the unit
-		ourUnit.attack(move, enemyUnit, _currentTime);
-			
-		// enemy unit takes damage if it is alive
-		if (enemyUnit.isAlive())
-		{				
+
+		// if the target was already killed by a previous action this round, treat as a pass
+		if (!enemyUnit.isAlive())
+		{
+			ourUnit.pass(move, _currentTime);
+		}
+		else
+		{
+			// attack the unit and apply damage
+			ourUnit.attack(move, enemyUnit, _currentTime);
 			enemyUnit.takeAttack(ourUnit);
 
 			// check to see if enemy unit died
 			if (!enemyUnit.isAlive())
 			{
-				// if it died, remove it
 				_numUnits[enemyPlayer]--;
 			}
-		}			
+		}
 	}
 	else if (move.type() == ActionTypes::MOVE)
 	{
@@ -700,6 +701,9 @@ const bool GameState::playerDead(const size_t & player) const
 
 const size_t GameState::whoCanMove() const
 {
+	if (_numUnits[0] == 0) { return Players::Player_Two; }
+	if (_numUnits[1] == 0) { return Players::Player_One; }
+
 	TimeType p1Time(getUnit(0,0).firstTimeFree());
 	TimeType p2Time(getUnit(1,0).firstTimeFree());
 
@@ -746,13 +750,15 @@ void GameState::updateGameTime()
 {
 	const size_t who(whoCanMove());
 
-	// if the first player is to move, set the time to his time
 	if (who == Players::Player_One)
 	{
 		_currentTime = getUnit(Players::Player_One, 0).firstTimeFree();
 	}
-	// otherwise it is player two or both, so it's equal to player two's time
-	else
+	else if (who == Players::Player_Two)
+	{
+		_currentTime = getUnit(Players::Player_Two, 0).firstTimeFree();
+	}
+	else // Player_Both: both players have units with the same time
 	{
 		_currentTime = getUnit(Players::Player_Two, 0).firstTimeFree();
 	}
@@ -816,11 +822,8 @@ const ScoreType GameState::evalLTD2(const size_t & player) const
 
 const StateEvalScore GameState::evalSim(const size_t & player, const size_t & p1Script, const size_t & p2Script) const
 {
-	const size_t p1Model = (p1Script == PlayerModels::Random) ? PlayerModels::NOKDPS : p1Script;
-	const size_t p2Model = (p2Script == PlayerModels::Random) ? PlayerModels::NOKDPS : p2Script;
-
-	PlayerPtr p1(AllPlayers::getPlayerPtr(Players::Player_One, p1Model));
-	PlayerPtr p2(AllPlayers::getPlayerPtr(Players::Player_Two, p2Model));
+	PlayerPtr p1(AllPlayers::getPlayerPtr(Players::Player_One, p1Script));
+	PlayerPtr p2(AllPlayers::getPlayerPtr(Players::Player_Two, p2Script));
 
 	Game game(*this, p1, p2, 200);
 
@@ -851,7 +854,7 @@ void GameState::calculateStartingHealth()
 
 const ScoreType	GameState::LTD2(const size_t & player) const
 {
-	if (numUnits(player) == 0)
+	if (numUnits(player) == 0 || _totalSumSQRT[player] == 0)
 	{
 		return 0;
 	}
@@ -872,7 +875,7 @@ const ScoreType	GameState::LTD2(const size_t & player) const
 
 const ScoreType GameState::LTD(const size_t & player) const
 {
-	if (numUnits(player) == 0)
+	if (numUnits(player) == 0 || _totalLTD[player] == 0)
 	{
 		return 0;
 	}
