@@ -1,2 +1,0 @@
-   P1    P2    ST  UNIT       EVAL    RND           MS | UnitType PlayerID CurrentHP XPos YPos
-    0     0     2     1          0      0         0.00 | Terran_Marine 0 40 629 351 | Terran_Marine 1 40 651 369
