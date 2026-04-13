@@ -3,7 +3,7 @@
 #include "Common.h"
 #include <cstdarg>
 
-#include <ctime>
+#include <string>
 
 namespace SparCraft
 {
@@ -11,7 +11,7 @@ namespace SparCraft
 class GameState;
 namespace Assert
 {
-    const std::string currentDateTime();
+    const std::string CurrentDateTime();
     void ReportFailure(const GameState * state, const char * condition, const char * file, int line, const char * msg, ...);
 }
 }
