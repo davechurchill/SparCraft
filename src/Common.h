@@ -49,7 +49,8 @@ namespace SparCraft
 		// maximum number of moves possible for any unit
 		const size_t Max_Moves					= Max_Units + Num_Directions + 1;
 		const bool   Use_Unit_Bounding			= false;
-		const size_t Pass_Move_Duration			= 20;
+		const size_t Pass_Move_Duration			    = 20;
+        const size_t Stalemate_Turn_Limit           = 50;
 		const float  Min_Unit_DPF				= 0.1f;
 		const HealthType Starting_Energy		= 50;
 

@@ -31,7 +31,7 @@ GameState::GameState()
 	: m_map(NULL)
 	, m_currentTime(0)
 	, m_maxUnits(Constants::Max_Units)
-    , m_sameHPFrames(0)
+    , m_turnsWithNoHPChange(0)
 {
 	m_numUnits.fill(0);
 	m_prevNumUnits.fill(0);
@@ -74,11 +74,11 @@ void GameState::finishedMoving()
     // if the hp sums match the last hp sum
     if (hpSum[0] == m_prevHPSum[0] && hpSum[1] == m_prevHPSum[1])
     {
-        m_sameHPFrames++;
+        m_turnsWithNoHPChange++;
     }
     else
     {
-        m_sameHPFrames = 0;
+        m_turnsWithNoHPChange = 0;
     }
 
     for (size_t p(0); p<Constants::Num_Players; ++p)
@@ -980,7 +980,7 @@ const bool GameState::isTerminal() const
         return true;
     }
 
-    if (m_sameHPFrames > 200)
+    if (m_turnsWithNoHPChange > Constants::Stalemate_Turn_Limit)
     {
         return true;
     }

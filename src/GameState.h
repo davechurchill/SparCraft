@@ -34,7 +34,7 @@ class GameState
 	
     TimeType                                                        m_currentTime;
     size_t                                                          m_maxUnits;
-    TimeType                                                        m_sameHPFrames;
+    TimeType                                                        m_turnsWithNoHPChange;
 
     // checks to see if the unit array is full before adding a unit to the state
     void                    checkFull(const size_t & player)                                        const;
