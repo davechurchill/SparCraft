@@ -80,6 +80,7 @@ class SearchExperiment
     void parseStateDescriptionFile(const std::string & fileName);
     void parseConfigFile(const std::string & filename);
     void writeConfig(const std::string & configfile);
+    std::string getResultsFileBase();
 	std::string getResultsSummaryFileName();
     std::string getResultsOutFileName();
     std::string getConfigOutFileName();

@@ -1,4 +1,5 @@
 #include "SearchExperiment.h"
+#include <filesystem>
 
 using namespace SparCraft;
 
@@ -93,41 +94,36 @@ void SearchExperiment::padString(std::string & str, const size_t & length)
     }
 }
 
+std::string SearchExperiment::getResultsFileBase()
+{
+    size_t sep = resultsFile.find_last_of("/\\");
+    std::string dir  = (sep == std::string::npos) ? "" : resultsFile.substr(0, sep + 1);
+    std::string name = (sep == std::string::npos) ? resultsFile : resultsFile.substr(sep + 1);
+    std::string base = dir + "results/" + name;
+    std::filesystem::create_directories(dir + "results");
+    return base;
+}
+
 std::string SearchExperiment::getResultsSummaryFileName()
 {
-    std::string res = resultsFile;
-    
-    if (appendTimeStamp)
-    {
-        res += "_" + getDateTimeString();
-    }
-
+    std::string res = getResultsFileBase();
+    if (appendTimeStamp) { res += "_" + getDateTimeString(); }
     res += "_results_summary.txt";
     return res;
 }
 
 std::string SearchExperiment::getResultsOutFileName()
 {
-    std::string res = resultsFile;
-    
-    if (appendTimeStamp)
-    {
-        res += "_" + getDateTimeString();
-    }
-
+    std::string res = getResultsFileBase();
+    if (appendTimeStamp) { res += "_" + getDateTimeString(); }
     res += "_results_raw.txt";
     return res;
 }
 
 std::string SearchExperiment::getConfigOutFileName()
 {
-    std::string conf = resultsFile;
-    
-    if (appendTimeStamp)
-    {
-        conf += "_" + getDateTimeString();
-    }
-
+    std::string conf = getResultsFileBase();
+    if (appendTimeStamp) { conf += "_" + getDateTimeString(); }
     conf += "_config.txt";
     return conf;
 }

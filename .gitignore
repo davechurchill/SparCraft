@@ -14,3 +14,6 @@ src/**/*.d
 /VisualStudio/.vs
 /VisualStudio/SparCraft
 /VisualStudio/SparCraft_main
+/VisualStudio - Copy
+/VisualStudio/x64
+/bin/sample_experiment/results
