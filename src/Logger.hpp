@@ -86,13 +86,14 @@ inline std::string ReplaceNewlines(const std::string & input)
 class Logger
 {
     bool            m_printToConsole = false;
+    bool            m_enabled = true;
     std::string     m_logFileName = "sparcraft_error_log.txt";
     std::ofstream   m_fout;
 
     Logger() = default;
     ~Logger() = default;
 
-    void EnsureOpen()
+    void ensureOpen()
     {
         if (m_fout.is_open())
         {
@@ -111,24 +112,24 @@ public:
     static Logger & Instance()
     {
         static Logger instance;
-        instance.EnsureOpen();
+        instance.ensureOpen();
         return instance;
     }
 
     Logger(const Logger &) = delete;
     Logger & operator=(const Logger &) = delete;
 
-    void SetLogFileName(const std::string & fileName)
+    void setLogFileName(const std::string & fileName)
     {
         m_logFileName = fileName;
         if (m_fout.is_open())
         {
             m_fout.close();
         }
-        EnsureOpen();
+        ensureOpen();
     }
 
-    void ClearLogFile()
+    void clearLogFile()
     {
         if (m_fout.is_open())
         {
@@ -137,23 +138,28 @@ public:
 
         std::ofstream truncate(m_logFileName, std::ios::out | std::ios::trunc | std::ios::binary);
         truncate.close();
-        EnsureOpen();
+        ensureOpen();
     }
 
-    void WriteSystemInfo()
+    void writeSystemInfo()
     {
         Instance() << "[" << CurrentTime() << "] ";
         Instance() << "Build Date: " << BuildDateTime() << "\n";
         Instance() << "Run   Date: " << CurrentDateTime() << "\n\n";
     }
 
-    void WriteToLog(const std::string & message)
+    void writeToLog(const std::string & message)
     {
+        if (!m_enabled)
+        {
+            return;
+        }
+
         const std::string output = ReplaceNewlines(message);
 
         try
         {
-            EnsureOpen();
+            ensureOpen();
             if (!m_fout.is_open())
             {
                 throw std::ios_base::failure("Log file is not open.");
@@ -189,30 +195,34 @@ public:
     // Compatibility wrappers for existing older API.
     void log(const std::string & logFile, std::string & msg)
     {
-        SetLogFileName(logFile);
-        WriteToLog(msg);
+        setLogFileName(logFile);
+        writeToLog(msg);
     }
 
-    void clearLogFile(const std::string & logFile)
-    {
-        SetLogFileName(logFile);
-        ClearLogFile();
-    }
-
-    void SetPrintToConsole(const bool printToConsole)
+    void setPrintToConsole(const bool printToConsole)
     {
         m_printToConsole = printToConsole;
     }
 
+    void setEnabled(const bool enabled)
+    {
+        m_enabled = enabled;
+    }
+
+    const bool isEnabled() const
+    {
+        return m_enabled;
+    }
+
     Logger & operator<<(const char * message)
     {
-        WriteToLog(std::string(message ? message : ""));
+        writeToLog(std::string(message ? message : ""));
         return *this;
     }
 
     Logger & operator<<(const std::string & message)
     {
-        WriteToLog(message);
+        writeToLog(message);
         return *this;
     }
 
@@ -221,7 +231,7 @@ public:
     {
         std::ostringstream oss;
         oss << message;
-        WriteToLog(oss.str());
+        writeToLog(oss.str());
         return *this;
     }
 };

@@ -19,8 +19,17 @@ public:
 
     void testRunStarting(Catch::TestRunInfo const &) override
     {
+        // Suppress file logging during tests; expected throw-path tests should not
+        // pollute runtime log files.
+        SparCraft::SCLog().setEnabled(false);
+
         // Keep SparCraft initialization in runtime startup logic before tests execute.
         SparCraft::init();
+    }
+
+    void testRunEnded(Catch::TestRunStats const &) override
+    {
+        SparCraft::SCLog().setEnabled(true);
     }
 };
 
