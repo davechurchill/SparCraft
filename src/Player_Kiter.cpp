@@ -2,7 +2,7 @@
 
 using namespace SparCraft;
 
-Player_Kiter::Player_Kiter (const size_t & playerID) 
+Player_Kiter::Player_Kiter (const size_t playerID) 
 {
 	m_playerID = playerID;
 }

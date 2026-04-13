@@ -19,7 +19,7 @@ class SparCraft::UCTMemoryPool
 
 public:
 
-	UCTMemoryPool(const size_t & poolSize, const size_t & maxChildren)
+	UCTMemoryPool(const size_t poolSize, const size_t maxChildren)
         : m_pool             (poolSize, std::vector<UCTNode>())
         , m_poolSize         (poolSize)
         , m_maxChildren      (maxChildren)

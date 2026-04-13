@@ -352,12 +352,12 @@ const Game & GUIGame::getGame() const
     return m_game;
 }
 
-void GUIGame::setResults(const size_t & player, const std::vector<std::vector<std::string> > & r)
+void GUIGame::setResults(const size_t player, const std::vector<std::vector<std::string> > & r)
 {
     m_results[player] = r;
 }
 
-void GUIGame::setParams(const size_t & player, const std::vector<std::vector<std::string> > & p)
+void GUIGame::setParams(const size_t player, const std::vector<std::vector<std::string> > & p)
 {
     m_params[player] = p;
 }

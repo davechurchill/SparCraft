@@ -38,7 +38,7 @@ public:
 
     }
 
-    UCTNode (UCTNode * parent, const size_t player, const size_t nodeType, const std::vector<Action> & move, const size_t & maxChildren, std::vector<UCTNode> * fromPool = NULL)
+    UCTNode (UCTNode * parent, const size_t player, const size_t nodeType, const std::vector<Action> & move, const size_t maxChildren, std::vector<UCTNode> * fromPool = NULL)
         : m_numVisits            (0)
         , m_numWins              (0)
         , m_uctVal               (0)
@@ -59,7 +59,7 @@ public:
     const size_t    getPlayer()                 const           { return m_player; }
 
     UCTNode *       getParent()                 const           { return m_parent; }
-    UCTNode &       getChild(const size_t & c)                  { return m_children[c]; }
+    UCTNode &       getChild(const size_t c)                  { return m_children[c]; }
 
     void            setUCTVal(double val)                       { m_uctVal = val; }
     void            incVisits()                                 { m_numVisits++; }
@@ -77,7 +77,7 @@ public:
         m_move = move;
     }
 
-    void addChild(UCTNode * parent, const size_t player, const size_t nodeType, const std::vector<Action> & move, const size_t & maxChildren, std::vector<UCTNode> * fromPool = NULL)
+    void addChild(UCTNode * parent, const size_t player, const size_t nodeType, const std::vector<Action> & move, const size_t maxChildren, std::vector<UCTNode> * fromPool = NULL)
     {
         m_children.push_back(UCTNode(parent, player, nodeType, move, maxChildren));
     }

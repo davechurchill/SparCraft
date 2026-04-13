@@ -10,8 +10,8 @@ TTEntry::TTEntry()
 
 }
 
-TTEntry::TTEntry(const HashType & hash2, const StateEvalScore & score, const size_t & depth, const int & type, 
-				const size_t & firstPlayer, const AlphaBetaMove & bestFirstMove, const AlphaBetaMove & bestSecondMove)
+TTEntry::TTEntry(const HashType hash2, const StateEvalScore & score, const size_t depth, const int type, 
+				const size_t firstPlayer, const AlphaBetaMove & bestFirstMove, const AlphaBetaMove & bestSecondMove)
 	: m_hash2(hash2)
 	, m_score(score)
 	, m_depth(depth)
@@ -20,7 +20,7 @@ TTEntry::TTEntry(const HashType & hash2, const StateEvalScore & score, const siz
 	m_bestMoves[firstPlayer] = TTBestMove(bestFirstMove, bestSecondMove);
 }
 
-const bool TTEntry::hashMatches(const HashType & hash2) const
+const bool TTEntry::hashMatches(const HashType hash2) const
 {
 	return hash2 == m_hash2;
 }
@@ -30,12 +30,12 @@ const bool TTEntry::isValid() const
 	return m_type != TTEntry::NONE;
 }
 
-const HashType & TTEntry::getHash()								const { return m_hash2; }
+const HashType TTEntry::getHash()								const { return m_hash2; }
 const StateEvalScore & TTEntry::getScore()						const { return m_score; }
-const size_t & TTEntry::getDepth()								const { return m_depth; }
-const int & TTEntry::getType()									const { return m_type;  }
-const TTBestMove & TTEntry::getBestMove(const size_t & player)	const { return m_bestMoves[player];  }
-void TTEntry::setBestMove(const size_t &firstPlayer, const AlphaBetaMove & bestFirstMove, const AlphaBetaMove & bestSecondMove)
+const size_t TTEntry::getDepth()								const { return m_depth; }
+const int TTEntry::getType()									const { return m_type;  }
+const TTBestMove & TTEntry::getBestMove(const size_t player)	const { return m_bestMoves[player];  }
+void TTEntry::setBestMove(const size_tfirstPlayer, const AlphaBetaMove & bestFirstMove, const AlphaBetaMove & bestSecondMove)
 {
 	m_bestMoves[firstPlayer] = TTBestMove(bestFirstMove, bestSecondMove);
 }
@@ -56,17 +56,17 @@ TranspositionTable::TranspositionTable ()
 {
 }
 	
-const TTEntry & TranspositionTable::operator [] (const size_t & hash) const
+const TTEntry & TranspositionTable::operator [] (const size_t hash) const
 {
 	return TT[getIndex(hash)];
 }
 
-const TTEntry & TranspositionTable::get(const size_t & hash) const
+const TTEntry & TranspositionTable::get(const size_t hash) const
 {
 	return TT[getIndex(hash)];
 }
         
-const size_t TranspositionTable::getSaveIndex(const size_t & index, const HashType & hash2, const size_t & depth) const
+const size_t TranspositionTable::getSaveIndex(const size_t index, const HashType hash2, const size_t depth) const
 {
 	size_t worstDepth(1000);
 	size_t worstDepthIndex(index);
@@ -102,8 +102,8 @@ const size_t TranspositionTable::getSaveIndex(const size_t & index, const HashTy
 	return worstDepthIndex;
 }
 
-void TranspositionTable::save(	const HashType & hash1, const HashType & hash2, const StateEvalScore & value, const size_t & depth, const int & type,
-			const size_t & firstPlayer, const AlphaBetaMove & bestFirstMove, const AlphaBetaMove & bestSecondMove)
+void TranspositionTable::save(	const HashType hash1, const HashType hash2, const StateEvalScore & value, const size_t depth, const int type,
+			const size_t firstPlayer, const AlphaBetaMove & bestFirstMove, const AlphaBetaMove & bestSecondMove)
 {
 	size_t indexToSave = getSaveIndex(getIndex(hash1), hash2, depth);
 	TTEntry existing = TT[indexToSave];
@@ -129,7 +129,7 @@ void TranspositionTable::save(	const HashType & hash1, const HashType & hash2, c
 	TT[indexToSave] = TTEntry(hash2, value, depth, type, firstPlayer, bestFirstMove, bestSecondMove);
 }
 
-TTEntry * TranspositionTable::lookupScan(const HashType & hash1, const HashType & hash2)
+TTEntry * TranspositionTable::lookupScan(const HashType hash1, const HashType hash2)
 {
 	lookups++;
 	size_t index = getIndex(hash1);
@@ -153,7 +153,7 @@ TTEntry * TranspositionTable::lookupScan(const HashType & hash1, const HashType 
 }
 
 // look up a value in the transposition table, return NULL if not found or collision
-TTEntry * TranspositionTable::lookup(const size_t & index, const HashType & hash2)
+TTEntry * TranspositionTable::lookup(const size_t index, const HashType hash2)
 {
 	if (index < minIndex) minIndex = index;
 	if (index > maxIndex) maxIndex = index;
@@ -183,12 +183,12 @@ TTEntry * TranspositionTable::lookup(const size_t & index, const HashType & hash
 	}
 }
 	
-const size_t & TranspositionTable::getSize()		const { return size; }
-const size_t & TranspositionTable::numFound()		const { return found; }	
-const size_t & TranspositionTable::numNotFound()	const { return notFound; }
-const size_t & TranspositionTable::numCollisions()	const { return collisions; }
-const size_t & TranspositionTable::numSaves()		const { return saves; }
-const size_t & TranspositionTable::numLookups()		const { return lookups; }
+const size_t TranspositionTable::getSize()		const { return size; }
+const size_t TranspositionTable::numFound()		const { return found; }	
+const size_t TranspositionTable::numNotFound()	const { return notFound; }
+const size_t TranspositionTable::numCollisions()	const { return collisions; }
+const size_t TranspositionTable::numSaves()		const { return saves; }
+const size_t TranspositionTable::numLookups()		const { return lookups; }
 
 const size_t TranspositionTable::getUsage() const
 {

@@ -16,7 +16,7 @@ class Player_Random : public Player
 {
 	RandomInt rand;
 public:
-	Player_Random (const size_t & playerID);
+	Player_Random (const size_t playerID);
 	void getMoves(GameState & state, const MoveArray & moves, std::vector<Action> & moveVec);
 	size_t getType() { return PlayerModels::Random; }
 };

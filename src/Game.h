@@ -38,24 +38,24 @@ protected:
 public:
 	
 	// game constructor
-	Game(const GameState & initialState, PlayerPtr & p1, PlayerPtr & p2, const size_t & limit);
-    Game(const GameState & initialState, const size_t & limit);
+	Game(const GameState & initialState, PlayerPtr & p1, PlayerPtr & p2, const size_t limit);
+    Game(const GameState & initialState, const size_t limit);
 
 	void            play();
     void            playNextTurn();
     void            playIndividualScripts(UnitScriptData & scriptsChosen);
-	void            storeHistory(const bool & store);
+	void            storeHistory(const bool store);
 	bool            gameOver() const;
     
 
-	ScoreType       eval(const size_t & evalMethod) const;
+	ScoreType       eval(const size_t evalMethod) const;
 
 	GameState &     getState();
     const GameState &     getState() const;
 	size_t          getRounds() const;
 	double          getTime() const;
 	const size_t    getPlayerToMove();
-    PlayerPtr       getPlayer(const size_t & player);
+    PlayerPtr       getPlayer(const size_t player);
 
 };
 

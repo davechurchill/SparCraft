@@ -33,11 +33,11 @@ public:
 	void clear();
 
 	// returns a given move from a unit
-	const Action & getMove(const size_t & unit, const size_t & move) const;
+	const Action & getMove(const size_t unit, const size_t move) const;
 
     void printCurrentMoveIndex();
 
-    void incrementMove(const size_t & unit);
+    void incrementMove(const size_t unit);
 
     const bool hasMoreMoves() const;
 
@@ -52,17 +52,17 @@ public:
 	
 	bool validateMoves();
 
-	const size_t getUnitID(const size_t & unit) const;
+	const size_t getUnitID(const size_t unit) const;
 
-	const size_t getPlayerID(const size_t & unit) const;
+	const size_t getPlayerID(const size_t unit) const;
 
 	void addUnit();
 
     void shuffleMoveActions();
 
-	const size_t & numUnits()						const;
-	const size_t & numUnitsInTuple()				const;
-	const size_t & numMoves(const size_t & unit)	const;
+	const size_t numUnits()						const;
+	const size_t numUnitsInTuple()				const;
+	const size_t numMoves(const size_t unit)	const;
 };
 }
 

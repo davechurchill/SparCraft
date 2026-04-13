@@ -22,11 +22,11 @@ namespace Hash
 
 		HashValues(int seed = 0);
 		
-		const HashType getAttackHash		(const size_t & player, const size_t & value) const;
-		const HashType getMoveHash			(const size_t & player, const size_t & value) const;
-		const HashType getUnitTypeHash		(const size_t & player, const size_t & value) const;
-		const HashType getCurrentHPHash		(const size_t & player, const size_t & value) const;
-		const HashType positionHash			(const size_t & player, const PositionType & x, const PositionType & y) const;
+		const HashType getAttackHash		(const size_t player, const size_t value) const;
+		const HashType getMoveHash			(const size_t player, const size_t value) const;
+		const HashType getUnitTypeHash		(const size_t player, const size_t value) const;
+		const HashType getCurrentHPHash		(const size_t player, const size_t value) const;
+		const HashType positionHash			(const size_t player, const PositionType x, const PositionType y) const;
 	};
 
 	// some data storage
@@ -37,8 +37,8 @@ namespace Hash
 	void			initHash();
 	int				hash32shift(int key);
 	const size_t	jenkinsHash( size_t a);
-	const size_t	magicHash(const HashType & hash, const size_t & player, const size_t & index);
+	const size_t	magicHash(const HashType hash, const size_t player, const size_t index);
 
-	const int jenkinsHashCombine(const HashType & hash, const int val);
+	const int jenkinsHashCombine(const HashType hash, const int val);
 };
 }

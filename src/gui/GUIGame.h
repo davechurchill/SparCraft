@@ -34,8 +34,8 @@ class GUIGame
     void drawControlsWindow();
     void drawUnitsWindow();
 
-    void setResults(const size_t & player, const std::vector<std::vector<std::string> > & r);
-    void setParams(const size_t & player, const std::vector<std::vector<std::string> > & p);
+    void setResults(const size_t player, const std::vector<std::vector<std::string> > & r);
+    void setParams(const size_t player, const std::vector<std::vector<std::string> > & p);
 
 public:
 

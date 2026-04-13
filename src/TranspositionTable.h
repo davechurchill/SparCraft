@@ -27,19 +27,19 @@ private:
 public:
 
 	TTEntry();
-	TTEntry(const HashType & hash2, const StateEvalScore & score, const size_t & depth, const int & type, 
-			const size_t & firstPlayer, const AlphaBetaMove & bestFirstMove, const AlphaBetaMove & bestSecondMove);
+	TTEntry(const HashType hash2, const StateEvalScore & score, const size_t depth, const int type, 
+			const size_t firstPlayer, const AlphaBetaMove & bestFirstMove, const AlphaBetaMove & bestSecondMove);
 
-	const bool hashMatches(const HashType & hash2) const;
+	const bool hashMatches(const HashType hash2) const;
 
 	const bool isValid() const;
 
-	const HashType & getHash()									const;
+	const HashType getHash()									const;
 	const StateEvalScore & getScore()							const;
-	const size_t & getDepth()									const;
-	const int & getType()										const;
-	const TTBestMove & getBestMove(const size_t & player)		const;
-	void setBestMove(const size_t &firstPlayer, const AlphaBetaMove & bestFirstMove, const AlphaBetaMove & bestSecondMove);
+	const size_t getDepth()									const;
+	const int getType()										const;
+	const TTBestMove & getBestMove(const size_t player)		const;
+	void setBestMove(const size_tfirstPlayer, const AlphaBetaMove & bestFirstMove, const AlphaBetaMove & bestSecondMove);
 
 	void print() const
 	{
@@ -87,7 +87,7 @@ class TranspositionTable
 	size_t			minIndex,
 					maxIndex;
 
-	const size_t getIndex(const size_t & hash1) const
+	const size_t getIndex(const size_t hash1) const
 	{
 		return hash1 % size;
 	}
@@ -105,28 +105,28 @@ public:
 
 	TranspositionTable ();
 	
-	const TTEntry & operator [] (const size_t & hash) const;
+	const TTEntry & operator [] (const size_t hash) const;
 
-	const TTEntry & get(const size_t & hash) const;
+	const TTEntry & get(const size_t hash) const;
         
-	void save(const HashType & hash1, const TTEntry & entry) ;
+	void save(const HashType hash1, const TTEntry & entry) ;
 
-	void save(	const HashType & hash1, const HashType & hash2, const StateEvalScore & value, const size_t & depth, const int & type,
-				const size_t & firstPlayer, const AlphaBetaMove & bestFirstMove, const AlphaBetaMove & bestSecondMove);
+	void save(	const HashType hash1, const HashType hash2, const StateEvalScore & value, const size_t depth, const int type,
+				const size_t firstPlayer, const AlphaBetaMove & bestFirstMove, const AlphaBetaMove & bestSecondMove);
 
-	TTEntry * lookup(const size_t & index, const HashType & hash2);
-	TTEntry * lookupScan(const HashType & hash1, const HashType & hash2);
+	TTEntry * lookup(const size_t index, const HashType hash2);
+	TTEntry * lookupScan(const HashType hash1, const HashType hash2);
 	
-	const size_t & getSize()		const;
-	const size_t & numFound()		const;	
-	const size_t & numNotFound()	const;
-	const size_t & numCollisions()	const;
-	const size_t & numSaves()		const;
-	const size_t & numLookups()		const;
+	const size_t getSize()		const;
+	const size_t numFound()		const;	
+	const size_t numNotFound()	const;
+	const size_t numCollisions()	const;
+	const size_t numSaves()		const;
+	const size_t numLookups()		const;
 
 	const size_t getUsage() const;
 
-	const size_t getSaveIndex(const size_t & index, const HashType & hash2, const size_t & depth) const;
+	const size_t getSaveIndex(const size_t index, const HashType hash2, const size_t depth) const;
 
 	void print();
 };

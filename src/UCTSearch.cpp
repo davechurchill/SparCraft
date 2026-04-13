@@ -81,12 +81,12 @@ const bool UCTSearch::searchTimeOut()
 	return (m_params.timeLimit() && (m_searchTimer.elapsedMS() >= m_params.timeLimit()));
 }
 
-const bool UCTSearch::terminalState(GameState & state, const size_t & depth) const
+const bool UCTSearch::terminalState(GameState & state, const size_t depth) const
 {
 	return (depth <= 0 || state.isTerminal());
 }
 
-void UCTSearch::generateOrderedMoves(GameState & state, MoveArray & moves, const size_t & playerToMove)
+void UCTSearch::generateOrderedMoves(GameState & state, MoveArray & moves, const size_t playerToMove)
 {
 	m_orderedMoves.clear();
 
@@ -143,7 +143,7 @@ const size_t UCTSearch::getChildNodeType(UCTNode & parent, const GameState & pre
     return SearchNodeType::Default;
 }
 
-const bool UCTSearch::getNextMove(size_t playerToMove, MoveArray & moves, const size_t & moveNumber, std::vector<Action> & actionVec)
+const bool UCTSearch::getNextMove(size_t playerToMove, MoveArray & moves, const size_t moveNumber, std::vector<Action> & actionVec)
 {
     if (moveNumber > m_params.maxChildren())
     {

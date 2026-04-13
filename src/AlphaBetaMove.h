@@ -16,7 +16,7 @@ public:
 
 	AlphaBetaMove();
 
-	AlphaBetaMove(const std::vector<Action> & move, const bool & isValid);
+	AlphaBetaMove(const std::vector<Action> & move, const bool isValid);
 
 	const bool isValid() const;
 	const std::vector<Action> & moveVec() const;

@@ -18,7 +18,7 @@ namespace SparCraft
 class Player_AttackWeakest : public Player
 {
 public:
-	Player_AttackWeakest (const size_t & playerID);
+	Player_AttackWeakest (const size_t playerID);
 	void getMoves(GameState & state, const MoveArray & moves, std::vector<Action> & moveVec);
 	size_t getType() { return PlayerModels::AttackWeakest; }
 };

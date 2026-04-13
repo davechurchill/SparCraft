@@ -27,7 +27,7 @@ public:
 	void		SetResearched(BWAPI::TechType tech, bool researched);
 	void		Capture(const BWAPI::Player & player);
 
-    static      PlayerProperties & Get(const size_t & playerID);
+    static      PlayerProperties & Get(const size_t playerID);
 };
 
 class PlayerWeapon

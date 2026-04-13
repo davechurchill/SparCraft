@@ -11,7 +11,7 @@ Unit getSampleUnit()
     // Unit has several constructors
     // You will typically only be using this one to construct a 'starting' unit
 
-    // Unit(const BWAPI::UnitType unitType, const IDType & playerID, const Position & pos)
+    // Unit(const BWAPI::UnitType unitType, const IDType playerID, const Position & pos)
 
     // The BWAPI::UnitType of the unit to be added
     BWAPI::UnitType marine = BWAPI::UnitTypes::Terran_Marine;
@@ -71,7 +71,7 @@ Map getSampleMap()
     Map smallMap(32, 32);
 
     // We can set the walkable values of WalkTile resolution via
-    // void setMapData(const size_t & buildTileX, const size_t & buildTileY, const bool val)
+    // void setMapData(const size_t buildTileX, const size_t buildTileY, const bool val)
     smallMap.setMapData(21, 98, false);
 
     // The default map sets all tiles to walkable, with an upper-left boundary of (0,0) and a lower-right boundary of (x,y)

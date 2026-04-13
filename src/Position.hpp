@@ -20,7 +20,7 @@ public:
 	{
 	}
 
-	Position(const PositionType & x, const PositionType & y)
+	Position(const PositionType x, const PositionType y)
 		: m_x(x)
 		, m_y(y)
 	{
@@ -53,12 +53,12 @@ public:
 		return Position(x() - rhs.x(), y() - rhs.y());
 	}
 
-	const Position scale(const float & f) const
+	const Position scale(const float f) const
 	{
 		return Position((PositionType)(f * x()), (PositionType)(f * y()));
 	}
 
-    void scalePosition(const float & f)
+    void scalePosition(const float f)
     {
         m_x = (PositionType)(f * m_x);
         m_y = (PositionType)(f * m_y);
@@ -82,13 +82,13 @@ public:
 		m_y = pos.y();
 	}
 
-	void addPosition(const PositionType & x, const PositionType & y)
+	void addPosition(const PositionType x, const PositionType y)
 	{
 		m_x += x;
 		m_y += y;
 	}
 
-	void moveTo(const PositionType & x, const PositionType & y)
+	void moveTo(const PositionType x, const PositionType y)
 	{
 		m_x = x;
 		m_y = y;

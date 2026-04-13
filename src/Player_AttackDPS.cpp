@@ -2,7 +2,7 @@
 
 using namespace SparCraft;
 
-Player_AttackDPS::Player_AttackDPS (const size_t & playerID) 
+Player_AttackDPS::Player_AttackDPS (const size_t playerID) 
 {
 	m_playerID = playerID;
 }

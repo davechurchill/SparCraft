@@ -24,22 +24,22 @@ public:
 		std::fill(m_arr, m_arr + elem, fill);
 	}
 
-	T & get(const size_t & index)
+	T & get(const size_t index)
 	{
 		return m_arr[index];
 	}
 
-	const T & get(const size_t & index) const
+	const T & get(const size_t index) const
 	{
 		return m_arr[index];
 	}
 
-	T & operator [] (const size_t & index)
+	T & operator [] (const size_t index)
 	{
 		return get(index);
 	}
 	
-	const T & operator [] (const size_t & index) const
+	const T & operator [] (const size_t index) const
 	{
 		return get(index);
 	}
@@ -106,7 +106,7 @@ public:
 		m_size = 0;
 	}
 
-	const size_t & size() const
+	const size_t size() const
 	{
 		return m_size;
 	}
@@ -161,13 +161,13 @@ public:
 		return m_arr.capacity();
 	}
 	
-	Array<T, cols> & operator [] (const size_t & index)
+	Array<T, cols> & operator [] (const size_t index)
 	{
 		assert(index < m_rows);
 		return m_arr[index];
 	}
 	
-	const Array<T, cols> & operator [] (const size_t & index) const
+	const Array<T, cols> & operator [] (const size_t index) const
 	{
 		assert(index < m_rows);
 		return m_arr[index];

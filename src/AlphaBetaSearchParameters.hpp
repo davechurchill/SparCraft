@@ -45,32 +45,32 @@ public:
         setSimScripts(PlayerModels::NOKDPS, PlayerModels::NOKDPS);
     }
 
-    const size_t & searchMethod()							    const   { return m_searchMethod; }
-    const size_t & maxPlayer()							        const   { return m_maxPlayer; }
-    const size_t & maxDepth()							        const   { return m_maxDepth; }
-    const size_t & timeLimit()							        const   { return m_timeLimit; }
-    const size_t & maxChildren()                                const   { return m_maxChildren; }
-    const size_t & moveOrderingMethod()                         const   { return m_moveOrdering; }
-    const size_t & evalMethod()						            const   { return m_evalMethod; }
-    const size_t & simScript(const size_t & player)             const   { return m_simScripts[player]; }
-    const size_t & playerToMoveMethod()				            const   { return m_playerToMoveMethod; }
-    const size_t & playerModel(const size_t & player)	        const   { return m_playerModel[player]; }
+    const size_t searchMethod()							    const   { return m_searchMethod; }
+    const size_t maxPlayer()							        const   { return m_maxPlayer; }
+    const size_t maxDepth()							        const   { return m_maxDepth; }
+    const size_t timeLimit()							        const   { return m_timeLimit; }
+    const size_t maxChildren()                                const   { return m_maxChildren; }
+    const size_t moveOrderingMethod()                         const   { return m_moveOrdering; }
+    const size_t evalMethod()						            const   { return m_evalMethod; }
+    const size_t simScript(const size_t player)             const   { return m_simScripts[player]; }
+    const size_t playerToMoveMethod()				            const   { return m_playerToMoveMethod; }
+    const size_t playerModel(const size_t player)	        const   { return m_playerModel[player]; }
     const std::string & graphVizFilename()                      const   { return m_graphVizFilename; }
     const std::vector<size_t> & getOrderedMoveScripts()         const   { return m_orderedMoveScripts; }
 	
-    void setSearchMethod(const size_t & method)                         { m_searchMethod = method; }
-    void setMaxPlayer(const size_t & player)					        { m_maxPlayer = player; }
-    void setMaxDepth(const size_t & depth)                              { m_maxDepth = depth; }
+    void setSearchMethod(const size_t method)                         { m_searchMethod = method; }
+    void setMaxPlayer(const size_t player)					        { m_maxPlayer = player; }
+    void setMaxDepth(const size_t depth)                              { m_maxDepth = depth; }
     
-    void setTimeLimit(const size_t & timeLimit)					        { m_timeLimit = timeLimit; }
-    void setMaxChildren(const size_t & children)                        { m_maxChildren = children; }
-    void setMoveOrderingMethod(const size_t & method)                   { m_moveOrdering = method; }
-    void setEvalMethod(const size_t & eval)						        { m_evalMethod = eval; }
-    void setSimScripts(const size_t & p1, const size_t & p2)		    { m_simScripts[0] = p1; m_simScripts[1] = p2; }
-    void setPlayerToMoveMethod(const size_t & method)				    { m_playerToMoveMethod = method; }
+    void setTimeLimit(const size_t timeLimit)					        { m_timeLimit = timeLimit; }
+    void setMaxChildren(const size_t children)                        { m_maxChildren = children; }
+    void setMoveOrderingMethod(const size_t method)                   { m_moveOrdering = method; }
+    void setEvalMethod(const size_t eval)						        { m_evalMethod = eval; }
+    void setSimScripts(const size_t p1, const size_t p2)		    { m_simScripts[0] = p1; m_simScripts[1] = p2; }
+    void setPlayerToMoveMethod(const size_t method)				    { m_playerToMoveMethod = method; }
     void setGraphVizFilename(const std::string & filename)              { m_graphVizFilename = filename; }
-    void addOrderedMoveScript(const size_t & script)                    { m_orderedMoveScripts.push_back(script); }
-    void setPlayerModel(const size_t & player, const size_t & model)	{ m_playerModel[player] = model; }	
+    void addOrderedMoveScript(const size_t script)                    { m_orderedMoveScripts.push_back(script); }
+    void setPlayerModel(const size_t player, const size_t model)	{ m_playerModel[player] = model; }	
 
     std::vector<std::vector<std::string> > & getDescription()
     {

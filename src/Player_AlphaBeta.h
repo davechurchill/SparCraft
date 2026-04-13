@@ -23,8 +23,8 @@ class Player_AlphaBeta : public Player
 	TTPtr TT;
 	AlphaBetaSearchParameters m_params;
 public:
-	Player_AlphaBeta (const size_t & playerID);
-	Player_AlphaBeta (const size_t & playerID, const AlphaBetaSearchParameters & params, TTPtr table);
+	Player_AlphaBeta (const size_t playerID);
+	Player_AlphaBeta (const size_t playerID, const AlphaBetaSearchParameters & params, TTPtr table);
     virtual ~Player_AlphaBeta();
 	void getMoves(GameState & state, const MoveArray & moves, std::vector<Action> & moveVec);
 	void setParameters(AlphaBetaSearchParameters & p);

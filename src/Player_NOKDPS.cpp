@@ -2,7 +2,7 @@
 
 using namespace SparCraft;
 
-Player_NOKDPS::Player_NOKDPS (const size_t & playerID) 
+Player_NOKDPS::Player_NOKDPS (const size_t playerID) 
 {
 	m_playerID = playerID;
 }

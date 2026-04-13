@@ -41,21 +41,21 @@ class Unit
 public:
 
 	Unit();
-	Unit(const BWAPI::UnitType unitType, const size_t & playerID, const Position & pos);
-	Unit(const BWAPI::UnitType unitType, const Position & pos, const size_t & unitID, const size_t & playerID, 
-		 const HealthType & hp, const HealthType & energy, const TimeType & tm, const TimeType & ta);
+	Unit(const BWAPI::UnitType unitType, const size_t playerID, const Position & pos);
+	Unit(const BWAPI::UnitType unitType, const Position & pos, const size_t unitID, const size_t playerID, 
+		 const HealthType hp, const HealthType energy, const TimeType tm, const TimeType ta);
 
 	const bool operator < (const Unit & rhs) const;
 
     // action functions
-	void                    setPreviousAction(const Action & m, const TimeType & previousMoveTime);
-	void                    updateAttackActionTime(const TimeType & newTime);
-	void                    updateMoveActionTime(const TimeType & newTime);
-	void                    attack(const Action & move, const Unit & target, const TimeType & gameTime);
-	void                    heal(const Action & move, const Unit & target, const TimeType & gameTime);
-	void                    move(const Action & move, const TimeType & gameTime) ;
-	void                    waitUntilAttack(const Action & move, const TimeType & gameTime);
-	void                    pass(const Action & move, const TimeType & gameTime);
+	void                    setPreviousAction(const Action & m, const TimeType previousMoveTime);
+	void                    updateAttackActionTime(const TimeType newTime);
+	void                    updateMoveActionTime(const TimeType newTime);
+	void                    attack(const Action & move, const Unit & target, const TimeType gameTime);
+	void                    heal(const Action & move, const Unit & target, const TimeType gameTime);
+	void                    move(const Action & move, const TimeType gameTime) ;
+	void                    waitUntilAttack(const Action & move, const TimeType gameTime);
+	void                    pass(const Action & move, const TimeType gameTime);
 	void                    takeAttack(const Unit & attacker);
 	void                    takeHeal(const Unit & healer);
 
@@ -69,12 +69,12 @@ public:
 	const bool			    canKite()                   const;
 	const bool			    canHeal()                   const;
 	const bool              equalsID(const Unit & rhs)  const;
-	bool					canSeeTarget(const Unit & unit, const TimeType & gameTime) const;
-	const bool              canAttackTarget(const Unit & unit, const TimeType & gameTime) const;
-	const bool              canHealTarget(const Unit & unit, const TimeType & gameTime) const;
+	bool					canSeeTarget(const Unit & unit, const TimeType gameTime) const;
+	const bool              canAttackTarget(const Unit & unit, const TimeType gameTime) const;
+	const bool              canHealTarget(const Unit & unit, const TimeType gameTime) const;
 
     // id related
-	void                    setUnitID(const size_t & id);
+	void                    setUnitID(const size_t id);
 	const size_t		    ID()                        const;
 	const size_t		    player()                    const;
 
@@ -85,10 +85,10 @@ public:
 	const PositionType      y()                         const;
 	const PositionType      range()                     const;
 	const PositionType      healRange()                 const;
-	const PositionType      getDistanceSqToUnit(const Unit & u, const TimeType & gameTime) const;
-	const PositionType      getDistanceSqToPosition(const Position & p, const TimeType & gameTime) const;
-    const Position &        currentPosition(const TimeType & gameTime) const;
-    void                    setPreviousPosition(const TimeType & gameTime);
+	const PositionType      getDistanceSqToUnit(const Unit & u, const TimeType gameTime) const;
+	const PositionType      getDistanceSqToPosition(const Position & p, const TimeType gameTime) const;
+    const Position &        currentPosition(const TimeType gameTime) const;
+    void                    setPreviousPosition(const TimeType gameTime);
 
     // health and damage related functions
 	const HealthType        damage()                    const;
@@ -100,7 +100,7 @@ public:
 	const HealthType	    healCost()                  const;
     const HealthType        getArmor()                  const;
 	const float			    dpf()                       const;
-	void                    updateCurrentHP(const HealthType & newHP);
+	void                    updateCurrentHP(const HealthType newHP);
     const BWAPI::UnitSizeType getSize()                 const;
     const BWAPI::WeaponType getWeapon(BWAPI::UnitType target) const;
     const HealthType        getDamageTo(const Unit & unit) const;
@@ -128,8 +128,8 @@ public:
     const std::string       debugString()               const;
 
 	// hash functions
-	const HashType          calculateHash(const size_t & hashNum, const TimeType & gameTime) const;
-	void                    debugHash(const size_t & hashNum, const TimeType & gameTime) const;
+	const HashType          calculateHash(const size_t hashNum, const TimeType gameTime) const;
+	void                    debugHash(const size_t hashNum, const TimeType gameTime) const;
 };
 
 class UnitPtrCompare

@@ -53,24 +53,24 @@ class SearchExperiment
     void setupResults();
     void addPlayer(const std::string & line);
     void addState(const std::string & line);
-    void padString(std::string & str, const size_t & length);
+    void padString(std::string & str, const size_t length);
     void setCurrentDateTime();
     std::string getDateTimeString();
-    svv getExpDescription(const size_t & p1, const size_t & p2, const size_t & state);
+    svv getExpDescription(const size_t p1, const size_t p2, const size_t state);
 
     std::vector<std::string> getLines(const std::string & filename);
 
-    Position    getRandomPosition(  const PositionType & xlimit, const PositionType & ylimit);
+    Position    getRandomPosition(  const PositionType xlimit, const PositionType ylimit);
 
     void   addSeparatedState(	std::vector<std::string> & unitTypes, std::vector<int> & numUnits,
                                     const int cx1, const int cy1, const int cx2, const int cy2,
-								    const PositionType & xLimit, const PositionType & yLimit);
+								    const PositionType xLimit, const PositionType yLimit);
 
     GameState   getSymmetricState(	std::vector<std::string> & unitTypes, std::vector<int> & numUnits,
-								    const PositionType & xLimit, const PositionType & yLimit);
+								    const PositionType xLimit, const PositionType yLimit);
     
-    GameState   getLineState(       const BWAPI::UnitType type1, const size_t & num1, 
-                                    const BWAPI::UnitType type2, const size_t & num2,
+    GameState   getLineState(       const BWAPI::UnitType type1, const size_t num1, 
+                                    const BWAPI::UnitType type2, const size_t num2,
                                     const size_t xSpace, const size_t ySpace);
 
     void        addLineStates(      std::vector<GameState> & states, int num);

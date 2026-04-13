@@ -2,7 +2,7 @@
 
 using namespace SparCraft;
 
-Player_Cluster::Player_Cluster (const size_t & playerID) 
+Player_Cluster::Player_Cluster (const size_t playerID) 
 {
 	m_playerID = playerID;
 }

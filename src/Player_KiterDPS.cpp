@@ -2,7 +2,7 @@
 
 using namespace SparCraft;
 
-Player_KiterDPS::Player_KiterDPS (const size_t & playerID) 
+Player_KiterDPS::Player_KiterDPS (const size_t playerID) 
 {
 	m_playerID = playerID;
 }

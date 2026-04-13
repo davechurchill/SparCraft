@@ -18,7 +18,7 @@ protected:
 public:
     virtual void		getMoves(GameState & state, const MoveArray & moves, std::vector<Action> & moveVec);
     const size_t        ID();
-    void                setID(const size_t & playerid);
+    void                setID(const size_t playerid);
     virtual size_t      getType() { return PlayerModels::None; }
 };
 

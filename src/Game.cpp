@@ -2,7 +2,7 @@
 
 using namespace SparCraft;
 
-Game::Game(const GameState & initialState, const size_t & limit)
+Game::Game(const GameState & initialState, const size_t limit)
     : m_numPlayers(0)
     , state(initialState)
     , m_playerToMoveMethod(SparCraft::PlayerToMove::Alternate)
@@ -13,7 +13,7 @@ Game::Game(const GameState & initialState, const size_t & limit)
 
 }
 
-Game::Game(const GameState & initialState, PlayerPtr & p1, PlayerPtr & p2, const size_t & limit)
+Game::Game(const GameState & initialState, PlayerPtr & p1, PlayerPtr & p2, const size_t limit)
     : m_numPlayers(0)
     , state(initialState)
     , m_playerToMoveMethod(SparCraft::PlayerToMove::Alternate)
@@ -155,7 +155,7 @@ void Game::playIndividualScripts(UnitScriptData & scriptData)
     gameTimeMS = t.elapsedMS();
 }
 
-PlayerPtr Game::getPlayer(const size_t & player)
+PlayerPtr Game::getPlayer(const size_t player)
 {
     return m_players[player];
 }

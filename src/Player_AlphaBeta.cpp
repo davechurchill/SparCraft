@@ -2,13 +2,13 @@
 
 using namespace SparCraft;
 
-Player_AlphaBeta::Player_AlphaBeta (const size_t & playerID)
+Player_AlphaBeta::Player_AlphaBeta (const size_t playerID)
     : alphaBeta(nullptr)
 {
 	m_playerID = playerID;
 }
 
-Player_AlphaBeta::Player_AlphaBeta (const size_t & playerID, const AlphaBetaSearchParameters & params, TTPtr table)
+Player_AlphaBeta::Player_AlphaBeta (const size_t playerID, const AlphaBetaSearchParameters & params, TTPtr table)
     : alphaBeta(nullptr)
 {
 	m_playerID = playerID;

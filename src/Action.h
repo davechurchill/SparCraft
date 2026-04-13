@@ -25,16 +25,16 @@ public:
 
 	Action();
 
-    Action( const size_t & unitIndex, const size_t & player, const size_t & type, const size_t & moveIndex, const Position & dest);
+    Action( const size_t unitIndex, const size_t player, const size_t type, const size_t moveIndex, const Position & dest);
 
-	Action( const size_t & unitIndex, const size_t & player, const size_t & type, const size_t & moveIndex);
+	Action( const size_t unitIndex, const size_t player, const size_t type, const size_t moveIndex);
 
 	const bool operator == (const Action & rhs);
 
-	const size_t & unit()	const;
-	const size_t & player() const;
-	const size_t & type()	const;
-	const size_t & index()	const;
+	const size_t unit()	const;
+	const size_t player() const;
+	const size_t type()	const;
+	const size_t index()	const;
     const Position & pos()  const;
 
 	const std::string moveString() const;

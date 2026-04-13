@@ -2,7 +2,7 @@
 
 using namespace SparCraft;
 
-PortfolioGreedySearch::PortfolioGreedySearch(const size_t & player, const size_t & enemyScript, const size_t & iter, const size_t & responses, const size_t & timeLimit)
+PortfolioGreedySearch::PortfolioGreedySearch(const size_t player, const size_t enemyScript, const size_t iter, const size_t responses, const size_t timeLimit)
 	: m_player(player)
 	, m_enemyScript(enemyScript)
 	, m_iterations(iter)
@@ -14,7 +14,7 @@ PortfolioGreedySearch::PortfolioGreedySearch(const size_t & player, const size_t
 	m_playerScriptPortfolio.push_back(PlayerModels::KiterDPS);
 }
 
-std::vector<Action> PortfolioGreedySearch::search(const size_t & player, const GameState & state)
+std::vector<Action> PortfolioGreedySearch::search(const size_t player, const GameState & state)
 {
     Timer t;
     t.start();
@@ -60,7 +60,7 @@ std::vector<Action> PortfolioGreedySearch::search(const size_t & player, const G
     return moveVec;
 }
 
-void PortfolioGreedySearch::doPortfolioSearch(const size_t & player, const GameState & state, UnitScriptData & currentScriptData)
+void PortfolioGreedySearch::doPortfolioSearch(const size_t player, const GameState & state, UnitScriptData & currentScriptData)
 {
     Timer t;
     t.start();
@@ -107,7 +107,7 @@ void PortfolioGreedySearch::doPortfolioSearch(const size_t & player, const GameS
     }   
 }
 
-size_t PortfolioGreedySearch::calculateInitialSeed(const size_t & player, const GameState & state)
+size_t PortfolioGreedySearch::calculateInitialSeed(const size_t player, const GameState & state)
 {
     size_t bestScript;
     StateEvalScore bestScriptScore;
@@ -143,7 +143,7 @@ size_t PortfolioGreedySearch::calculateInitialSeed(const size_t & player, const 
     return bestScript;
 }
 
-StateEvalScore PortfolioGreedySearch::eval(const size_t & player, const GameState & state, UnitScriptData & playerScriptsChosen)
+StateEvalScore PortfolioGreedySearch::eval(const size_t player, const GameState & state, UnitScriptData & playerScriptsChosen)
 {
     const size_t enemyPlayer(state.getEnemy(player));
 
@@ -156,7 +156,7 @@ StateEvalScore PortfolioGreedySearch::eval(const size_t & player, const GameStat
 	return g.getState().eval(player, SparCraft::EvaluationMethods::LTD2);
 }
 
-void  PortfolioGreedySearch::setAllScripts(const size_t & player, const GameState & state, UnitScriptData & data, const size_t & script)
+void  PortfolioGreedySearch::setAllScripts(const size_t player, const GameState & state, UnitScriptData & data, const size_t script)
 {
     for (size_t unitIndex(0); unitIndex < state.numUnits(player); ++unitIndex)
     {

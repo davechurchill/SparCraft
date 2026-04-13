@@ -2,7 +2,7 @@
 
 using namespace SparCraft;
 
-Player_AttackClosest::Player_AttackClosest(const size_t & playerID)
+Player_AttackClosest::Player_AttackClosest(const size_t playerID)
 {
     m_playerID = playerID;
 }

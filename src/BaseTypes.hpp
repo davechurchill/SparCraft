@@ -28,7 +28,7 @@ namespace SparCraft
         {
         }
 
-        StateEvalScore(const ScoreType & val,const int & numMoves)
+        StateEvalScore(const ScoreType val,const int numMoves)
             : m_val(val)
             ,m_numMoves(numMoves)
         {
@@ -103,8 +103,8 @@ namespace SparCraft
             return (m_val == rhs.m_val) && (m_numMoves == rhs.m_numMoves);
         }
 
-        const ScoreType & val() const { return m_val; }
-        const TimeType & numMoves() const { return m_numMoves; }
+        const ScoreType val() const { return m_val; }
+        const TimeType numMoves() const { return m_numMoves; }
     };
 
 

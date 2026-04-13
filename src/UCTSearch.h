@@ -56,16 +56,16 @@ public:
     
     // Move and Child generation functions
     void            generateChildren(UCTNode & node, GameState & state);
-	void            generateOrderedMoves(GameState & state, MoveArray & moves, const size_t & playerToMove);
+	void            generateOrderedMoves(GameState & state, MoveArray & moves, const size_t playerToMove);
     void            makeMove(UCTNode & node, GameState & state);
-	const bool      getNextMove(size_t playerToMove, MoveArray & moves, const size_t & moveNumber, std::vector<Action> & actionVec);
+	const bool      getNextMove(size_t playerToMove, MoveArray & moves, const size_t moveNumber, std::vector<Action> & actionVec);
 
     // Utility functions
 	const size_t    getPlayerToMove(UCTNode & node, const GameState & state) const;
     const size_t    getChildNodeType(UCTNode & parent, const GameState & prevState) const;
 	const bool      searchTimeOut();
 	const bool      isRoot(UCTNode & node) const;
-	const bool      terminalState(GameState & state, const size_t & depth) const;
+	const bool      terminalState(GameState & state, const size_t depth) const;
     const bool      isFirstSimMove(UCTNode & node, GameState & state);
     const bool      isSecondSimMove(UCTNode & node, GameState & state);
     StateEvalScore  performPlayout(GameState & state);

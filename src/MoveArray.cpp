@@ -78,7 +78,7 @@ void MoveArray::shuffleMoveActions()
 }
 
 // returns a given move from a unit
-const Action & MoveArray::getMove(const size_t & unit, const size_t & move) const
+const Action & MoveArray::getMove(const size_t unit, const size_t move) const
 {
     assert(m_moves[unit][(size_t)move].unit() != 255);
 
@@ -95,7 +95,7 @@ void MoveArray::printCurrentMoveIndex()
     std::cout << std::endl;
 }
 
-void MoveArray::incrementMove(const size_t & unit)
+void MoveArray::incrementMove(const size_t unit)
 {
     // increment the index for this unit
     m_currentMovesIndex[unit] = (m_currentMovesIndex[unit] + 1) % m_numMoves[unit];
@@ -183,19 +183,19 @@ bool MoveArray::validateMoves()
 	return true;
 }
 
-const size_t MoveArray::getUnitID(const size_t & unit) const
+const size_t MoveArray::getUnitID(const size_t unit) const
 {
 	return getMove(unit, 0).unit();
 }
 
-const size_t MoveArray::getPlayerID(const size_t & unit) const
+const size_t MoveArray::getPlayerID(const size_t unit) const
 {
 	return getMove(unit, 0).player();
 }
 
 void MoveArray::addUnit() 											{ m_numUnits++; }
 
-const size_t & MoveArray::numUnits()						const	{ return m_numUnits; }
-const size_t & MoveArray::numUnitsInTuple()				const	{ return numUnits(); }
-const size_t & MoveArray::numMoves(const size_t & unit)	const	{ return m_numMoves[unit]; }
+const size_t MoveArray::numUnits()						const	{ return m_numUnits; }
+const size_t MoveArray::numUnitsInTuple()				const	{ return numUnits(); }
+const size_t MoveArray::numMoves(const size_t unit)	const	{ return m_numMoves[unit]; }
 

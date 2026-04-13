@@ -13,7 +13,7 @@ const size_t Player::ID()
 	return m_playerID; 
 }
 
-void Player::setID(const size_t & playerID)
+void Player::setID(const size_t playerID)
 {
 	m_playerID = playerID;
 }

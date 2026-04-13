@@ -44,7 +44,7 @@ public:
     }
 
     // constructor which sets a completely walkable map
-    Map(const size_t & bottomRightBuildTileX, const size_t & bottomRightBuildTileY)
+    Map(const size_t bottomRightBuildTileX, const size_t bottomRightBuildTileY)
         : m_walkTileWidth(bottomRightBuildTileX * 4)
 		, m_walkTileHeight(bottomRightBuildTileY * 4)
 		, m_buildTileWidth(bottomRightBuildTileX)
@@ -80,22 +80,22 @@ public:
         return getWalkTileHeight() * 4;
     }
 
-	const size_t & getWalkTileWidth() const
+	const size_t getWalkTileWidth() const
 	{
 		return m_walkTileWidth;
 	}
 
-	const size_t & getWalkTileHeight() const
+	const size_t getWalkTileHeight() const
 	{
 		return m_walkTileHeight;
 	}
 
-	const size_t & getBuildTileWidth() const
+	const size_t getBuildTileWidth() const
 	{
 		return m_buildTileWidth;
 	}
 
-	const size_t & getBuildTileHeight() const
+	const size_t getBuildTileHeight() const
 	{
 		return m_buildTileHeight;
 	}
@@ -114,30 +114,30 @@ public:
 		return isFlyable(wp.x(), wp.y());
 	}
 
-	const bool isWalkable(const size_t & walkTileX, const size_t & walkTileY) const
+	const bool isWalkable(const size_t walkTileX, const size_t walkTileY) const
 	{
 		return	walkTileX >= 0 && walkTileX < (PositionType)getWalkTileWidth() && 
 				walkTileY >= 0 && walkTileY < (PositionType)getWalkTileHeight() &&
 				getMapData(walkTileX, walkTileY);
 	}
 
-    const bool isFlyable(const size_t & walkTileX, const size_t & walkTileY) const
+    const bool isFlyable(const size_t walkTileX, const size_t walkTileY) const
 	{
 		return	walkTileX >= 0 && walkTileX < (PositionType)getWalkTileWidth() && 
 				walkTileY >= 0 && walkTileY < (PositionType)getWalkTileHeight();
 	}
 
-	const bool getMapData(const size_t & walkTileX, const size_t & walkTileY) const
+	const bool getMapData(const size_t walkTileX, const size_t walkTileY) const
 	{
 		return m_mapData[walkTileX][walkTileY];
 	}
 
-	const bool getUnitData(const size_t & buildTileX, const size_t & buildTileY) const
+	const bool getUnitData(const size_t buildTileX, const size_t buildTileY) const
 	{
 		return m_unitData[buildTileX][buildTileY];
 	}
 
-	void setMapData(const size_t & walkTileX, const size_t & walkTileY, const bool val)
+	void setMapData(const size_t walkTileX, const size_t walkTileY, const bool val)
 	{
 		m_mapData[walkTileX][walkTileY] = val;
 	}

@@ -6,17 +6,17 @@ UnitScriptData::UnitScriptData()
 {
 }
 
-std::vector<Action> & UnitScriptData::getMoves(const size_t & player, const size_t & actualScript)
+std::vector<Action> & UnitScriptData::getMoves(const size_t player, const size_t actualScript)
 {
     return m_allScriptMoves[player][actualScript];
 }
 
-Action & UnitScriptData::getMove(const size_t & player, const size_t & unitIndex, const size_t & actualScript)
+Action & UnitScriptData::getMove(const size_t player, const size_t unitIndex, const size_t actualScript)
 {
     return m_allScriptMoves[player][actualScript][unitIndex];
 }
 
-void UnitScriptData::calculateMoves(const size_t & player, MoveArray & moves, GameState & state, std::vector<Action> & moveVec)
+void UnitScriptData::calculateMoves(const size_t player, MoveArray & moves, GameState & state, std::vector<Action> & moveVec)
 {
     // generate all script moves for this player at this state and store them in allScriptMoves
     for (size_t scriptIndex(0); scriptIndex<m_scriptVec[player].size(); ++scriptIndex)
@@ -46,32 +46,32 @@ void UnitScriptData::calculateMoves(const size_t & player, MoveArray & moves, Ga
     }
 }
 
-const size_t & UnitScriptData::getUnitScript(const size_t & player, const int & id) const
+const size_t UnitScriptData::getUnitScript(const size_t player, const int id) const
 {
     return (*m_unitScriptMap[player].find(id)).second;
 }
     
-const size_t & UnitScriptData::getUnitScript(const Unit & unit) const
+const size_t UnitScriptData::getUnitScript(const Unit & unit) const
 {
     return getUnitScript(unit.player(), (int)unit.ID());
 }
 
-const size_t & UnitScriptData::getScript(const size_t & player, const size_t & index)
+const size_t UnitScriptData::getScript(const size_t player, const size_t index)
 {
     return m_scriptVec[player][index];
 }
 
-const PlayerPtr & UnitScriptData::getPlayerPtr(const size_t & player, const size_t & index)
+const PlayerPtr & UnitScriptData::getPlayerPtr(const size_t player, const size_t index)
 {
     return m_playerPtrVec[player][index];
 }
 
-const size_t UnitScriptData::getNumScripts(const size_t & player) const
+const size_t UnitScriptData::getNumScripts(const size_t player) const
 {
     return m_scriptSet[player].size();
 }
 
-void UnitScriptData::setUnitScript(const size_t & player, const int & id, const size_t & script)
+void UnitScriptData::setUnitScript(const size_t player, const int id, const size_t script)
 {
     if (m_scriptSet[player].find(script) == m_scriptSet[player].end())
     {
@@ -83,7 +83,7 @@ void UnitScriptData::setUnitScript(const size_t & player, const int & id, const 
     m_unitScriptMap[player][id] = script;
 }
 
-void UnitScriptData::setUnitScript(const Unit & unit, const size_t & script)
+void UnitScriptData::setUnitScript(const Unit & unit, const size_t script)
 {
     setUnitScript(unit.player(), (int)unit.ID(), script);
 }

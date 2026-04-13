@@ -15,7 +15,7 @@ PlayerProperties::PlayerProperties(const BWAPI::Player & player)
 	Capture(player); 
 }
 
-PlayerProperties & PlayerProperties::Get(const size_t & playerID)
+PlayerProperties & PlayerProperties::Get(const size_t playerID)
 { 
     return props[playerID]; 
 }

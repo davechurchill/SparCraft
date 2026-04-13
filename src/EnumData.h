@@ -31,7 +31,7 @@ public:
         return name;
     }
 
-    static void setData(const int & ID, const std::string & s)
+    static void setData(const int ID, const std::string & s)
     {
         if (ID > size())
         {
@@ -56,7 +56,7 @@ public:
         return it->second;
     }
 
-    static const std::string & getName(const size_t & ID)
+    static const std::string & getName(const size_t ID)
     {
         if (ID > (size_t)size())
         {

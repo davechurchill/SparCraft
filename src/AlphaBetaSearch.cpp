@@ -44,7 +44,7 @@ void AlphaBetaSearch::doSearch(GameState & initialState)
 	m_results.timeElapsed = m_searchTimer.elapsedMS();
 }
 
-AlphaBetaValue AlphaBetaSearch::IDAlphaBeta(GameState & initialState, const size_t & maxDepth)
+AlphaBetaValue AlphaBetaSearch::IDAlphaBeta(GameState & initialState, const size_t maxDepth)
 {
 	AlphaBetaValue val;
 	m_results.nodesExpanded = 0;
@@ -94,8 +94,8 @@ AlphaBetaValue AlphaBetaSearch::IDAlphaBeta(GameState & initialState, const size
 }
 
 // Transposition Table save 
-void AlphaBetaSearch::TTsave(	GameState & state, const StateEvalScore & value, const StateEvalScore & alpha, const StateEvalScore & beta, const size_t & depth, 
-						const size_t & firstPlayer, const AlphaBetaMove & bestFirstMove, const AlphaBetaMove & bestSecondMove) 
+void AlphaBetaSearch::TTsave(	GameState & state, const StateEvalScore & value, const StateEvalScore & alpha, const StateEvalScore & beta, const size_t depth, 
+						const size_t firstPlayer, const AlphaBetaMove & bestFirstMove, const AlphaBetaMove & bestSecondMove) 
 {
 	// IF THE DEPTH OF THE ENTRY IS BIGGER THAN CURRENT DEPTH, DO NOTHING
 	TTEntry * entry = _TT->lookupScan(state.calculateHash(0), state.calculateHash(1));
@@ -120,7 +120,7 @@ void AlphaBetaSearch::TTsave(	GameState & state, const StateEvalScore & value, c
 }
 
 // Transposition Table look up + alpha/beta update
-TTLookupValue AlphaBetaSearch::TTlookup(const GameState & state, StateEvalScore & alpha, StateEvalScore & beta, const size_t & depth)
+TTLookupValue AlphaBetaSearch::TTlookup(const GameState & state, StateEvalScore & alpha, StateEvalScore & beta, const size_t depth)
 {
 	TTEntry * entry = _TT->lookupScan(state.calculateHash(0), state.calculateHash(1));
 	if (entry && (entry->getDepth() == depth)) 
@@ -177,12 +177,12 @@ const bool AlphaBetaSearch::searchTimeOut()
 	return (m_params.timeLimit() && (m_results.nodesExpanded % 50 == 0) && (m_searchTimer.elapsedMS() >= m_params.timeLimit()));
 }
 
-const bool AlphaBetaSearch::terminalState(GameState & state, const size_t & depth) const
+const bool AlphaBetaSearch::terminalState(GameState & state, const size_t depth) const
 {
 	return (depth <= 0 || state.isTerminal());
 }
 
-const AlphaBetaMove & AlphaBetaSearch::getAlphaBetaMove(const TTLookupValue & TTval, const size_t & playerToMove) const
+const AlphaBetaMove & AlphaBetaSearch::getAlphaBetaMove(const TTLookupValue & TTval, const size_t playerToMove) const
 {
 	const size_t enemyPlayer(getEnemy(playerToMove));
 
@@ -198,7 +198,7 @@ const AlphaBetaMove & AlphaBetaSearch::getAlphaBetaMove(const TTLookupValue & TT
 	}
 }
 
-void AlphaBetaSearch::generateOrderedMoves(GameState & state, MoveArray & moves, const TTLookupValue & TTval, const size_t & playerToMove, const size_t & depth)
+void AlphaBetaSearch::generateOrderedMoves(GameState & state, MoveArray & moves, const TTLookupValue & TTval, const size_t playerToMove, const size_t depth)
 {
 	// get the array where we will store the moves and clear it
 	Array<std::vector<Action>, Constants::Max_Ordered_Moves> & orderedMoves(m_orderedMoves[depth]);
@@ -233,7 +233,7 @@ void AlphaBetaSearch::generateOrderedMoves(GameState & state, MoveArray & moves,
     }
 }
 
-bool AlphaBetaSearch::getNextMoveVec(size_t playerToMove, MoveArray & moves, const size_t & moveNumber, const TTLookupValue & TTval, const size_t & depth, std::vector<Action> & moveVec) const
+bool AlphaBetaSearch::getNextMoveVec(size_t playerToMove, MoveArray & moves, const size_t moveNumber, const TTLookupValue & TTval, const size_t depth, std::vector<Action> & moveVec) const
 {
     if (m_params.maxChildren() && (moveNumber >= m_params.maxChildren()))
     {
@@ -287,7 +287,7 @@ bool AlphaBetaSearch::getNextMoveVec(size_t playerToMove, MoveArray & moves, con
 	}
 }
 
-const size_t AlphaBetaSearch::getPlayerToMove(GameState & state, const size_t & depth, const size_t & lastPlayerToMove, const bool isFirstSimMove) const
+const size_t AlphaBetaSearch::getPlayerToMove(GameState & state, const size_t depth, const size_t lastPlayerToMove, const bool isFirstSimMove) const
 {
 	const size_t whoCanMove(state.whoCanMove());
 
@@ -475,12 +475,12 @@ AlphaBetaSearchResults & AlphaBetaSearch::getResults()
 	return m_results;
 }
 
-const size_t AlphaBetaSearch::getEnemy(const size_t & player) const
+const size_t AlphaBetaSearch::getEnemy(const size_t player) const
 {
 	return (player + 1) % 2;
 }
 
-const bool AlphaBetaSearch::isRoot(const size_t & depth) const
+const bool AlphaBetaSearch::isRoot(const size_t depth) const
 {
 	return depth == m_currentRootDepth;
 }

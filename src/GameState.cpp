@@ -13,14 +13,14 @@ class UnitIndexCompare
 
 public:
 
-    UnitIndexCompare(const GameState & s, const int & p)
+    UnitIndexCompare(const GameState & s, const int p)
         : state(s)
         , player(p)
     {
 
     }
 
-	const bool operator() (const int & u1, const int & u2) const
+	const bool operator() (const int u1, const int u2) const
 	{
         return state.getUnitDirect(player, u1) < state.getUnitDirect(player, u2);
     }
@@ -87,7 +87,7 @@ void GameState::finishedMoving()
     }
 }
 
-const HashType GameState::calculateHash(const size_t & hashNum) const
+const HashType GameState::calculateHash(const size_t hashNum) const
 {
 	HashType hash(0);
 
@@ -102,7 +102,7 @@ const HashType GameState::calculateHash(const size_t & hashNum) const
 	return hash;
 }
 
-void GameState::generateMoves(MoveArray & moves, const size_t & playerIndex) const
+void GameState::generateMoves(MoveArray & moves, const size_t playerIndex) const
 {
 	moves.clear();
 
@@ -320,7 +320,7 @@ void GameState::performAction(const Action & move)
 	}
 }
 
-const Unit & GameState::getUnitByID(const size_t & unitID) const
+const Unit & GameState::getUnitByID(const size_t unitID) const
 {
 	for (size_t p(0); p<Constants::Num_Players; ++p)
 	{
@@ -337,7 +337,7 @@ const Unit & GameState::getUnitByID(const size_t & unitID) const
 	return getUnit(0,0);
 }
 
-const Unit & GameState::getUnitByID(const size_t & player, const size_t & unitID) const
+const Unit & GameState::getUnitByID(const size_t player, const size_t unitID) const
 {
 	for (size_t u(0); u<numUnits(player); ++u)
 	{
@@ -351,7 +351,7 @@ const Unit & GameState::getUnitByID(const size_t & player, const size_t & unitID
 	return getUnit(0,0);
 }
 
-Unit & GameState::getUnitByID(const size_t & player, const size_t & unitID) 
+Unit & GameState::getUnitByID(const size_t player, const size_t unitID) 
 {
 	for (size_t u(0); u<numUnits(player); ++u)
 	{
@@ -387,12 +387,12 @@ const bool GameState::isFlyable(const Position & pos) const
 	return true;
 }
 
-const size_t GameState::getEnemy(const size_t & player) const
+const size_t GameState::getEnemy(const size_t player) const
 {
 	return (player + 1) % 2;
 }
 
-const Unit & GameState::getClosestOurUnit(const size_t & player, const size_t & unitIndex)
+const Unit & GameState::getClosestOurUnit(const size_t player, const size_t unitIndex)
 {
 	const Unit & myUnit(getUnit(player,unitIndex));
 
@@ -423,7 +423,7 @@ const Unit & GameState::getClosestOurUnit(const size_t & player, const size_t & 
 	return foundUnit ? getUnit(player, minUnitInd) : myUnit;
 }
 
-const Unit & GameState::getClosestEnemyUnit(const size_t & player, const size_t & unitIndex, bool checkCloaked)
+const Unit & GameState::getClosestEnemyUnit(const size_t player, const size_t unitIndex, bool checkCloaked)
 {
 	const size_t enemyPlayer(getEnemy(player));
 	const Unit & myUnit(getUnit(player,unitIndex));
@@ -482,7 +482,7 @@ const Unit & GameState::getClosestEnemyUnit(const size_t & player, const size_t 
 	return foundUnit ? getUnit(enemyPlayer, minUnitInd) : getUnit(enemyPlayer, 0);
 }
 
-void GameState::checkFull(const size_t & player) const
+void GameState::checkFull(const size_t player) const
 {
     if (numUnits(player) >= Constants::Max_Units)
     {
@@ -592,7 +592,7 @@ void GameState::sortUnits()
 	}	
 }
 
-Unit & GameState::getUnit(const size_t & player, const size_t & unitIndex)
+Unit & GameState::getUnit(const size_t player, const size_t unitIndex)
 {
     if (player >= Constants::Num_Players)
     {
@@ -621,7 +621,7 @@ Unit & GameState::getUnit(const size_t & player, const size_t & unitIndex)
     return m_units[player][static_cast<size_t>(storageIndex)];
 }
 
-const Unit & GameState::getUnit(const size_t & player, const size_t & unitIndex) const
+const Unit & GameState::getUnit(const size_t player, const size_t unitIndex) const
 {
     if (player >= Constants::Num_Players)
     {
@@ -669,7 +669,7 @@ const size_t GameState::closestEnemyUnitDistance(const Unit & unit) const
 	return closestDist;
 }
 
-const bool GameState::playerDead(const size_t & player) const
+const bool GameState::playerDead(const size_t player) const
 {
 	if (numUnits(player) <= 0)
 	{
@@ -758,7 +758,7 @@ void GameState::updateGameTime()
 	}
 }
 
-const StateEvalScore GameState::eval(const size_t & player, const size_t & evalMethod, const size_t p1Script, const size_t p2Script) const
+const StateEvalScore GameState::eval(const size_t player, const size_t evalMethod, const size_t p1Script, const size_t p2Script) const
 {
 	StateEvalScore score;
 	const size_t enemyPlayer(getEnemy(player));
@@ -799,7 +799,7 @@ const StateEvalScore GameState::eval(const size_t & player, const size_t & evalM
 }
 
 // evaluate the state for m_playerToMove
-const ScoreType GameState::evalLTD(const size_t & player) const
+const ScoreType GameState::evalLTD(const size_t player) const
 {
 	const size_t enemyPlayer(getEnemy(player));
 	
@@ -807,14 +807,14 @@ const ScoreType GameState::evalLTD(const size_t & player) const
 }
 
 // evaluate the state for m_playerToMove
-const ScoreType GameState::evalLTD2(const size_t & player) const
+const ScoreType GameState::evalLTD2(const size_t player) const
 {
 	const size_t enemyPlayer(getEnemy(player));
 
 	return LTD2(player) - LTD2(enemyPlayer);
 }
 
-const StateEvalScore GameState::evalSim(const size_t & player, const size_t & p1Script, const size_t & p2Script) const
+const StateEvalScore GameState::evalSim(const size_t player, const size_t p1Script, const size_t p2Script) const
 {
 	PlayerPtr p1(AllPlayers::getPlayerPtr(Players::Player_One, p1Script));
 	PlayerPtr p2(AllPlayers::getPlayerPtr(Players::Player_Two, p2Script));
@@ -846,7 +846,7 @@ void GameState::calculateStartingHealth()
 	}
 }
 
-const ScoreType	GameState::LTD2(const size_t & player) const
+const ScoreType	GameState::LTD2(const size_t player) const
 {
 	if (numUnits(player) == 0 || m_totalSumSQRT[player] == 0)
 	{
@@ -867,7 +867,7 @@ const ScoreType	GameState::LTD2(const size_t & player) const
 	return ret;
 }
 
-const ScoreType GameState::LTD(const size_t & player) const
+const ScoreType GameState::LTD(const size_t player) const
 {
 	if (numUnits(player) == 0 || m_totalLTD[player] == 0)
 	{
@@ -907,17 +907,17 @@ void GameState::setMap(Map * map)
     }
 }
 
-const size_t GameState::numUnits(const size_t & player) const
+const size_t GameState::numUnits(const size_t player) const
 {
 	return m_numUnits[player];
 }
 
-const size_t GameState::prevNumUnits(const size_t & player) const
+const size_t GameState::prevNumUnits(const size_t player) const
 {
 	return m_prevNumUnits[player];
 }
 
-const Unit & GameState::getUnitDirect(const size_t & player, const size_t & unit) const
+const Unit & GameState::getUnitDirect(const size_t player, const size_t unit) const
 {
     if (player >= Constants::Num_Players)
     {
@@ -940,12 +940,12 @@ const bool GameState::bothCanMove() const
 	return whoCanMove() == Players::Player_Both;
 }
 
-void GameState::setTime(const TimeType & time)
+void GameState::setTime(const TimeType time)
 {
 	m_currentTime = time;
 }
 
-const int & GameState::getNumMovements(const size_t & player) const
+const int GameState::getNumMovements(const size_t player) const
 {
 	return m_numMovements[player];
 }
@@ -955,17 +955,17 @@ const TimeType GameState::getTime() const
 	return m_currentTime;
 }
 
-const float & GameState::getTotalLTD(const size_t & player) const
+const float GameState::getTotalLTD(const size_t player) const
 {
 	return m_totalLTD[player];
 }
 
-const float & GameState::getTotalLTD2(const size_t & player)	const
+const float GameState::getTotalLTD2(const size_t player)	const
 {
 	return m_totalSumSQRT[player];
 }
 
-void GameState::setTotalLTD(const float & p1, const float & p2)
+void GameState::setTotalLTD(const float p1, const float p2)
 {
 	m_totalLTD[Players::Player_One] = p1;
 	m_totalLTD[Players::Player_Two] = p2;
@@ -1020,7 +1020,7 @@ const bool GameState::isTerminal() const
 	return true;
 }
 
-void GameState::setTotalLTD2(const float & p1, const float & p2)
+void GameState::setTotalLTD2(const float p1, const float p2)
 {
 	m_totalSumSQRT[Players::Player_One] = p1;
 	m_totalSumSQRT[Players::Player_Two] = p2;
@@ -1036,7 +1036,7 @@ const size_t GameState::numNeutralUnits() const
 	return m_neutralUnits.size();
 }
 
-const Unit & GameState::getNeutralUnit(const size_t & u) const
+const Unit & GameState::getNeutralUnit(const size_t u) const
 {
 	return m_neutralUnits[u];
 }

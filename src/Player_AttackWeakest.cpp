@@ -2,7 +2,7 @@
 
 using namespace SparCraft;
 
-Player_AttackWeakest::Player_AttackWeakest (const size_t & playerID) 
+Player_AttackWeakest::Player_AttackWeakest (const size_t playerID) 
 {
 	m_playerID = playerID;
 }

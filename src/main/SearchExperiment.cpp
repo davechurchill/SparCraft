@@ -86,7 +86,7 @@ void SearchExperiment::writeResultsSummary()
     results.close();
 }
 
-void SearchExperiment::padString(std::string & str, const size_t & length)
+void SearchExperiment::padString(std::string & str, const size_t length)
 {
     while (str.length() < length)
     {
@@ -635,7 +635,7 @@ void SearchExperiment::addPlayer(const std::string & line)
     }
 }
 
-Position SearchExperiment::getRandomPosition(const PositionType & xlimit, const PositionType & ylimit)
+Position SearchExperiment::getRandomPosition(const PositionType xlimit, const PositionType ylimit)
 {
 	int x = xlimit - (rand.nextInt() % (2*xlimit));
 	int y = ylimit - (rand.nextInt() % (2*ylimit));
@@ -644,7 +644,7 @@ Position SearchExperiment::getRandomPosition(const PositionType & xlimit, const 
 }
 
 GameState SearchExperiment::getSymmetricState( std::vector<std::string> & unitTypes, std::vector<int> & numUnits,
-								                const PositionType & xLimit, const PositionType & yLimit)
+								                const PositionType xLimit, const PositionType yLimit)
 {
 	GameState state;
 
@@ -677,7 +677,7 @@ GameState SearchExperiment::getSymmetricState( std::vector<std::string> & unitTy
 void SearchExperiment::addSeparatedState(  std::vector<std::string> & unitTypes, std::vector<int> & numUnits,
                                                 const PositionType cx1, const PositionType cy1, 
                                                 const PositionType cx2, const PositionType cy2,
-								                const PositionType & xLimit, const PositionType & yLimit)
+								                const PositionType xLimit, const PositionType yLimit)
 {
 	GameState state;
     GameState state2;
@@ -707,7 +707,7 @@ void SearchExperiment::addSeparatedState(  std::vector<std::string> & unitTypes,
     states.push_back(state2);
 }
 
-svv SearchExperiment::getExpDescription(const size_t & p1Ind, const size_t & p2Ind, const size_t & state)
+svv SearchExperiment::getExpDescription(const size_t p1Ind, const size_t p2Ind, const size_t state)
 {
     // 2-column description vector
     svv desc(2, sv());
