@@ -21,8 +21,6 @@ class GameState
     std::vector<Unit> m_units[Constants::Num_Players];
     std::vector<int>  m_unitIndex[Constants::Num_Players];
 
-    Array2D<Unit, Constants::Num_Players, Constants::Max_Units>     m_units2;             
-    Array2D<int, Constants::Num_Players, Constants::Max_Units>      m_unitIndex2;        
     Array<Unit, 1>                                                  m_neutralUnits;
 
     Array<size_t, Constants::Num_Players>                    m_numUnits;
