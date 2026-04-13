@@ -11,4 +11,4 @@ State StateSymmetric 13 96 96 Terran_Marine 6
 ResultsFile sample_experiment/simple_gui true
 
 # Display syntax requires: Display <true|false> <ImageDirToken>
-Display true asset/images/
+Display true assets/images/

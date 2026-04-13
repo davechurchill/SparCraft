@@ -96,7 +96,7 @@ void GUI::onFrame()
 
 void GUI::loadTextures()
 {
-    const std::string imageDir = "asset/images/";
+    const std::string imageDir = "assets/images/";
 
     for (const BWAPI::UnitType & type : BWAPI::UnitTypes::allUnitTypes())
     {
