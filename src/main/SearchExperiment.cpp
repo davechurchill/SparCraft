@@ -439,7 +439,7 @@ void SearchExperiment::addPlayer(const std::string & line)
 
     playerStrings[playerID].push_back(playerModelString);
 
-    playerModelID = PlayerModels::getID(playerModelString);
+    playerModelID = (int)PlayerModels::getID(playerModelString);
 
     //std::cout << "Player " << playerID << " adding type " << playerModelString << " (" << playerModelID << ")" << std::endl;
 
@@ -515,12 +515,12 @@ void SearchExperiment::addPlayer(const std::string & line)
         iss >> opponentModelScript;
 
         // convert them to the proper enum types
-        int moveOrderingID      = MoveOrderMethod::getID(moveOrdering);
-        int evalMethodID        = EvaluationMethods::getID(evalMethod);
-        int playoutScriptID1    = PlayerModels::getID(playoutScript1);
-        int playoutScriptID2    = PlayerModels::getID(playoutScript2);
-        int playerToMoveID      = PlayerToMove::getID(playerToMoveMethod);
-        int opponentModelID     = PlayerModels::getID(opponentModelScript);
+        int moveOrderingID      = (int)MoveOrderMethod::getID(moveOrdering);
+        int evalMethodID        = (int)EvaluationMethods::getID(evalMethod);
+        int playoutScriptID1    = (int)PlayerModels::getID(playoutScript1);
+        int playoutScriptID2    = (int)PlayerModels::getID(playoutScript2);
+        int playerToMoveID      = (int)PlayerToMove::getID(playerToMoveMethod);
+        int opponentModelID     = (int)PlayerModels::getID(opponentModelScript);
 
         // construct the parameter object
         AlphaBetaSearchParameters params;
@@ -591,12 +591,12 @@ void SearchExperiment::addPlayer(const std::string & line)
         iss >> opponentModelScript;
 
         // convert them to the proper enum types
-        int moveOrderingID      = MoveOrderMethod::getID(moveOrdering);
-        int evalMethodID        = EvaluationMethods::getID(evalMethod);
-        int playoutScriptID1    = PlayerModels::getID(playoutScript1);
-        int playoutScriptID2    = PlayerModels::getID(playoutScript2);
-        int playerToMoveID      = PlayerToMove::getID(playerToMoveMethod);
-        int opponentModelID     = PlayerModels::getID(opponentModelScript);
+        int moveOrderingID      = (int)MoveOrderMethod::getID(moveOrdering);
+        int evalMethodID        = (int)EvaluationMethods::getID(evalMethod);
+        int playoutScriptID1    = (int)PlayerModels::getID(playoutScript1);
+        int playoutScriptID2    = (int)PlayerModels::getID(playoutScript2);
+        int playerToMoveID      = (int)PlayerToMove::getID(playerToMoveMethod);
+        int opponentModelID     = (int)PlayerModels::getID(opponentModelScript);
 
         // construct the parameter object
         UCTSearchParameters params;
@@ -789,7 +789,7 @@ svv SearchExperiment::getExpDescription(const size_t & p1Ind, const size_t & p2I
 
 std::string SearchExperiment::getBaseFilename(const std::string & filename)
 {
-    for (int i(filename.length()-1); i>=0; --i)
+    for (int i((int)filename.length()-1); i>=0; --i)
     {
         if (filename[i] == '/' || filename[i] == '\\')
         {
@@ -842,10 +842,10 @@ void SearchExperiment::runExperiment()
 				sprintf(buf, "%5d %5d %5d %5d", (int)p1Player, (int)p2Player, (int)state, (int)states[state].numUnits(Players::Player_One));
                 results << buf;
 
-				resultsPlayers[0].push_back(p1Player);
-				resultsPlayers[1].push_back(p2Player);
-				resultsStateNumber[p1Player][p2Player].push_back(state);
-				resultsNumUnits[p1Player][p2Player].push_back(states[state].numUnits(Players::Player_One));
+				resultsPlayers[0].push_back((int)p1Player);
+				resultsPlayers[1].push_back((int)p2Player);
+				resultsStateNumber[p1Player][p2Player].push_back((int)state);
+				resultsNumUnits[p1Player][p2Player].push_back((int)states[state].numUnits(Players::Player_One));
 				
 				// get player one
 				PlayerPtr playerOne(players[0][p1Player]);
@@ -901,11 +901,11 @@ void SearchExperiment::runExperiment()
                 }
 
 				double ms = g.getTime();
-				sprintf(buf, " %10d %6d %12.2lf", gameEval, g.getRounds(), ms);
+				sprintf(buf, " %10d %6zu %12.2lf", gameEval, g.getRounds(), ms);
 				fprintf(stderr, "%12d %12.2lf\n", gameEval, ms);
 
 				resultsEval[p1Player][p2Player].push_back(gameEval);
-				resultsRounds[p1Player][p2Player].push_back(g.getRounds());
+				resultsRounds[p1Player][p2Player].push_back((int)g.getRounds());
 				resultsTime[p1Player][p2Player].push_back(ms);
 
                 results << buf;

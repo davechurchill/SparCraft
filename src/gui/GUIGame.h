@@ -32,7 +32,6 @@ class GUIGame
     void drawUnit(const Unit & unit, sf::RenderTarget & target);
 
     void drawControlsWindow();
-    void drawPlayerDataWindow();
     void drawUnitsWindow();
 
     void setResults(const size_t & player, const std::vector<std::vector<std::string> > & r);

@@ -53,7 +53,7 @@ const size_t & UnitScriptData::getUnitScript(const size_t & player, const int & 
     
 const size_t & UnitScriptData::getUnitScript(const Unit & unit) const
 {
-    return getUnitScript(unit.player(), unit.ID());
+    return getUnitScript(unit.player(), (int)unit.ID());
 }
 
 const size_t & UnitScriptData::getScript(const size_t & player, const size_t & index)
@@ -85,5 +85,5 @@ void UnitScriptData::setUnitScript(const size_t & player, const int & id, const 
 
 void UnitScriptData::setUnitScript(const Unit & unit, const size_t & script)
 {
-    setUnitScript(unit.player(), unit.ID(), script);
+    setUnitScript(unit.player(), (int)unit.ID(), script);
 }

@@ -48,8 +48,8 @@ void GUI::onStart()
         System::FatalError("Failed to initialize ImGui-SFML");
     }
 
-    ImGui::GetStyle().ScaleAllSizes(1.5f);
-    ImGui::GetIO().FontGlobalScale = 1.5f;
+    //ImGui::GetStyle().ScaleAllSizes(1.5f);
+    //ImGui::GetIO().FontGlobalScale = 1.5f;
 
     loadTextures();
 

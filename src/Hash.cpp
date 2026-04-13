@@ -39,13 +39,13 @@ Hash::HashValues::HashValues(int seed)
 
 const HashType Hash::HashValues::getAttackHash (const size_t & player, const size_t & value) const		
 { 
-	return hash32shift(timeCanAttackHash[player] ^ value); 
+	return hash32shift((int)(timeCanAttackHash[player] ^ value));
 }
 
 
-const HashType Hash::HashValues::getMoveHash		(const size_t & player, const size_t & value) const		{ return hash32shift(timeCanMoveHash[player] ^ value); }
-const HashType Hash::HashValues::getUnitTypeHash	(const size_t & player, const size_t & value) const		{ return hash32shift(unitTypeHash[player] ^ value); }
-const HashType Hash::HashValues::getCurrentHPHash	(const size_t & player, const size_t & value) const		{ return hash32shift(currentHPHash[player] ^ value); }
+const HashType Hash::HashValues::getMoveHash		(const size_t & player, const size_t & value) const		{ return hash32shift((int)(timeCanMoveHash[player] ^ value)); }
+const HashType Hash::HashValues::getUnitTypeHash	(const size_t & player, const size_t & value) const		{ return hash32shift((int)(unitTypeHash[player] ^ value)); }
+const HashType Hash::HashValues::getCurrentHPHash	(const size_t & player, const size_t & value) const		{ return hash32shift((int)(currentHPHash[player] ^ value)); }
 
 //Robert Jenkins' 32 bit integer hash function
 const size_t Hash::jenkinsHash( size_t a)

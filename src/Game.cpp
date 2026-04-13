@@ -150,7 +150,7 @@ PlayerPtr Game::getPlayer(const size_t & player)
     return _players[player];
 }
 
-int Game::getRounds()
+size_t Game::getRounds()
 {
     return rounds;
 }

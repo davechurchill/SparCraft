@@ -52,7 +52,7 @@ public:
 
 	GameState &     getState();
     const GameState &     getState() const;
-	int             getRounds();
+	size_t          getRounds();
 	double          getTime();
 	const size_t    getPlayerToMove();
     PlayerPtr       getPlayer(const size_t & player);

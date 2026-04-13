@@ -112,7 +112,6 @@ void GUIGame::onFrame(sf::RenderTarget & target)
     _previousDrawGameTimer = drawTimer.getElapsedTimeInMilliSec();
 
     drawControlsWindow();
-    drawPlayerDataWindow();
     drawUnitsWindow();
 }
 
@@ -215,52 +214,60 @@ void GUIGame::drawHPBars(sf::RenderTarget & target)
 
 void GUIGame::drawControlsWindow()
 {
-    ImGui::Begin("SparCraft Controls");
+    ImGui::Begin("SparCraft");
 
-    ImGui::Checkbox("Pause Simulation", &_paused);
-    ImGui::Checkbox("Render World", &_renderWorld);
-    ImGui::Checkbox("Render HP Bars", &_renderHPBars);
-
-    if (ImGui::Button("Step One Turn"))
+    if (ImGui::BeginTabBar("MainTabs"))
     {
-        _stepOneTurn = true;
-    }
-
-    ImGui::Separator();
-    ImGui::Text("Rounds: %d", _game.getRounds());
-    ImGui::Text("Turn Time: %.2f ms", _previousTurnTimer);
-    ImGui::Text("Draw Time: %.2f ms", _previousDrawGameTimer);
-    ImGui::Text("State Eval (P1, LTD2): %d", _game.getState().eval(Players::Player_One, EvaluationMethods::LTD2).val());
-
-    if (_game.gameOver())
-    {
-        ImGui::Separator();
-        ImGui::TextColored(ImVec4(1.0f, 0.8f, 0.2f, 1.0f), "Game Over");
-    }
-
-    ImGui::End();
-}
-
-void GUIGame::drawPlayerDataWindow()
-{
-    ImGui::Begin("Search Data");
-
-    if (ImGui::BeginTabBar("PlayersTab"))
-    {
-        for (size_t p = 0; p < 2; ++p)
+        if (ImGui::BeginTabItem("Controls"))
         {
-            const std::string label = std::string("Player ") + std::to_string(p + 1);
-            if (ImGui::BeginTabItem(label.c_str()))
+            ImGui::Checkbox("Pause Simulation", &_paused);
+            ImGui::Checkbox("Render World", &_renderWorld);
+            ImGui::Checkbox("Render HP Bars", &_renderHPBars);
+
+            if (ImGui::Button("Step One Turn"))
             {
-                ImGui::TextColored(ToImVec4(PlayerColors[p]), "Settings");
-                DrawNameValueTable((std::string("settings") + std::to_string(p)).c_str(), _params[p]);
-
-                ImGui::Separator();
-                ImGui::TextColored(ToImVec4(PlayerColorsDark[p]), "Search Results");
-                DrawNameValueTable((std::string("results") + std::to_string(p)).c_str(), _results[p]);
-
-                ImGui::EndTabItem();
+                _stepOneTurn = true;
             }
+
+            ImGui::Separator();
+            ImGui::Text("Rounds: %zu", _game.getRounds());
+            ImGui::Text("Turn Time: %.2f ms", _previousTurnTimer);
+            ImGui::Text("Draw Time: %.2f ms", _previousDrawGameTimer);
+            ImGui::Text("State Eval (P1, LTD2): %d", _game.getState().eval(Players::Player_One, EvaluationMethods::LTD2).val());
+
+            if (_game.gameOver())
+            {
+                ImGui::Separator();
+                ImGui::TextColored(ImVec4(1.0f, 0.8f, 0.2f, 1.0f), "Game Over");
+            }
+
+            ImGui::EndTabItem();
+        }
+
+        if (ImGui::BeginTabItem("Search Data"))
+        {
+            if (ImGui::BeginTabBar("PlayersTab"))
+            {
+                for (size_t p = 0; p < 2; ++p)
+                {
+                    const std::string label = std::string("Player ") + std::to_string(p + 1);
+                    if (ImGui::BeginTabItem(label.c_str()))
+                    {
+                        ImGui::TextColored(ToImVec4(PlayerColors[p]), "Settings");
+                        DrawNameValueTable((std::string("settings") + std::to_string(p)).c_str(), _params[p]);
+
+                        ImGui::Separator();
+                        ImGui::TextColored(ToImVec4(PlayerColorsDark[p]), "Search Results");
+                        DrawNameValueTable((std::string("results") + std::to_string(p)).c_str(), _results[p]);
+
+                        ImGui::EndTabItem();
+                    }
+                }
+
+                ImGui::EndTabBar();
+            }
+
+            ImGui::EndTabItem();
         }
 
         ImGui::EndTabBar();

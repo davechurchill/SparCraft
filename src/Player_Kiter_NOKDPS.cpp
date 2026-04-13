@@ -50,8 +50,8 @@ void Player_Kiter_NOKDPS::getMoves(GameState & state, const MoveArray & moves, s
 
                 if (move.index() >= state.numUnits(enemy))
                 {
-                    int e = enemy;
-                    int pl = _playerID;
+                    int e = (int)enemy;
+                    int pl = (int)_playerID;
                     printf("wtf\n");
                 }
 			}

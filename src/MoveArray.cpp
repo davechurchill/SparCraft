@@ -41,7 +41,7 @@ void MoveArray::shuffleMoveActions()
         int moveBegin(-1);
 
         // reverse through the list of actions for this unit
-        for (int a(numMoves(u)-1); a >= 0; --a)
+        for (int a((int)numMoves(u)-1); a >= 0; --a)
         {
             size_t moveType(getMove(u, a).type());
 

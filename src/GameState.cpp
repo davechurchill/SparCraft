@@ -45,8 +45,8 @@ GameState::GameState()
 
 	for (size_t u(0); u<_maxUnits; ++u)
 	{
-        _unitIndex[0][u] = u;
-		_unitIndex[1][u] = u;
+        _unitIndex[0][u] = (int)u;
+		_unitIndex[1][u] = (int)u;
 	}
 }
 
@@ -613,7 +613,7 @@ void GameState::sortUnits()
 	
 			
 			//_unitPtrs[p].sort(_prevNumUnits[p], UnitPtrCompare());
-            std::sort(&_unitIndex[p][0], &_unitIndex[p][0] + _prevNumUnits[p], UnitIndexCompare(*this, p));
+            std::sort(&_unitIndex[p][0], &_unitIndex[p][0] + _prevNumUnits[p], UnitIndexCompare(*this, (int)p));
 			_prevNumUnits[p] = _numUnits[p];
 		}
 	}	

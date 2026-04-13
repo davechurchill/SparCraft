@@ -87,9 +87,9 @@ class TranspositionTable
 	size_t			minIndex,
 					maxIndex;
 
-	const size_t getIndex(const HashType & hash1) const
+	const size_t getIndex(const size_t & hash1) const
 	{
-		return hash1 % size; 
+		return hash1 % size;
 	}
 
 public:
