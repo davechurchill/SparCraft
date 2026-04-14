@@ -112,7 +112,13 @@ generate_vs.bat
 
 ### Linux
 
-1. Configure and build:
+0. Install SFML3 (if not installed). Ubuntu will install 2.6.1, so you need to run the included script
+
+```bash
+./install_sfml3.sh
+```
+
+2. Configure and build:
 
 ```bash
 cmake -S . -B build -DSPARCRAFT_BUILD_APP=ON -DSPARCRAFT_BUILD_BWAPIDATA=ON -DCMAKE_BUILD_TYPE=Release
