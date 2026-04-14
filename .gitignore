@@ -28,3 +28,4 @@ sparcraft_error_log.txt
 bin/SparCraftTests.ilk
 *.ilk
 /bin/results
+/bin/results\results

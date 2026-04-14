@@ -1,5 +1,6 @@
 #include "Strings.h"
 
+#include <cctype>
 #include <math.h>
 #include <stdarg.h>
 
@@ -31,7 +32,7 @@ namespace Util
     for (unsigned long i = begin; i < distance + begin && i < input.size();i++)
     {
       if (!isdigit(input[i]))
-        throw ParseException::ParseException("Strings::stringToInt - String " + input + " is not a number.");
+        throw ParseException("Strings::stringToInt - String " + input + " is not a number.");
       returnValue*=10;
       returnValue += (input[i] - '0');
     }
@@ -341,15 +342,15 @@ namespace Util
   return result;  
  }  
  const int BUFFER_SIZE = 4096;
- char buffer[BUFFER_SIZE];
+ char formatBuffer[BUFFER_SIZE];
  //-----------------------------------------------------------------------------------------------------------
  std::string Strings::ssprintf(const char* format, ...)
  {
     va_list ap;
     va_start(ap, format);
-    vsnprintf_s(buffer, BUFFER_SIZE, BUFFER_SIZE, format, ap); 
+    vsnprintf_s(formatBuffer, BUFFER_SIZE, BUFFER_SIZE, format, ap); 
     va_end(ap);
-    return buffer;
+    return formatBuffer;
  }
  //-----------------------------------------------------------------------------------------------------------
 }

@@ -19,9 +19,13 @@ namespace Util
       return false;
     if (showTime)
     {
-      char time[9];
-      _strtime(time);
-      fprintf(f, "%s ", time);
+      char timeBuffer[9] = {};
+      const std::time_t now = std::time(nullptr);
+      if (const std::tm* localTime = std::localtime(&now))
+      {
+        std::strftime(timeBuffer, sizeof(timeBuffer), "%H:%M:%S", localTime);
+      }
+      fprintf(f, "%s ", timeBuffer);
     }
     fprintf(f, "%s \n", data);
     fclose(f);

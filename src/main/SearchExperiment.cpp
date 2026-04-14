@@ -1,4 +1,5 @@
 #include "SearchExperiment.h"
+#include <cstdio>
 #include <filesystem>
 
 using namespace SparCraft;
@@ -769,7 +770,7 @@ svv SearchExperiment::getExpDescription(const size_t p1Ind, const size_t p2Ind, 
                 score = ((double)numWins[p1][p2] / (double)(numGames[p1][p2])) + 0.5*((double)numDraws[p1][p2] / (double)numGames[p1][p2]);
             }
 
-            sprintf(buf, "%.7lf", score);
+            std::snprintf(buf, sizeof(buf), "%.7lf", score);
 		    desc[1].push_back(std::string(buf));
         }
 	}
@@ -829,7 +830,7 @@ void SearchExperiment::runExperiment()
                 char buf[255];
                 fprintf(stderr, "%s  ", configFileSmall.c_str());
 				fprintf(stderr, "%5d %5d %5d %5d", (int)p1Player, (int)p2Player, (int)state, (int)states[state].numUnits(Players::Player_One));
-				sprintf(buf, "%5d %5d %5d %5d", (int)p1Player, (int)p2Player, (int)state, (int)states[state].numUnits(Players::Player_One));
+				std::snprintf(buf, sizeof(buf), "%5d %5d %5d %5d", (int)p1Player, (int)p2Player, (int)state, (int)states[state].numUnits(Players::Player_One));
                 results << buf;
 
 				resultsPlayers[0].push_back((int)p1Player);
@@ -894,7 +895,7 @@ void SearchExperiment::runExperiment()
                 }
 
 				double ms = completedGame->getTime();
-				sprintf(buf, " %10d %6zu %12.2lf", gameEval, completedGame->getRounds(), ms);
+				std::snprintf(buf, sizeof(buf), " %10d %6zu %12.2lf", gameEval, completedGame->getRounds(), ms);
 				fprintf(stderr, "%12d %12.2lf\n", gameEval, ms);
 
 				resultsEval[p1Player][p2Player].push_back(gameEval);

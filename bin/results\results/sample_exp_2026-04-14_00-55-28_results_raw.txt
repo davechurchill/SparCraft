@@ -1,0 +1,5 @@
+   P1    P2    ST  UNIT       EVAL    RND           MS | UnitType PlayerID CurrentHP XPos YPos
+    0     0     2    50          0    372         0.00
+    0     0     3    50          0    372         0.00
+    0     0     4    50          0    443         0.00
+    0     0     5    50          0    443         0.00
