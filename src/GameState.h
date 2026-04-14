@@ -16,25 +16,25 @@ namespace SparCraft
 {
 class GameState 
 {
-    Map *                                                           m_map;               
+    Map * m_map;               
 
     std::vector<Unit> m_units[Constants::Num_Players];
     std::vector<int>  m_unitIndex[Constants::Num_Players];
 
-    Array<Unit, 1>                                                  m_neutralUnits;
+    Array<Unit, 1>                          m_neutralUnits;
 
-    Array<size_t, Constants::Num_Players>                    m_numUnits;
-    Array<size_t, Constants::Num_Players>                    m_prevNumUnits;
+    Array<size_t, Constants::Num_Players>   m_numUnits;
+    Array<size_t, Constants::Num_Players>   m_prevNumUnits;
 
-    Array<float, Constants::Num_Players>                            m_totalLTD;
-    Array<float, Constants::Num_Players>                            m_totalSumSQRT;
+    Array<float, Constants::Num_Players>    m_totalLTD;
+    Array<float, Constants::Num_Players>    m_totalSumSQRT;
 
-    Array<int, Constants::Num_Players>                              m_numMovements;
-    Array<int, Constants::Num_Players>                              m_prevHPSum;
+    Array<int, Constants::Num_Players>      m_numMovements;
+    Array<int, Constants::Num_Players>      m_prevHPSum;
 	
-    TimeType                                                        m_currentTime;
-    size_t                                                          m_maxUnits;
-    TimeType                                                        m_turnsWithNoHPChange;
+    TimeType                                m_currentTime;
+    size_t                                  m_maxUnits;
+    TimeType                                m_turnsWithNoHPChange;
 
     // checks to see if the unit array is full before adding a unit to the state
     void                    checkFull(const size_t player)                                        const;
