@@ -26,6 +26,43 @@ SparCraft does not yet contain the following functionality:
 
 Despite these features not yet being included, SparCraft simulations demonstrate a high level of accuracy with what happens in an actual StarCraft battle. The accuracy of these simulations however diminishes as battle sizes increase, due to the lack of unit collision functionality.
 
+## StarCraft AI Research
+
+One of the main reasons for the release of this project was so that there could be a system for testing various AI algorithms for RTS combat. Many publications have presented work on RTS combat AI, however each one is implemented in a different system, and are often limited by simulation speed or by the time it takes to write a full simulation system.
+
+Not only is SparCraft a full simulation system, but it also includes several AI algorithms we have developed for RTS combat.
+
+### Scripted Players
+
+Many static scripted players come with SparCraft, they are:
+
+    AttackClosest
+    AttackDPS
+    AttackWeakest
+    Cluster
+    Kiter
+    KiterDPS
+    NOKDPS
+    Random
+
+### Alpha Beta
+
+We have developed a version of Alpha Beta tree search called Alpha Beta Considering Durations (ABCD). This algorithm was introduced in the following 2012 AIIDE paper: [Fast Heuristic Search for RTS Game Combat Scenarios](https://davechurchill.ca/publications/pdf/aiide12-combat.pdf).
+
+The algorithm is implemented in `src/AlphaBetaSearch.cpp`
+
+### UCT Tree Search
+
+UCT is another popular tree search algorithm, and we have modified it for use with RTS combat. It is available in `src/UCTSearch.cpp`
+
+A paper detailing this UCT implementation is currently submitted to CIG2013 and will be posted here if accepted.
+
+### Portfolio Greedy Search
+
+Our newest greedy search technique which loses to AB/UCT at small combat sizes, but easily defeats them at larger sizes. It is implemented in `src/PortfolioGreedySearch.cpp`
+
+You can read the details about these methods in our 2013 CIG paper: [Portfolio Greedy Search and Simulation for Large-Scale Combat in Starcraft](https://davechurchill.ca/publications/pdf/combat13.pdf)
+
 ## Quick Start
 
 ### Requirements
