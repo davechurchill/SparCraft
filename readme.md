@@ -121,8 +121,7 @@ generate_vs.bat
 2. Configure and build:
 
 ```bash
-cmake -S . -B build -DSPARCRAFT_BUILD_APP=ON -DSPARCRAFT_BUILD_BWAPIDATA=ON -DCMAKE_BUILD_TYPE=Release
-cmake --build build --target SparCraft --parallel 8
+./build_linux.sh
 ```
 
 2. Run:
