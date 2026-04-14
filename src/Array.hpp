@@ -1,5 +1,9 @@
 #pragma once
 
+#include <algorithm>
+#include <cassert>
+#include <cstddef>
+
 namespace SparCraft
 {
 template <class T, size_t elem>
@@ -11,13 +15,13 @@ class Array
 
 public:
 
-	Array<T, elem> ()
+	Array()
 		: m_size(0)
 		, m_capacity(elem)
 	{
 	}
 
-	Array<T, elem> (const T & fill)
+	Array(const T & fill)
 		: m_size(0)
 		, m_capacity(elem)
 	{
@@ -127,13 +131,13 @@ class Array2D
 
 public:
 
-	Array2D<T, rows, cols>()
+	Array2D()
 		: m_rows(rows)
 		, m_cols(cols)
 	{
 	}
 
-	Array2D<T, rows, cols> & operator = (const Array2D<T, rows, cols> & rhs)
+	Array2D & operator = (const Array2D<T, rows, cols> & rhs)
 	{
 		if (this == &rhs)
 		{
@@ -148,7 +152,7 @@ public:
 		return *this;
 	}
 
-	Array2D<T, rows, cols> (const Array2D<T, rows, cols> & rhs)
+	Array2D(const Array2D<T, rows, cols> & rhs)
 		: m_rows(rhs.m_rows)
 		, m_cols(rhs.m_cols)
 		, m_arr(rhs.m_arr)
@@ -183,4 +187,3 @@ public:
 
 };
 }
-

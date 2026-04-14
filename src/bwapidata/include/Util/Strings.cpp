@@ -31,7 +31,8 @@ namespace Util
     unsigned long returnValue = 0;
     for (unsigned long i = begin; i < distance + begin && i < input.size();i++)
     {
-      if (!isdigit(input[i]))
+      const unsigned char current = static_cast<unsigned char>(input[i]);
+      if (!std::isdigit(current))
         throw ParseException("Strings::stringToInt - String " + input + " is not a number.");
       returnValue*=10;
       returnValue += (input[i] - '0');
@@ -82,12 +83,16 @@ namespace Util
   //--------------------------------------------- LOAD FROM FILE ---------------------------------------------
   std::string Strings::loadFromFile(FILE* f)
   {
-    unsigned long Length;
-    fread(&Length,sizeof(unsigned long),1,f);
+    unsigned long Length = 0;
+    if (fread(&Length,sizeof(unsigned long),1,f) != 1)
+      return "";
     char* Buffer = new char[Length + 1];
     Buffer[Length] = 0;
     if (Length != 0)
-      fread(Buffer,Length*sizeof(char),1,f);
+    {
+      const size_t bytesRead = fread(Buffer, sizeof(char), Length, f);
+      Buffer[bytesRead] = 0;
+    }
     std::string ReturnValue = Buffer;;
     delete [] Buffer;
     return ReturnValue;
@@ -121,7 +126,7 @@ namespace Util
       target = buffer;
     }
     else
-      throw new FileException("Couldn't open file " + fileName);
+      throw FileException("Couldn't open file " + fileName);
     delete [] buffer;
   }
   //------------------------------------------------ TRIM ALL ------------------------------------------------
@@ -132,7 +137,7 @@ namespace Util
     long pos = 0;
     for (size_t i = 0;i < length;i++)
     {
-      if (!isspace(input[i]))
+      if (!std::isspace(static_cast<unsigned char>(input[i])))
       {
         buffer[pos] = input[i];
         pos++;
@@ -147,10 +152,10 @@ namespace Util
   std::string Strings::trim(std::string input)
   {
     size_t i, j;
-    for (i = 0; i < input.length() && isspace(input[i]);i++);
+    for (i = 0; i < input.length() && std::isspace(static_cast<unsigned char>(input[i]));i++);
     if (i == input.length())
       return  "";
-    for (j = input.length() - 1; j > 0 && isspace(input[j]);j--);
+    for (j = input.length() - 1; j > 0 && std::isspace(static_cast<unsigned char>(input[j]));j--);
     if (i == 0 && j == input.length())
       return input;
     else
@@ -164,11 +169,19 @@ namespace Util
     std::string result;
     readNextBlock:
     int position = 0;
-    fread(buffer, sizeof(char), 1, f);
+    if (fread(buffer, sizeof(char), 1, f) != 1)
+    {
+      buffer[0] = 0;
+      return result;
+    }
     while (buffer[position] != 13 && buffer[position] != 10 && position < STRING_UTIL_BUFFER_SIZE - 1 && !feof(f))
     {
       position++;
-      fread(&buffer[position], 1, 1,f);
+      if (fread(&buffer[position], 1, 1,f) != 1)
+      {
+        buffer[position] = 0;
+        break;
+      }
     }
 
     if (buffer[position] == 13 || buffer[position] == 10 || feof(f))
@@ -316,14 +329,14 @@ namespace Util
  //----------------------------------------------- SKIP SPACE ------------------------------------------------
  void Strings::skipSpace(const std::string& text, size_t& position)
  {
-   while (isspace(text[position]))
+   while (std::isspace(static_cast<unsigned char>(text[position])))
      position ++;
  }
  //------------------------------------------------ READ WORD ------------------------------------------------
  std::string Strings::readWord(const std::string& text, size_t& position)
  {
    std::string result;
-   while (isalpha(text[position]))
+   while (std::isalpha(static_cast<unsigned char>(text[position])))
    {
      result += text[position];
      position++;
@@ -334,7 +347,7 @@ namespace Util
  std::string Strings::readNumber(const std::string& text, size_t& position)
  {
    std::string result;
-   while (isdigit(text[position]) || text[position] == '.')
+   while (std::isdigit(static_cast<unsigned char>(text[position])) || text[position] == '.')
    {
      result += text[position];
      position++;
