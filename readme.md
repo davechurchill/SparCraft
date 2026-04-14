@@ -112,7 +112,7 @@ generate_vs.bat
 
 ### Linux
 
-0. Install SFML3 (if not installed). Ubuntu will install 2.6.1, so you need to run the included script
+1. Install SFML3 (if not installed). Ubuntu will install 2.6.1, so you need to run the included script
 
 ```bash
 ./install_sfml3.sh
