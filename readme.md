@@ -12,6 +12,19 @@ It is useful for AI search experiments, scripted policy evaluation, and reproduc
 - SFML 3 (for the GUI app)
 - OpenGL (for the GUI app)
 
+### Windows (Open Included Visual Studio Solution)
+
+1. Set `SFML_DIR` (used by `vs/SparCraft_main.vcxproj`):
+
+```bat
+set SFML_DIR=C:\path\to\SFML-3.0.1
+```
+
+2. Open `vs\SparCraft.sln` in Visual Studio.
+3. Select `x64` and `Release` (or `Debug`).
+4. Set startup project to `SparCraft_main`.
+5. Build and run from Visual Studio (`F5`).
+
 ### Windows (CMake + MSBuild)
 
 1. Build the app:
