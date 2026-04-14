@@ -1,5 +1,7 @@
 # SparCraft
 
+![SparCraft](https://davechurchill.ca/code/images/sparcraft.png)
+
 SparCraft is a cross-platform open source abstract StarCraft combat simulation package written in C++. It can be used to create standalone combat simulations or be imported into an existing BWAPI-based StarCraft bot to provide additional AI functionality.
 
 SparCraft was built with speed in mind, and uses a system of frame fast-forwarding to bypass game frames during which no combat decisions are being made (ie: during attack cooldowns, movements, etc). Using this system, SparCraft can easily perform tens of millions of unit actions per second.
